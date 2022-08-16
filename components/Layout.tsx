@@ -22,8 +22,8 @@ const Overlay = styled.div`
   grid-template-areas:
     "header header header"
     "sidebar main aside";
-  grid-template-rows: 150px 1fr;
-  grid-template-columns: 3fr 5fr 3fr;
+  grid-template-rows: 125px 1fr;
+  grid-template-columns: 3fr minmax(40ch, 5fr) 3fr;
 
   height: 100%;
 `;
@@ -38,6 +38,7 @@ const SideBar = styled.div`
 
 const Main = styled.div`
   grid-area: main;
+  justify-self: center;
 `;
 
 const Aside = styled.div`

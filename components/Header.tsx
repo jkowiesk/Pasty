@@ -22,7 +22,7 @@ export default function Header() {
         </Link>
       </HomeSide>
       <LogoWrapper>
-        <Image src={Logo} alt="Landscape picture" />
+        <Image src={Logo} alt="Logo" />
       </LogoWrapper>
       <ActionSide>
         <Actions>
@@ -56,7 +56,10 @@ const IconWrapper = styled.a`
 
   &:hover {
     cursor: pointer;
-    color: white;
+  }
+
+  &:hover * * {
+    color: var(--color-primary-light);
   }
 `;
 
@@ -66,13 +69,13 @@ const HomeWrapper = styled(IconWrapper)`
 
 const HomeIcon = styled(HomeAlt)`
   color: var(--color-primary-dark);
-  width: 50px;
-  height: 50px;
+  width: var(--icons-size);
+  height: var(--icons-size);
 `;
 
 const LogoWrapper = styled.div`
-  width: 500px;
-  padding-bottom: 25px;
+  width: 400px;
+  padding-bottom: 20px;
 `;
 
 const ActionSide = styled.div`
@@ -89,12 +92,12 @@ const Actions = styled.div`
 
 const PersonIcon = styled(Person)`
   color: var(--color-primary-dark);
-  width: 50px;
-  height: 50px;
+  width: var(--icons-size);
+  height: var(--icons-size);
 `;
 
 const MenuIcon = styled(Menu)`
   color: var(--color-primary-dark);
-  width: 50px;
-  height: 50px;
+  width: var(--icons-size);
+  height: var(--icons-size);
 `;
