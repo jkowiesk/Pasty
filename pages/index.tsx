@@ -3,15 +3,17 @@ import styled from "styled-components";
 import Head from "next/head";
 import Image from "next/image";
 
-import { stories as StoryMocks } from "../utils/mocks/stories";
+import { getStoriesForHome } from "../utils/firebase.utils";
 
 import Layout from "../components/Layout";
 import StoryCard from "../components/StoryCard";
 import { Story } from "../utils/types.utils";
 
 export async function getServerSideProps() {
+  const stories = await getStoriesForHome();
+
   return {
-    props: { stories: StoryMocks },
+    props: { stories },
   };
 }
 

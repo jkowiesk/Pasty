@@ -36,6 +36,7 @@ const Header = styled.div``;
 
 const Content = styled.p`
   font-size: 1.1rem;
+  white-space: pre-line;
 `;
 
 const Footer = styled.footer``;
