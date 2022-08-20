@@ -17,6 +17,7 @@ export default function Header() {
       <HomeSide>
         <Link href="/">
           <HomeWrapper>
+            <AnimatedText>Home</AnimatedText>
             <HomeIcon />
           </HomeWrapper>
         </Link>
@@ -26,10 +27,14 @@ export default function Header() {
       </LogoWrapper>
       <ActionSide>
         <Actions>
+          <Link href="/sign-in">
+            <IconWrapper>
+              <AnimatedText>Sign In</AnimatedText>
+              <PersonIcon />
+            </IconWrapper>
+          </Link>
           <IconWrapper>
-            <PersonIcon />
-          </IconWrapper>
-          <IconWrapper>
+            <AnimatedText>Menu</AnimatedText>
             <MenuIcon />
           </IconWrapper>
         </Actions>
@@ -45,6 +50,18 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const AnimatedText = styled.p`
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 30px;
+  bottom: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  color: var(--color-primary-light);
+`;
+
 const HomeSide = styled.div`
   flex: 1;
   display: flex;
@@ -52,7 +69,9 @@ const HomeSide = styled.div`
 `;
 
 const IconWrapper = styled.a`
-  padding: 15px;
+  isolation: isolate;
+  position: relative;
+  padding: 5px;
 
   &:hover {
     cursor: pointer;
@@ -61,16 +80,16 @@ const IconWrapper = styled.a`
   &:hover * * {
     color: var(--color-primary-light);
   }
+
+  &:hover p {
+    transform: translateY(80%);
+    transition: transform 0.6s;
+    transition-timing-function: ease-out;
+  }
 `;
 
 const HomeWrapper = styled(IconWrapper)`
   margin-left: 50px;
-`;
-
-const HomeIcon = styled(HomeAlt)`
-  color: var(--color-primary-dark);
-  width: var(--icons-size);
-  height: var(--icons-size);
 `;
 
 const LogoWrapper = styled.div`
@@ -90,14 +109,29 @@ const Actions = styled.div`
   margin-right: 50px;
 `;
 
-const PersonIcon = styled(Person)`
+const HomeIcon = styled(HomeAlt)`
+  position: relative;
   color: var(--color-primary-dark);
   width: var(--icons-size);
   height: var(--icons-size);
+  background: var(--color-header);
+  z-index: 1;
+`;
+
+const PersonIcon = styled(Person)`
+  position: relative;
+  color: var(--color-primary-dark);
+  width: var(--icons-size);
+  height: var(--icons-size);
+  background: var(--color-header);
+  z-index: 1;
 `;
 
 const MenuIcon = styled(Menu)`
+  position: relative;
   color: var(--color-primary-dark);
   width: var(--icons-size);
   height: var(--icons-size);
+  background: var(--color-header);
+  z-index: 1;
 `;

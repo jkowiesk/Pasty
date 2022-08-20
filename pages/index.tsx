@@ -24,13 +24,24 @@ type Props = {
 export default function Home({ stories }: Props) {
   return (
     <Layout>
-      <>
-        {stories.map((story, idx) => (
-          <StoryCard key={idx} story={story}>
-            {story.content}
-          </StoryCard>
-        ))}
-      </>
+      <MaxWidthWrapper>
+        <>
+          {stories.map((story, idx) => (
+            <StoryCard key={idx} story={story}>
+              {story.content}
+            </StoryCard>
+          ))}
+        </>
+      </MaxWidthWrapper>
     </Layout>
   );
 }
+
+const MaxWidthWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 700px);
+  margin: 0 auto;
+`;
