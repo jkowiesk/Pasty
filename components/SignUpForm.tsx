@@ -13,12 +13,14 @@ type Props = {
 type Account = {
   email: string;
   password: string;
+  username: string;
 };
 
 export default function SignUpForm() {
   const [account, setAccount] = useState<Account>({
     email: "",
     password: "",
+    username: "",
   });
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -31,7 +33,7 @@ export default function SignUpForm() {
 
   return (
     <Wrapper>
-      <HeaderText>Sign In</HeaderText>
+      <HeaderText>Sign Up</HeaderText>
       <Form>
         <TextInput
           type="email"
@@ -47,20 +49,19 @@ export default function SignUpForm() {
           onChange={handleChange}
           value={account.password}
         />
-        <button
-          onClick={() => {
-            alert(xD);
-          }}
-        >
-          Sign In with Google
-        </button>
+        <TextInput
+          label="Username"
+          name="username"
+          onChange={handleChange}
+          value={account.username}
+        />
       </Form>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  gird-area: sign-in;
+  gird-area: sign-up;
 `;
 
 const Form = styled.div`

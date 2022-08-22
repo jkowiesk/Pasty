@@ -33,17 +33,21 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 200px;
+  width: 250px;
 `;
 
 const Label = styled.label`
-  color: var(--color-secondary);
+  margin-left: 4px;
+  color: var(--color-primary);
 `;
 
 const Input = styled.input`
-  border: none;
-  outline: none !important;
-  background: var(--color-primary-dark);
+  border: 2px solid var(--color-gray-50);
+  border-radius: 5px;
+  background: var(--color-gray-1000);
+
   &:focus {
+    outline: none;
+    border: 2px solid var(--color-secondary-light);
   }
 `;

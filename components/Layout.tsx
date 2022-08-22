@@ -37,7 +37,9 @@ const SideBar = styled.div`
 `;
 
 const Main = styled.div`
-  grid-area: main
+  grid-area: main;
+  padding: 20px;
+  min-height: 100%;
 `;
 
 const Aside = styled.div`
