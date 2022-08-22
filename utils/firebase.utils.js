@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import {
   collection,
@@ -22,7 +23,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Auth
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -54,9 +55,28 @@ export const signOutWithGoogle = async () => {
     });
 };
 
+export const onAuthChange = (setUser, setIsLoggedIn) =>
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUser({
+        uid: user.uid,
+        username: user.displayName,
+        avatar: user.photoURL,
+      });
+      setIsLoggedIn(true);
+    } else {
+      setUser({
+        uid: "",
+        username: "",
+        avatar: "",
+      });
+      setIsLoggedIn(false);
+    }
+  });
+
 // DB
 
-/* import { stories } from "./mocks/stories"; */ // Only import if running addSetUpMocksToDB
+// import { stories } from "./mocks/stories";  Only import if running addSetUpMocksToDB
 export const addSetUpMocksToDB = async () => {
   for (const story of stories) {
     try {
@@ -73,6 +93,14 @@ export const addUserToDB = async (user) => {
     email: user.email,
     avatar: user.photoURL,
   });
+};
+
+export const getUserById = async (uid) => {
+  const docSnap = await getDoc(doc(db, "users", uid));
+
+  if (docSnap.exists()) {
+    return docSnap.data();
+  }
 };
 
 export const getStoriesForHome = async () => {

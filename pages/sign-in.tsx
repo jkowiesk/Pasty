@@ -3,15 +3,15 @@ import styled from "styled-components";
 import Head from "next/head";
 import Image from "next/image";
 
-import Layout from "../components/Layout";
-import SignInForm from "../components/SignInForm";
-import SignUpForm from "../components/SignUpForm";
+import Layout from "../components/layout.component";
+import SignInForm from "../components/sign-in-form.component";
+import SignUpForm from "../components/sign-up-form.component";
 
 type Props = {};
 
 export default function SignIn() {
   return (
-    <Layout>
+    <Layout fullMain>
       <Forms>
         <SignInForm />
         <SignUpForm />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import { Story } from "../utils/types.utils";
-import TextInput from "./TextInput";
+import TextInput from "./text-input.component";
 
 import { signInWithGoogle, signOutWithGoogle } from "../utils/firebase.utils";
 

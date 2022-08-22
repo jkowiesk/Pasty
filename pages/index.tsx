@@ -5,8 +5,8 @@ import Image from "next/image";
 
 import { getStoriesForHome } from "../utils/firebase.utils";
 
-import Layout from "../components/Layout";
-import StoryCard from "../components/StoryCard";
+import Layout from "../components/layout.component";
+import StoryCard from "../components/story-card.component";
 import { Story } from "../utils/types.utils";
 
 export async function getServerSideProps() {

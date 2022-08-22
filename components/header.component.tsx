@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import styled from "styled-components";
 
 import Image from "next/image";
@@ -9,9 +11,14 @@ import { Menu } from "@styled-icons/boxicons-regular/Menu";
 
 import Logo from "../public/images/logo-header.png";
 
+import { UserContext } from "../contexts/user";
+
 type Props = {};
 
 export default function Header() {
+  const { user } = useContext(UserContext);
+  console.log(user);
+
   return (
     <Wrapper>
       <HomeSide>

@@ -1,18 +1,24 @@
 import styled from "styled-components";
-import Header from "./Header";
+import Header from "./header.component";
 
 type Props = {
+  fullMain?: boolean;
   children: JSX.Element;
 };
 
-export default function Layout({ children }: Props) {
-  return (
+export default function Layout({ fullMain, children }: Props) {
+  return !fullMain ? (
     <Overlay>
       <Header />
       <SideBar></SideBar>
       <Main>{children}</Main>
       <Aside></Aside>
     </Overlay>
+  ) : (
+    <FullMainOverlay>
+      <Header />
+      <Main>{children}</Main>
+    </FullMainOverlay>
   );
 }
 
@@ -26,6 +32,14 @@ const Overlay = styled.div`
   grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
 
   min-height: 100%;
+`;
+
+const FullMainOverlay = styled(Overlay)`
+  grid-template-areas:
+    "header"
+    "main";
+  grid-template-rows: 100px 1fr;
+  grid-template-columns: 1fr;
 `;
 
 const HeaderWrapper = styled.div`
