@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import { Story } from "../utils/types.utils";
-
 import TextInput from "./TextInput";
+
+import { signInWithGoogle, signOutWithGoogle } from "../utils/firebase.utils";
 
 type Props = {
   story: Story;
@@ -47,13 +48,8 @@ export default function SignUpForm() {
           onChange={handleChange}
           value={account.password}
         />
-        <button
-          onClick={() => {
-            alert(xD);
-          }}
-        >
-          Sign In with Google
-        </button>
+        <button onClick={signInWithGoogle}>Sign In with Google</button>
+        <button onClick={signOutWithGoogle}>Sign Out</button>
       </Form>
     </Wrapper>
   );
