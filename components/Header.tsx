@@ -54,12 +54,13 @@ const AnimatedText = styled.p`
   position: absolute;
   right: 0;
   left: 0;
-  top: 30px;
+  top: 20px;
   bottom: 0;
   margin: auto;
   width: fit-content;
   height: fit-content;
   color: var(--color-primary-light);
+  font-size: 0.85rem;
 `;
 
 const HomeSide = styled.div`
@@ -93,8 +94,8 @@ const HomeWrapper = styled(IconWrapper)`
 `;
 
 const LogoWrapper = styled.div`
-  width: 400px;
-  padding-bottom: 20px;
+  width: 300px;
+  padding-bottom: 10px;
 `;
 
 const ActionSide = styled.div`

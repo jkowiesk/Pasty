@@ -1,6 +1,7 @@
 export type User = {
   uid: string;
   username: string;
+  avatar?: string;
 };
 
 export type Story = {

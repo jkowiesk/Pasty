@@ -22,10 +22,10 @@ const Overlay = styled.div`
   grid-template-areas:
     "header header header"
     "sidebar main aside";
-  grid-template-rows: 125px 1fr;
+  grid-template-rows: 100px 1fr;
   grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
 
-  height: 100%;
+  min-height: 100%;
 `;
 
 const HeaderWrapper = styled.div`
