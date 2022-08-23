@@ -11,13 +11,13 @@ import { Menu } from "@styled-icons/boxicons-regular/Menu";
 
 import Logo from "../public/images/logo-header.png";
 
-import { UserContext } from "../contexts/user";
+import { UserContext } from "../contexts/user.context";
 
 type Props = {};
 
 export default function Header() {
-  const { user } = useContext(UserContext);
-  console.log(user);
+  const { isLoggedIn, user } = useContext(UserContext);
+  console.log(isLoggedIn);
 
   return (
     <Wrapper>
@@ -34,10 +34,19 @@ export default function Header() {
       </LogoWrapper>
       <ActionSide>
         <Actions>
-          <Link href="/sign-in">
+          <Link href={"/sign-in"}>
             <IconWrapper>
-              <AnimatedText>Sign In</AnimatedText>
-              <PersonIcon />
+              <AnimatedText>{isLoggedIn ? "Profile" : "Sign In"}</AnimatedText>
+              {user.avatar ? (
+                <Avatar
+                  src={user.avatar}
+                  alt="avatar"
+                  width="40px"
+                  height="40px"
+                />
+              ) : (
+                <PersonIcon />
+              )}
             </IconWrapper>
           </Link>
           <IconWrapper>
@@ -57,6 +66,10 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
+const Avatar = styled(Image)`
+  border-radius: 20px;
+`;
+
 const AnimatedText = styled.p`
   position: absolute;
   right: 0;
@@ -66,7 +79,7 @@ const AnimatedText = styled.p`
   margin: auto;
   width: fit-content;
   height: fit-content;
-  color: var(--color-primary-light);
+  color: var(--color-header);
   font-size: 0.85rem;
 `;
 
@@ -91,6 +104,7 @@ const IconWrapper = styled.a`
 
   &:hover p {
     transform: translateY(80%);
+    color: var(--color-primary-light);
     transition: transform 0.6s;
     transition-timing-function: ease-out;
   }

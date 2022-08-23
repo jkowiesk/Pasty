@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 
-import UserProvider from "../contexts/user";
+import UserProvider from "../contexts/user.context";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
