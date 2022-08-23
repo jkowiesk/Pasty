@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { useEffect, useState } from "react";
+
 import Head from "next/head";
 import Image from "next/image";
 
@@ -7,6 +9,9 @@ import { getStoriesForHome } from "../utils/firebase.utils";
 
 import Layout from "../components/layout.component";
 import StoryCard from "../components/story-card.component";
+import AddStoryBtn from "../components/add-story-btn.component";
+import StoryDialog from "../components/story-dialog.component";
+
 import { Story } from "../utils/types.utils";
 
 export async function getServerSideProps() {
@@ -22,6 +27,8 @@ type Props = {
 };
 
 export default function Home({ stories }: Props) {
+  const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
+
   return (
     <Layout>
       <MaxWidthWrapper>
@@ -33,6 +40,8 @@ export default function Home({ stories }: Props) {
           ))}
         </>
       </MaxWidthWrapper>
+      <AddStoryBtn setIsOpen={setStoryDialogOpen} />
+      <StoryDialog isOpen={isStoryDialogOpen} setIsOpen={setStoryDialogOpen} />
     </Layout>
   );
 }

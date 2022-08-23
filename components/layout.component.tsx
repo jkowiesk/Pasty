@@ -3,7 +3,7 @@ import Header from "./header.component";
 
 type Props = {
   fullMain?: boolean;
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 };
 
 export default function Layout({ fullMain, children }: Props) {

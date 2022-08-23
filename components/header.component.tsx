@@ -2,7 +2,9 @@ import { useContext } from "react";
 
 import styled from "styled-components";
 
+import ImageExperimental from "next/future/image";
 import Image from "next/image";
+
 import Link from "next/link";
 
 import { HomeAlt } from "@styled-icons/boxicons-regular/HomeAlt";
@@ -38,12 +40,7 @@ export default function Header() {
             <IconWrapper>
               <AnimatedText>{isLoggedIn ? "Profile" : "Sign In"}</AnimatedText>
               {user.avatar ? (
-                <Avatar
-                  src={user.avatar}
-                  alt="avatar"
-                  width="40px"
-                  height="40px"
-                />
+                <Avatar src={user.avatar} alt="avatar" width={40} height={40} />
               ) : (
                 <PersonIcon />
               )}
@@ -66,8 +63,10 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const Avatar = styled(Image)`
+const Avatar = styled(ImageExperimental)`
+  position: relative;
   border-radius: 20px;
+  z-index: 1;
 `;
 
 const AnimatedText = styled.p`
@@ -79,7 +78,6 @@ const AnimatedText = styled.p`
   margin: auto;
   width: fit-content;
   height: fit-content;
-  color: var(--color-header);
   font-size: 0.85rem;
 `;
 
@@ -98,7 +96,7 @@ const IconWrapper = styled.a`
     cursor: pointer;
   }
 
-  &:hover * * {
+  &:hover * a {
     color: var(--color-primary-light);
   }
 

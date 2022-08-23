@@ -56,11 +56,14 @@ h6 {
   --color-primary-dark: hsl(37, 95%, 63%);
   --color-primary-light: hsl(49, 100%, 77%);
 
-  --color-secondary: hsl(7, 86%, 62%);
-  --color-secondary-light: hsl(14, 91%, 62%);
+  --color-secondary: hsl(36, 92%, 41%);
+
+  --color-distinct: hsl(7, 86%, 62%);
+  --color-secondary-distinct: hsl(14, 91%, 62%);
 
   --color-header: hsl(12, 6%, 15%);
   --color-background: hsl(30, 6%, 25%);
+  --color-background-light: hsl(12, 6%, 20%);
 
   --color-gray-50: hsl(210deg, 19%, 10%);
   --color-gray-100: hsl(210deg, 15%, 20%);
@@ -73,6 +76,22 @@ h6 {
   --color-gray-800: hsl(210deg, 20%, 77%);
   --color-gray-900: hsl(210deg, 25%, 88%);
   --color-gray-1000: hsl(210deg, 25%, 96%);
+  --shadow-color: 30deg 10% 13%;
+  --shadow-elevation-low: 0.7px 0.5px 1px hsl(var(--shadow-color) / 0.34),
+    1.1px 0.8px 1.5px -1.2px hsl(var(--shadow-color) / 0.34),
+    2.7px 2px 3.8px -2.5px hsl(var(--shadow-color) / 0.34);
+  --shadow-elevation-medium: 0.7px 0.5px 1px hsl(var(--shadow-color) / 0.36),
+    2.2px 1.7px 3.1px -0.8px hsl(var(--shadow-color) / 0.36),
+    5.5px 4.2px 7.8px -1.7px hsl(var(--shadow-color) / 0.36),
+    13.3px 10.1px 18.8px -2.5px hsl(var(--shadow-color) / 0.36);
+  --shadow-elevation-high: 0.7px 0.5px 1px hsl(var(--shadow-color) / 0.34),
+    3.9px 3px 5.5px -0.4px hsl(var(--shadow-color) / 0.34),
+    7.2px 5.5px 10.2px -0.7px hsl(var(--shadow-color) / 0.34),
+    11.9px 9.1px 16.9px -1.1px hsl(var(--shadow-color) / 0.34),
+    19px 14.5px 26.9px -1.4px hsl(var(--shadow-color) / 0.34),
+    29.6px 22.6px 41.9px -1.8px hsl(var(--shadow-color) / 0.34),
+    45.1px 34.4px 63.8px -2.1px hsl(var(--shadow-color) / 0.34),
+    66.4px 50.6px 93.9px -2.5px hsl(var(--shadow-color) / 0.34);
 
   --icons-size: 40px;
 }
