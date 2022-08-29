@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+
+import { UserContext } from "../contexts/user.context";
 
 import Head from "next/head";
 import Image from "next/image";
@@ -28,6 +30,7 @@ type Props = {
 
 export default function Home({ stories }: Props) {
   const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
+  const { isLoggedIn } = useContext(UserContext);
 
   return (
     <Layout>
@@ -40,7 +43,7 @@ export default function Home({ stories }: Props) {
           ))}
         </>
       </MaxWidthWrapper>
-      <AddStoryBtn setIsOpen={setStoryDialogOpen} />
+      {isLoggedIn && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}
       <StoryDialog isOpen={isStoryDialogOpen} setIsOpen={setStoryDialogOpen} />
     </Layout>
   );

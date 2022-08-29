@@ -5,7 +5,15 @@ export type User = {
 };
 
 export type Story = {
-  title?: string;
+  title: string;
   content: string;
+  tags: string[];
+  author: User;
+};
+
+export type newStory = {
+  title: string;
+  content: string;
+  tags: string;
   author: User;
 };

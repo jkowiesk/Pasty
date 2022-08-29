@@ -51,12 +51,23 @@ h6 {
   height: 100%;
 }
 
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  background: var(--color-background-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar);
+
+  border-radius: 100vw;
+}
+
 :root {
   --color-primary: hsl(40, 91%, 64%);
   --color-primary-dark: hsl(37, 95%, 63%);
   --color-primary-light: hsl(49, 100%, 77%);
 
-  --color-secondary: hsl(36, 92%, 41%);
+  --color-secondary: hsl(36, 92%, 50%);
 
   --color-distinct: hsl(7, 86%, 62%);
   --color-secondary-distinct: hsl(14, 91%, 62%);
@@ -64,6 +75,8 @@ h6 {
   --color-header: hsl(12, 6%, 15%);
   --color-background: hsl(30, 6%, 25%);
   --color-background-light: hsl(12, 6%, 20%);
+
+  --color-scrollbar: hsl(210deg, 25%, 5%);
 
   --color-gray-50: hsl(210deg, 19%, 10%);
   --color-gray-100: hsl(210deg, 15%, 20%);
@@ -93,5 +106,6 @@ h6 {
     45.1px 34.4px 63.8px -2.1px hsl(var(--shadow-color) / 0.34),
     66.4px 50.6px 93.9px -2.5px hsl(var(--shadow-color) / 0.34);
 
+  --scrollbar-size: 1rem;
   --icons-size: 40px;
 }

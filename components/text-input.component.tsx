@@ -7,6 +7,7 @@ type Props = {
   value: string;
   onChange: any;
   type?: string;
+  required?: boolean;
 };
 
 export default function TextInput({
@@ -15,6 +16,7 @@ export default function TextInput({
   value,
   onChange,
   type,
+  ...otherProps
 }: Props) {
   return (
     <Wrapper>
@@ -24,6 +26,7 @@ export default function TextInput({
         name={name}
         value={value}
         onChange={onChange}
+        {...otherProps}
       />
     </Wrapper>
   );
@@ -33,21 +36,21 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 250px;
+  width: 80%;
 `;
 
 const Label = styled.label`
   margin-left: 4px;
-  color: var(--color-primary);
+  color: var(--color-secondary);
 `;
 
 const Input = styled.input`
-  border: 2px solid var(--color-gray-50);
   border-radius: 5px;
   background: var(--color-gray-1000);
+  border: 2px solid var(--color-gray-50);
+  outline: none;
 
   &:focus {
-    outline: none;
-    border: 2px solid var(--color-secondary-light);
+    border: 2px solid var(--color-primary);
   }
 `;

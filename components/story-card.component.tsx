@@ -7,7 +7,10 @@ type Props = {
 };
 
 export default function StoryCard({
-  story: { title, author },
+  story: {
+    title,
+    author: { username },
+  },
   children,
 }: Props) {
   return (
@@ -16,7 +19,7 @@ export default function StoryCard({
         <Title>{title}</Title>
       </Header>
       <Content>{children}</Content>
-      <Footer>{author.username}</Footer>
+      <Footer>{username}</Footer>
     </Card>
   );
 }

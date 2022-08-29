@@ -66,6 +66,6 @@ const Form = styled.div`
 `;
 
 const HeaderText = styled.h1`
-  color: var(--color-primary-dark);
+  color: var(--color-secondary);
   margin-bottom: 30px;
 `;

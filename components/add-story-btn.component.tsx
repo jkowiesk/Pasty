@@ -3,7 +3,18 @@ import styled from "styled-components";
 type Props = { setIsOpen: any };
 
 export default function AddStoryBtn({ setIsOpen }: Props) {
-  return <Wrapper onClick={() => setIsOpen(true)}>+</Wrapper>;
+  return (
+    <Wrapper
+      onClick={async () => {
+        await setIsOpen(true);
+        const html = document.getElementsByTagName("html")[0];
+        html.style.overflowY = "scroll";
+        html.style.padding = "0";
+      }}
+    >
+      +
+    </Wrapper>
+  );
 }
 
 const Wrapper = styled.button`

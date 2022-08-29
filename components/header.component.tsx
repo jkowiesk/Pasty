@@ -61,6 +61,8 @@ const Wrapper = styled.div`
   grid-area: header;
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
 `;
 
 const Avatar = styled(ImageExperimental)`
@@ -96,7 +98,7 @@ const IconWrapper = styled.a`
     cursor: pointer;
   }
 
-  &:hover * a {
+  &:hover * * {
     color: var(--color-primary-light);
   }
 
