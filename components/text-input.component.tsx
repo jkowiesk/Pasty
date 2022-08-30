@@ -40,17 +40,17 @@ const Wrapper = styled.div`
 `;
 
 const Label = styled.label`
-  margin-left: 4px;
+  padding-left: 4px;
   color: var(--color-secondary);
 `;
 
 const Input = styled.input`
   border-radius: 5px;
   background: var(--color-gray-1000);
-  border: 2px solid var(--color-gray-50);
+  border: 1px solid var(--color-gray-50);
   outline: none;
 
   &:focus {
-    border: 2px solid var(--color-primary);
+    border: 1px solid var(--color-primary);
   }
 `;

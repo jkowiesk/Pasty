@@ -51,21 +51,22 @@ h6 {
   height: 100%;
 }
 
-::-webkit-scrollbar {
+html::-webkit-scrollbar {
   width: var(--scrollbar-size);
   background: var(--color-background-light);
 }
 
-::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb {
   background: var(--color-scrollbar);
   border-radius: 100vw;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover {
   background: var(--color-scrollbar-hover);
 }
 
 :root {
+  --test: #f5970a;
   --color-primary: hsl(40, 91%, 64%);
   --color-primary-dark: hsl(37, 95%, 63%);
   --color-primary-light: hsl(49, 100%, 77%);
@@ -93,6 +94,7 @@ h6 {
   --color-gray-800: hsl(210deg, 20%, 77%);
   --color-gray-900: hsl(210deg, 25%, 88%);
   --color-gray-1000: hsl(210deg, 25%, 96%);
+
   --shadow-color: 30deg 10% 13%;
   --shadow-elevation-low: 0.7px 0.5px 1px hsl(var(--shadow-color) / 0.34),
     1.1px 0.8px 1.5px -1.2px hsl(var(--shadow-color) / 0.34),

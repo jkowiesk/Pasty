@@ -95,6 +95,14 @@ export const addUserToDB = async (user) => {
   });
 };
 
+export const addStoryToDB = async (Story) => {
+  const docRef = await setDoc(doc(db, "stories", user.uid), {
+    username: user.displayName,
+    email: user.email,
+    avatar: user.photoURL,
+  });
+};
+
 export const getUserById = async (uid) => {
   const docSnap = await getDoc(doc(db, "users", uid));
 

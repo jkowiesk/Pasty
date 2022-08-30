@@ -8,12 +8,12 @@ export type Story = {
   title: string;
   content: string;
   tags: string[];
-  author: User;
+  uid: string;
 };
 
 export type newStory = {
   title: string;
   content: string;
   tags: string;
-  author: User;
+  uid: string;
 };

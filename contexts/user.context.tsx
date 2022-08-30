@@ -2,17 +2,18 @@ import { createContext, useEffect, useState } from "react";
 
 import { onAuthChange } from "../utils/firebase.utils";
 
+import { User } from "../utils/types.utils";
+
 type Props = {
   children: JSX.Element;
 };
 
-type SimpleUser = {
-  uid: string;
-  username: string;
-  avatar: string;
+type Context = {
+  user: User;
+  isLoggedIn: boolean;
 };
 
-export const UserContext = createContext({
+export const UserContext = createContext<Context>({
   user: {
     uid: "",
     username: "",
@@ -22,7 +23,7 @@ export const UserContext = createContext({
 });
 
 export default function UserProvider({ children }: Props) {
-  const [user, setUser] = useState<SimpleUser>({
+  const [user, setUser] = useState<User>({
     uid: "",
     username: "",
     avatar: "",

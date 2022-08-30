@@ -4,22 +4,30 @@ import styled from "styled-components";
 
 import { Dialog } from "@headlessui/react";
 import TextInput from "./text-input.component";
-import { newStory } from "../utils/types.utils";
+import { newStory, User } from "../utils/types.utils";
+
+import { Cross } from "@styled-icons/entypo/Cross";
 
 type Props = {
   isOpen: any;
   setIsOpen: any;
 };
 
-export default function StoryDialog({ isOpen, setIsOpen }: Props) {
-  const { user } = useContext(UserContext);
-
-  const [newStory, setNewStory] = useState<newStory>({
+const newStoryInit = (uid: string) => {
+  return {
     title: "",
     content: "",
     tags: "",
-    author: user,
-  });
+    uid,
+  };
+};
+
+export default function StoryDialog({ isOpen, setIsOpen }: Props) {
+  const {
+    user: { uid },
+  } = useContext(UserContext);
+
+  const [newStory, setNewStory] = useState<newStory>(newStoryInit(uid));
 
   const handleChange = (
     e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>
@@ -31,31 +39,54 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
     });
   };
 
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+  };
+
   return (
-    <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+    <Dialog
+      open={isOpen}
+      onClose={() => {
+        setNewStory(newStoryInit(uid));
+        setIsOpen(false);
+      }}
+    >
       <Overlay />
       <Panel>
-        <Form>
-          <TitleInput
-            label="Title"
-            name="title"
-            value={newStory.title}
-            onChange={handleChange}
-            required
-          />
-          <TagsInput
-            label="Tags"
-            name="tags"
-            value={newStory.tags}
-            onChange={handleChange}
-          />
+        <Form onSubmit={handleSubmit}>
+          <MaxWidth>
+            <TitleInput
+              label="Title"
+              name="title"
+              value={newStory.title}
+              onChange={handleChange}
+              required
+            />
+          </MaxWidth>
+          <MaxWidth>
+            <TagsInput
+              label="Tags"
+              name="tags"
+              value={newStory.tags}
+              onChange={handleChange}
+            />
+          </MaxWidth>
           <TextArea
             name="content"
             value={newStory.content}
             onChange={handleChange}
+            required
           />
+          <Submit type="submit">Submit</Submit>
         </Form>
-        <button onClick={() => setIsOpen(false)}>Cancel</button>
+        <Cancel
+          onClick={() => {
+            setNewStory(newStoryInit(uid));
+            setIsOpen(false);
+          }}
+        >
+          <CrossIcon />
+        </Cancel>
       </Panel>
     </Dialog>
   );
@@ -78,8 +109,8 @@ const Panel = styled(Dialog.Panel)`
   right: 0;
   margin: auto;
   height: 40vh;
-  width: 40vw;
-  padding: 8px;
+  width: 30vw;
+  padding-inline: 16px;
   background: var(--color-gray-1000);
   border-radius: 5px;
   border: 1px solid var(--color-primary-dark);
@@ -88,10 +119,8 @@ const Panel = styled(Dialog.Panel)`
 
 const Form = styled.form`
   display: grid;
-  grid-template-areas: "title tags" "content content";
-  justify-items: center;
-  align-content: center;
-  grid-template-rows: 100px 1fr;
+  grid-template-areas: "title tags" "content content" "submit submit";
+  grid-template-rows: 80px 1fr 50px;
   width: 100%;
   height: 100%;
 `;
@@ -99,12 +128,76 @@ const Form = styled.form`
 const TextArea = styled.textarea`
   grid-area: content;
   width: 100%;
+  resize: none;
+  border-radius: 5px;
+  background: var(--color-gray-1000);
+  border: 1px solid var(--color-gray-50);
+  outline: none;
+
+  &:focus {
+    border: 1px solid var(--color-primary);
+  }
 `;
 
 const TitleInput = styled(TextInput)`
   grid-area: title;
+  width: 100%;
 `;
 
 const TagsInput = styled(TextInput)`
   grid-area: tags;
+  width: 100%;
+`;
+
+const Cancel = styled.button`
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary-dark);
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  transform: translateY(-100%);
+
+  &:hover {
+    color: var(--color-primary-light);
+  }
+`;
+
+const CrossIcon = styled(Cross)`
+  height: 100%;
+  width: 100%;
+`;
+
+const MaxWidth = styled.div`
+  padding-inline: 8px;
+  display: grid;
+  justify-content: center;
+  padding-top: 8px;
+`;
+
+const Submit = styled.button`
+  grid-area: submit;
+  background: linear-gradient(
+    180deg,
+    #f7bf50,
+    #f7b842,
+    #f6b034,
+    #f6a826,
+    #f5a018,
+    #f5970a
+  );
+  color: var(--color-gray-50);
+  padding: 0;
+  border: 0;
+  height: 30px;
+  align-self: center;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-primary);
+  }
 `;
