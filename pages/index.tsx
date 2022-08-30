@@ -43,7 +43,7 @@ export default function Home({ stories }: Props) {
           ))}
         </>
       </MaxWidthWrapper>
-      {isLoggedIn && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}
+      <>{isLoggedIn && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}</>
       <StoryDialog isOpen={isStoryDialogOpen} setIsOpen={setStoryDialogOpen} />
     </Layout>
   );

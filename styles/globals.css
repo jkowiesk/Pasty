@@ -58,8 +58,11 @@ h6 {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-scrollbar);
-
   border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-hover);
 }
 
 :root {
@@ -77,6 +80,7 @@ h6 {
   --color-background-light: hsl(12, 6%, 20%);
 
   --color-scrollbar: hsl(210deg, 25%, 5%);
+  --color-scrollbar-hover: hsl(210deg, 50%, 10%);
 
   --color-gray-50: hsl(210deg, 19%, 10%);
   --color-gray-100: hsl(210deg, 15%, 20%);

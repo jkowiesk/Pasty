@@ -36,7 +36,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 80%;
+  width: min(100%, 250px);
 `;
 
 const Label = styled.label`
