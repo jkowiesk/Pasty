@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
 import styled from "styled-components";
-import { Story } from "../utils/types.utils";
+import { StoryDoc } from "../utils/types.utils";
 import TextInput from "./text-input.component";
 
 import { signInWithGoogle, signOutWithGoogle } from "../utils/firebase.utils";
 
 type Props = {
-  story: Story;
+  story: StoryDoc;
   children: string;
 };
 

@@ -8,6 +8,8 @@ import { newStory, User } from "../utils/types.utils";
 
 import { Cross } from "@styled-icons/entypo/Cross";
 
+import { addStoryToDB } from "../utils/firebase.utils";
+
 type Props = {
   isOpen: any;
   setIsOpen: any;
@@ -39,8 +41,10 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
     });
   };
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    setIsOpen(false);
+    await addStoryToDB(newStory, uid);
   };
 
   return (

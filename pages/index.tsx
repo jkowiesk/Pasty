@@ -14,7 +14,7 @@ import StoryCard from "../components/story-card.component";
 import AddStoryBtn from "../components/add-story-btn.component";
 import StoryDialog from "../components/story-dialog.component";
 
-import { Story } from "../utils/types.utils";
+import { StoryDoc } from "../utils/types.utils";
 
 export async function getServerSideProps() {
   const stories = await getStoriesForHome();
@@ -25,7 +25,7 @@ export async function getServerSideProps() {
 }
 
 type Props = {
-  stories: Story[];
+  stories: StoryDoc[];
 };
 
 export default function Home({ stories }: Props) {

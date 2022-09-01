@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Story } from "../utils/types.utils";
+import { StoryDoc } from "../utils/types.utils";
 
 type Props = {
   label: string;
