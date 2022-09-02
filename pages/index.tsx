@@ -14,7 +14,7 @@ import StoryCard from "../components/story-card.component";
 import AddStoryBtn from "../components/add-story-btn.component";
 import StoryDialog from "../components/story-dialog.component";
 
-import { StoryDoc } from "../utils/types.utils";
+import { Story, StoryDoc } from "../utils/types.utils";
 
 export async function getServerSideProps() {
   const stories = await getStoriesForHome();
@@ -25,7 +25,7 @@ export async function getServerSideProps() {
 }
 
 type Props = {
-  stories: StoryDoc[];
+  stories: Story[];
 };
 
 export default function Home({ stories }: Props) {
@@ -36,7 +36,7 @@ export default function Home({ stories }: Props) {
     <Layout>
       <MaxWidthWrapper>
         <>
-          {stories.map((story, idx) => (
+          {stories.map((story: Story, idx) => (
             <StoryCard key={idx} story={story}>
               {story.content}
             </StoryCard>

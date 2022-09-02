@@ -17,6 +17,7 @@ export const UserContext = createContext<Context>({
   user: {
     uid: "",
     username: "",
+    email: "",
     avatar: "",
   },
   isLoggedIn: false,
@@ -26,6 +27,7 @@ export default function UserProvider({ children }: Props) {
   const [user, setUser] = useState<User>({
     uid: "",
     username: "",
+    email: "",
     avatar: "",
   });
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);

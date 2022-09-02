@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -5,6 +6,7 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
+  User,
 } from "firebase/auth";
 import {
   collection,
@@ -16,7 +18,10 @@ import {
   getFirestore,
 } from "firebase/firestore";
 
-const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+import { stories } from "./mocks/stories";
+import { User as MyUser, StoryDoc, Story } from "./types.utils";
+
+const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
 
 const app = initializeApp(firebaseConfig);
 
@@ -55,19 +60,24 @@ export const signOutWithGoogle = async () => {
     });
 };
 
-export const onAuthChange = (setUser, setIsLoggedIn) =>
+export const onAuthChange = (
+  setUser: Dispatch<SetStateAction<MyUser>>,
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>
+) =>
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser({
         uid: user.uid,
-        username: user.displayName,
-        avatar: user.photoURL,
+        username: user.displayName!,
+        email: user.email!,
+        avatar: user.photoURL!,
       });
       setIsLoggedIn(true);
     } else {
       setUser({
         uid: "",
         username: "",
+        email: "",
         avatar: "",
       });
       setIsLoggedIn(false);
@@ -76,7 +86,6 @@ export const onAuthChange = (setUser, setIsLoggedIn) =>
 
 // DB
 
-// import { stories } from "./mocks/stories";  Only import if running addSetUpMocksToDB
 export const addSetUpMocksToDB = async () => {
   for (const story of stories) {
     try {
@@ -87,7 +96,7 @@ export const addSetUpMocksToDB = async () => {
   }
 };
 
-export const addUserToDB = async (user) => {
+export const addUserToDB = async (user: User) => {
   const docRef = await setDoc(doc(db, "users", user.uid), {
     username: user.displayName,
     email: user.email,
@@ -95,7 +104,7 @@ export const addUserToDB = async (user) => {
   });
 };
 
-export const addStoryToDB = async (newStory, uid) => {
+export const addStoryToDB = async (newStory: StoryDoc, uid: string) => {
   try {
     await addDoc(collection(db, "stories"), { ...newStory, uid });
   } catch (e) {
@@ -103,7 +112,7 @@ export const addStoryToDB = async (newStory, uid) => {
   }
 };
 
-export const getUserById = async (uid) => {
+export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
   if (docSnap.exists()) {
     return docSnap.data();
@@ -112,9 +121,10 @@ export const getUserById = async (uid) => {
 
 export const getStoriesForHome = async () => {
   const querySnapshot = await getDocs(collection(db, "stories"));
-  let stories = [];
+  let stories: Story[] = [];
   querySnapshot.forEach((doc) => {
-    stories.push(doc.data());
+    const id: string = doc.id;
+    stories.push({ id, ...doc.data() } as Story);
   });
 
   return stories;

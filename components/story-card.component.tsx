@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { StoryDoc, User, UserDoc } from "../utils/types.utils";
+
+import { Story, StoryDoc, User, UserDoc } from "../utils/types.utils";
 
 import { getUserById } from "../utils/firebase.utils";
 
@@ -13,19 +14,29 @@ import { Sad } from "@styled-icons/boxicons-regular/Sad";
 import Image from "next/image";
 import Link from "next/link";
 
+import AnimatedIcon from "./animated-icon.component";
+
 type Props = {
-  story: StoryDoc;
+  story: Story;
   children: string;
 };
 
-export default function StoryCard({ story: { title, uid }, children }: Props) {
-  const [user, setUser] = useState<UserDoc>({
+type SimpleUser = {
+  username: string;
+  avatar: string;
+};
+
+export default function StoryCard({
+  story: { id, title, uid },
+  children,
+}: Props) {
+  const [user, setUser] = useState<SimpleUser>({
     username: "",
     avatar: "",
   });
 
   useEffect(() => {
-    getUserById(uid).then((data) => setUser(data as UserDoc));
+    getUserById(uid).then((data) => setUser(data as SimpleUser));
   }, []);
 
   return user.username ? (
@@ -35,9 +46,9 @@ export default function StoryCard({ story: { title, uid }, children }: Props) {
       </Header>
       <Content>{children}</Content>
       <Footer>
-        <IconBtn>
+        <AnimatedIcon text="Copy" onHoverColor="var(--color-secondary-light)">
           <CopyIcon />
-        </IconBtn>
+        </AnimatedIcon>
         <Link href={`/users/${user.username}`}>
           <UserBar>
             <Avatar src={user.avatar!} width={40} height={40} alt="avatar" />
@@ -45,12 +56,15 @@ export default function StoryCard({ story: { title, uid }, children }: Props) {
           </UserBar>
         </Link>
         <RatingBar>
-          <IconBtn>
+          <AnimatedIcon
+            text="Dislike"
+            onHoverColor="var(--color-secondary-light)"
+          >
             <SadIcon />
-          </IconBtn>
-          <IconBtn>
+          </AnimatedIcon>
+          <AnimatedIcon text="Like" onHoverColor="var(--color-secondary-light)">
             <HappyIcon />
-          </IconBtn>
+          </AnimatedIcon>
         </RatingBar>
       </Footer>
     </Card>
@@ -59,7 +73,8 @@ export default function StoryCard({ story: { title, uid }, children }: Props) {
 
 const Card = styled.div`
   margin: 16px;
-  padding: 8px;
+  padding-inline: 8px;
+  padding-block: 16px;
   background: var(--color-gray-1000);
   border-radius: 5px;
   border: 1px solid var(--color-primary-dark);
@@ -99,6 +114,28 @@ const IconBtn = styled.button`
 const CopyIcon = styled(Copy)`
   width: calc(var(--icons-size) - 5px);
   height: calc(var(--icons-size) - 5px);
+  position: relative;
+  color: var(--color-secondary);
+  background: var(--color-gray-1000);
+  z-index: 1;
+`;
+
+const HappyIcon = styled(Happy)`
+  width: var(--icons-size);
+  height: var(--icons-size);
+  position: relative;
+  color: var(--color-secondary);
+  background: var(--color-gray-1000);
+  z-index: 1;
+`;
+
+const SadIcon = styled(Sad)`
+  width: var(--icons-size);
+  height: var(--icons-size);
+  position: relative;
+  color: var(--color-secondary);
+  background: var(--color-gray-1000);
+  z-index: 1;
 `;
 
 const UserBar = styled.a`
@@ -114,6 +151,7 @@ const Avatar = styled(Image)`
 
 const Username = styled.p`
   color: var(--color-secondary);
+  padding-top: 5px;
 `;
 
 const PersonIcon = styled(Person)`
@@ -123,13 +161,3 @@ const PersonIcon = styled(Person)`
 `;
 
 const RatingBar = styled.div``;
-
-const HappyIcon = styled(Happy)`
-  width: var(--icons-size);
-  height: var(--icons-size);
-`;
-
-const SadIcon = styled(Sad)`
-  width: var(--icons-size);
-  height: var(--icons-size);
-`;

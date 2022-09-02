@@ -5,7 +5,7 @@ import styled from "styled-components";
 import ImageExperimental from "next/future/image";
 import Image from "next/image";
 
-import Link from "next/link";
+import AnimatedIcon from "./animated-icon.component";
 
 import { HomeAlt } from "@styled-icons/boxicons-regular/HomeAlt";
 import { Person } from "@styled-icons/bootstrap/Person";
@@ -19,42 +19,41 @@ type Props = {};
 
 export default function Header() {
   const { isLoggedIn, user } = useContext(UserContext);
-  console.log(isLoggedIn);
 
   return (
     <Wrapper>
       <HomeSide>
-        <Link href="/">
-          <HomeWrapper>
-            <AnimatedText>Home</AnimatedText>
-            <HomeIcon />
-          </HomeWrapper>
-        </Link>
+        <HomeWrapper text="Home" href="/">
+          <HomeIcon />
+        </HomeWrapper>
       </HomeSide>
       <LogoWrapper>
         <Image src={Logo} alt="Logo" />
       </LogoWrapper>
       <ActionSide>
         <Actions>
-          <Link href={"/sign-in"}>
-            <IconWrapper>
-              <AnimatedText>{isLoggedIn ? "Profile" : "Sign In"}</AnimatedText>
-              {user.avatar ? (
-                <Avatar src={user.avatar} alt="avatar" width={40} height={40} />
-              ) : (
-                <PersonIcon />
-              )}
-            </IconWrapper>
-          </Link>
-          <IconWrapper>
-            <AnimatedText>Menu</AnimatedText>
+          <AnimatedIcon
+            text={isLoggedIn ? "Profile" : "Sign In"}
+            href="/sign-in"
+          >
+            {user.avatar ? (
+              <Avatar src={user.avatar} alt="avatar" width={40} height={40} />
+            ) : (
+              <PersonIcon />
+            )}
+          </AnimatedIcon>
+          <AnimatedIcon text="Menu">
             <MenuIcon />
-          </IconWrapper>
+          </AnimatedIcon>
         </Actions>
       </ActionSide>
     </Wrapper>
   );
 }
+
+const HomeWrapper = styled(AnimatedIcon)`
+  margin-left: 50px;
+`;
 
 const Wrapper = styled.div`
   background: var(--color-header);
@@ -71,47 +70,10 @@ const Avatar = styled(ImageExperimental)`
   z-index: 1;
 `;
 
-const AnimatedText = styled.p`
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 20px;
-  bottom: 0;
-  margin: auto;
-  width: fit-content;
-  height: fit-content;
-  font-size: 0.85rem;
-`;
-
 const HomeSide = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-start;
-`;
-
-const IconWrapper = styled.a`
-  isolation: isolate;
-  position: relative;
-  padding: 5px;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  &:hover * * {
-    color: var(--color-primary-light);
-  }
-
-  &:hover p {
-    transform: translateY(80%);
-    color: var(--color-primary-light);
-    transition: transform 0.6s;
-    transition-timing-function: ease-out;
-  }
-`;
-
-const HomeWrapper = styled(IconWrapper)`
-  margin-left: 50px;
 `;
 
 const LogoWrapper = styled.div`

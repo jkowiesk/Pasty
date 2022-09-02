@@ -72,6 +72,7 @@ html::-webkit-scrollbar-thumb:hover {
   --color-primary-light: hsl(49, 100%, 77%);
 
   --color-secondary: hsl(36, 92%, 50%);
+  --color-secondary-light: hsl(36, 92%, 60%);
 
   --color-distinct: hsl(7, 86%, 62%);
   --color-distinct-light: hsl(14, 91%, 62%);
