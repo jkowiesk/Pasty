@@ -11,7 +11,7 @@ type Props = {};
 
 export default function SignIn() {
   return (
-    <Layout fullMain>
+    <Layout>
       <Forms>
         <SignInForm />
         <SignUpForm />

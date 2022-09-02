@@ -19,7 +19,7 @@ import {
 } from "firebase/firestore";
 
 import { stories } from "./mocks/stories";
-import { User as MyUser, StoryDoc, Story } from "./types.utils";
+import { User as MyUser, StoryDoc, Story, UserDoc } from "./types.utils";
 
 const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
 
@@ -114,9 +114,14 @@ export const addStoryToDB = async (newStory: StoryDoc, uid: string) => {
 
 export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
+
   if (docSnap.exists()) {
     return docSnap.data();
   }
+
+  return {
+    uid: "",
+  };
 };
 
 export const getStoriesForHome = async () => {

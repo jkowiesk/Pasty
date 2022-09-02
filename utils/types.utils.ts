@@ -11,12 +11,22 @@ export type UserDoc = {
   avatar?: string;
 };
 
+export type SimpleUser = {
+  username: string;
+  avatar: string;
+};
+
 export type Story = {
   id: string;
   title: string;
   content: string;
   tags: string[];
   uid: string;
+};
+
+export type StoryCardType = {
+  story: Story;
+  user: UserDoc;
 };
 
 export type StoryDoc = {

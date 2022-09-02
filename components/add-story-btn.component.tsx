@@ -21,7 +21,7 @@ const Wrapper = styled.button`
   position: fixed;
   display: grid;
   place-content: center;
-  background: var(--color-header);
+  background: var(--color-background-secondary);
   color: var(--color-primary);
   font-size: 3.5rem;
   bottom: 40px;

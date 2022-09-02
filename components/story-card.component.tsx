@@ -18,6 +18,7 @@ import AnimatedIcon from "./animated-icon.component";
 
 type Props = {
   story: Story;
+  user: UserDoc;
   children: string;
 };
 
@@ -28,18 +29,10 @@ type SimpleUser = {
 
 export default function StoryCard({
   story: { id, title, uid },
+  user: { username, avatar },
   children,
 }: Props) {
-  const [user, setUser] = useState<SimpleUser>({
-    username: "",
-    avatar: "",
-  });
-
-  useEffect(() => {
-    getUserById(uid).then((data) => setUser(data as SimpleUser));
-  }, []);
-
-  return user.username ? (
+  return username ? (
     <Card>
       <Header>
         <Title>{title}</Title>
@@ -49,10 +42,10 @@ export default function StoryCard({
         <AnimatedIcon text="Copy" onHoverColor="var(--color-secondary-light)">
           <CopyIcon />
         </AnimatedIcon>
-        <Link href={`/users/${user.username}`}>
+        <Link href={`/users/${username}`}>
           <UserBar>
-            <Avatar src={user.avatar!} width={40} height={40} alt="avatar" />
-            <Username>{user.username}</Username>
+            <Avatar src={avatar!} width={40} height={40} alt="avatar" />
+            <Username>{username}</Username>
           </UserBar>
         </Link>
         <RatingBar>

@@ -18,7 +18,10 @@ import { UserContext } from "../contexts/user.context";
 type Props = {};
 
 export default function Header() {
-  const { isLoggedIn, user } = useContext(UserContext);
+  const {
+    isLoggedIn,
+    user: { username, avatar },
+  } = useContext(UserContext);
 
   return (
     <Wrapper>
@@ -34,10 +37,10 @@ export default function Header() {
         <Actions>
           <AnimatedIcon
             text={isLoggedIn ? "Profile" : "Sign In"}
-            href="/sign-in"
+            href={isLoggedIn ? `/users/${username}` : "/sign-in"}
           >
-            {user.avatar ? (
-              <Avatar src={user.avatar} alt="avatar" width={40} height={40} />
+            {avatar ? (
+              <Avatar src={avatar} alt="avatar" width={40} height={40} />
             ) : (
               <PersonIcon />
             )}
@@ -56,7 +59,7 @@ const HomeWrapper = styled(AnimatedIcon)`
 `;
 
 const Wrapper = styled.div`
-  background: var(--color-header);
+  background: var(--color-background-secondary);
   grid-area: header;
   display: flex;
   align-items: center;
@@ -98,7 +101,7 @@ const HomeIcon = styled(HomeAlt)`
   color: var(--color-primary-dark);
   width: var(--icons-size);
   height: var(--icons-size);
-  background: var(--color-header);
+  background: var(--color-background-secondary);
   z-index: 1;
 `;
 
@@ -107,7 +110,7 @@ const PersonIcon = styled(Person)`
   color: var(--color-primary-dark);
   width: var(--icons-size);
   height: var(--icons-size);
-  background: var(--color-header);
+  background: var(--color-background-secondary);
   z-index: 1;
 `;
 
@@ -116,6 +119,6 @@ const MenuIcon = styled(Menu)`
   color: var(--color-primary-dark);
   width: var(--icons-size);
   height: var(--icons-size);
-  background: var(--color-header);
+  background: var(--color-background-secondary);
   z-index: 1;
 `;
