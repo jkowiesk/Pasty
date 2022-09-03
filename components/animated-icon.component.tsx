@@ -11,7 +11,7 @@ type Props = {
   children: JSX.Element;
 };
 
-type StyledProps = {
+type StyleProps = {
   onHoverColor?: string;
 };
 
@@ -48,13 +48,13 @@ const LinkWrapper = styled.a`
   }
 
   &:hover * * {
-    color: ${({ onHoverColor }: StyledProps) =>
+    color: ${({ onHoverColor }: StyleProps) =>
       onHoverColor || "var(--color-primary-light)"};
   }
 
   &:hover p {
     transform: translateY(80%);
-    color: ${({ onHoverColor }: StyledProps) =>
+    color: ${({ onHoverColor }: StyleProps) =>
       onHoverColor || "var(--color-primary-light)"};
     transition: transform 0.6s;
     transition-timing-function: ease-out;

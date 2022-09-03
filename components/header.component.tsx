@@ -23,6 +23,8 @@ export default function Header() {
     user: { username, avatar },
   } = useContext(UserContext);
 
+  console.log(username);
+
   return (
     <Wrapper>
       <HomeSide>

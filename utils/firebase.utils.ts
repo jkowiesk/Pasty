@@ -6,7 +6,7 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
-  User,
+  User as FireUser,
 } from "firebase/auth";
 import {
   collection,
@@ -16,10 +16,14 @@ import {
   setDoc,
   doc,
   getFirestore,
+  query,
+  where,
+  Timestamp,
 } from "firebase/firestore";
 
+import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
-import { User as MyUser, StoryDoc, Story, UserDoc } from "./types.utils";
+import { User, StoryDoc, Story, UserDoc } from "./types.utils";
 
 const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
 
@@ -39,7 +43,7 @@ export const signInWithGoogle = async () => {
       const docSnap = await getDoc(doc(db, `users/${user.uid}`));
 
       if (!docSnap.exists()) {
-        await addUserToDB(user);
+        await googleAddUserToDB(user);
       }
     })
     .catch((error) => {
@@ -61,16 +65,17 @@ export const signOutWithGoogle = async () => {
 };
 
 export const onAuthChange = (
-  setUser: Dispatch<SetStateAction<MyUser>>,
+  setUser: Dispatch<SetStateAction<User>>,
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>
 ) =>
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
+  onAuthStateChanged(auth, async (googleUser) => {
+    if (googleUser) {
+      const user = await getUserById(googleUser.uid);
       setUser({
-        uid: user.uid,
-        username: user.displayName!,
-        email: user.email!,
-        avatar: user.photoURL!,
+        uid: googleUser.uid,
+        username: user.username,
+        email: user.email,
+        avatar: user.avatar,
       });
       setIsLoggedIn(true);
     } else {
@@ -96,17 +101,30 @@ export const addSetUpMocksToDB = async () => {
   }
 };
 
-export const addUserToDB = async (user: User) => {
+export const googleAddUserToDB = async (user: FireUser) => {
   const docRef = await setDoc(doc(db, "users", user.uid), {
-    username: user.displayName,
+    username: randUsername(),
     email: user.email,
     avatar: user.photoURL,
   });
 };
 
+export const EmailAddUserToDB = async ({
+  uid,
+  username,
+  email,
+  avatar,
+}: User) => {
+  const docRef = await setDoc(doc(db, "users", uid), {
+    username,
+    email,
+    avatar,
+  });
+};
+
 export const addStoryToDB = async (newStory: StoryDoc, uid: string) => {
   try {
-    await addDoc(collection(db, "stories"), { ...newStory, uid });
+    await addDoc(collection(db, "stories"), { ...newStory, uid, Timestamp });
   } catch (e) {
     console.log(e);
   }
@@ -124,9 +142,35 @@ export const getUserById = async (uid: string) => {
   };
 };
 
+export const getUserByUsername = async (username: string) => {
+  const q = query(collection(db, "users"), where("username", "==", username));
+  const querySnapshot = await getDocs(q);
+  let user: User = { uid: "", username: "", email: "", avatar: "" };
+
+  querySnapshot.forEach((doc) => {
+    const uid: string = doc.id;
+    user = { uid, ...doc.data() } as User;
+  });
+
+  return user;
+};
+
 export const getStoriesForHome = async () => {
   const querySnapshot = await getDocs(collection(db, "stories"));
   let stories: Story[] = [];
+  querySnapshot.forEach((doc) => {
+    const id: string = doc.id;
+    stories.push({ id, ...doc.data() } as Story);
+  });
+
+  return stories;
+};
+
+export const getStoriesByUid = async (uid: string) => {
+  const q = query(collection(db, "stories"), where("uid", "==", uid));
+  const querySnapshot = await getDocs(q);
+  let stories: Story[] = [];
+
   querySnapshot.forEach((doc) => {
     const id: string = doc.id;
     stories.push({ id, ...doc.data() } as Story);

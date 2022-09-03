@@ -19,7 +19,7 @@ import AnimatedIcon from "./animated-icon.component";
 type Props = {
   story: Story;
   user: UserDoc;
-  children: string;
+  className?: any;
 };
 
 type SimpleUser = {
@@ -28,16 +28,16 @@ type SimpleUser = {
 };
 
 export default function StoryCard({
-  story: { id, title, uid },
+  story: { id, title, uid, content },
   user: { username, avatar },
-  children,
+  className,
 }: Props) {
   return username ? (
-    <Card>
+    <Card className={className}>
       <Header>
         <Title>{title}</Title>
       </Header>
-      <Content>{children}</Content>
+      <Content>{content}</Content>
       <Footer>
         <AnimatedIcon text="Copy" onHoverColor="var(--color-secondary-light)">
           <CopyIcon />
@@ -65,7 +65,6 @@ export default function StoryCard({
 }
 
 const Card = styled.div`
-  margin: 16px;
   padding-inline: 8px;
   padding-block: 16px;
   background: var(--color-gray-1000);
@@ -75,9 +74,12 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: var(--shadow-elevation-low);
 `;
 
-const Title = styled.h1``;
+const Title = styled.h1`
+  color: var(--color-font-black);
+`;
 
 const Header = styled.div``;
 
@@ -88,6 +90,7 @@ const Content = styled.p`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 10;
   overflow: hidden;
+  color: var(--color-font-black);
 `;
 
 const Footer = styled.footer`

@@ -52,9 +52,7 @@ export default function Home({ storyCards }: Props) {
           <MaxWidthWrapper>
             <>
               {storyCards.map(({ story, user }: StoryCardType, idx) => (
-                <StoryCard key={idx} story={story} user={user}>
-                  {story.content}
-                </StoryCard>
+                <StoryCard key={idx} story={story} user={user} />
               ))}
             </>
           </MaxWidthWrapper>
@@ -90,6 +88,8 @@ const RightSide = styled.div`
 
 const MaxWidthWrapper = styled.div`
   display: flex;
+  padding-block: 32px;
+  gap: 32px;
   flex-direction: column;
   align-items: center;
   justify-content: center;

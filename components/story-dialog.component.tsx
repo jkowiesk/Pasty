@@ -44,7 +44,7 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setIsOpen(false);
-    await addStoryToDB(newStory, uid);
+    await addStoryToDB({ ...newStory, tags: [newStory.tags] }, uid);
   };
 
   return (
@@ -194,7 +194,7 @@ const Submit = styled.button`
     #f5a018,
     #f5970a
   );
-  color: var(--color-gray-50);
+  color: var(--color-font-black);
   padding: 0;
   border: 0;
   height: 30px;

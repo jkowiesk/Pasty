@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type User = {
   uid: string;
   username: string;
@@ -22,6 +24,15 @@ export type Story = {
   content: string;
   tags: string[];
   uid: string;
+};
+
+export type StoryTs = {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  uid: string;
+  timeStamp: Timestamp;
 };
 
 export type StoryCardType = {
