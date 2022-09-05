@@ -25,6 +25,8 @@ export async function getServerSideProps({ params: { username } }: any) {
 }
 
 export default function Profile({ profileUser, stories }: Props) {
+  const handleFollowBtnClick = () => {};
+
   return (
     <Layout>
       <MaxWidth>
@@ -34,14 +36,19 @@ export default function Profile({ profileUser, stories }: Props) {
               <ImageWrapper>
                 <Avatar src={profileUser.avatar!} layout="fill" />
               </ImageWrapper>
-              <FollowersCount>9999</FollowersCount>
-              <FollowButton text="Follow">
+              <FollowersCount>Followers: 9999</FollowersCount>
+              <FollowButton onClick={handleFollowBtnClick} text="Follow">
                 <MaskIcon />
               </FollowButton>
             </LeftSide>
           </HeaderCard>
           <Sidebar>
-            <AchievementsCard>dssda</AchievementsCard>
+            <AchievementsCard>
+              <AchievementsTitle>Achievements</AchievementsTitle>
+              <MaxWidth>
+                <Achievements>achievement</Achievements>
+              </MaxWidth>
+            </AchievementsCard>
           </Sidebar>
           <StoriesBar>
             <>
@@ -78,21 +85,26 @@ const HeaderCard = styled(Card)`
   width: 100%;
   padding-inline: 64px;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const LeftSide = styled.div`
   display: grid;
   grid-template-areas:
     "avatar followers"
-    "avatar follow";
-  place-content: center;
+    "avatar followBtn";
+  place-items: center;
+  height: 128px;
+  grid-template-rows: 1fr 40px;
+  gap: 16px;
 `;
 
 const ImageWrapper = styled.div`
   position: relative;
   grid-area: avatar;
-  width: 128px;
   height: 128px;
+  width: 128px;
 `;
 
 const Sidebar = styled.div`
@@ -100,6 +112,9 @@ const Sidebar = styled.div`
   align-self: start;
   width: 100%;
   padding-right: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 `;
 
 const StoriesBar = styled.div`
@@ -110,11 +125,10 @@ const StoriesBar = styled.div`
 
 const MaxWidth = styled.div`
   width: 100%;
-  padding-inline: 128px;
+  padding-inline: 10%;
 `;
 
 const AchievementsCard = styled(Card)`
-  margin-block: 16px;
   width: 100%;
   height: 100px;
 `;
@@ -122,14 +136,29 @@ const AchievementsCard = styled(Card)`
 const Avatar = styled(Image)``;
 
 const FollowersCount = styled.p`
-  color: var(--color-secondary);
+  font-size: 1.2rem;
+  grid-area: followers;
+  color: var(--color-primary-dark);
 `;
 
 const FollowButton = styled(CustomBtn)`
+  grid-area: followBtn;
   background: var(--color-primary);
+  height: 100%;
+  padding-inline: 24px;
+  align-self: end;
 `;
 
 const MaskIcon = styled(Mask)`
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
 `;
+
+const AchievementsTitle = styled.h2`
+  color: var(--color-primary-dark);
+  width: 100%;
+  text-align: center;
+  padding-block: 10px;
+`;
+
+const Achievements = styled.div``;

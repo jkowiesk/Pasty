@@ -42,7 +42,7 @@ export default function StoryCard({
         <AnimatedIcon text="Copy" onHoverColor="var(--color-secondary-light)">
           <CopyIcon />
         </AnimatedIcon>
-        <Link href={`/users/${username}`}>
+        <Link href={`/users/${username}`} passHref>
           <UserBar>
             <Avatar src={avatar!} width={40} height={40} alt="avatar" />
             <Username>{username}</Username>
@@ -75,6 +75,7 @@ const Card = styled.div`
   flex-direction: column;
   gap: 15px;
   box-shadow: var(--shadow-elevation-low);
+  min-height: 400px;
 `;
 
 const Title = styled.h1`
@@ -110,27 +111,27 @@ const IconBtn = styled.button`
 const CopyIcon = styled(Copy)`
   width: calc(var(--icons-size) - 5px);
   height: calc(var(--icons-size) - 5px);
-  position: relative;
   color: var(--color-secondary);
   background: var(--color-gray-1000);
+  position: relative;
   z-index: 1;
 `;
 
 const HappyIcon = styled(Happy)`
   width: var(--icons-size);
   height: var(--icons-size);
-  position: relative;
   color: var(--color-secondary);
   background: var(--color-gray-1000);
+  position: relative;
   z-index: 1;
 `;
 
 const SadIcon = styled(Sad)`
   width: var(--icons-size);
   height: var(--icons-size);
-  position: relative;
   color: var(--color-secondary);
   background: var(--color-gray-1000);
+  position: relative;
   z-index: 1;
 `;
 
@@ -139,6 +140,11 @@ const UserBar = styled.a`
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline var(--color-distinct);
+  }
 `;
 
 const Avatar = styled(Image)`

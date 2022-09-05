@@ -53,3 +53,5 @@ export type newStory = {
   tags: string;
   uid: string;
 };
+
+export type isOpenType = "true" | "false" | "";

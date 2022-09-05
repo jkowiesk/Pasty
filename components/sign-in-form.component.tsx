@@ -4,7 +4,10 @@ import styled from "styled-components";
 import { StoryDoc } from "../utils/types.utils";
 import TextInput from "./text-input.component";
 
-import { signInWithGoogle, signOutWithGoogle } from "../utils/firebase.utils";
+import { signInWithGoogle } from "../utils/firebase.utils";
+import { Google } from "@styled-icons/boxicons-logos/Google";
+
+import CustomBtn from "./custom-btn.component";
 
 type Props = {
   story: StoryDoc;
@@ -48,8 +51,9 @@ export default function SignUpForm() {
           onChange={handleChange}
           value={account.password}
         />
-        <button onClick={signInWithGoogle}>Sign In with Google</button>
-        <button onClick={signOutWithGoogle}>Sign Out</button>
+        <GoogleBtn text="Sign In with Google" onClick={signInWithGoogle}>
+          <GoogleIcon />
+        </GoogleBtn>
       </Form>
     </Wrapper>
   );
@@ -57,6 +61,7 @@ export default function SignUpForm() {
 
 const Wrapper = styled.div`
   gird-area: sign-in;
+  width: 250px;
 `;
 
 const Form = styled.div`
@@ -68,4 +73,14 @@ const Form = styled.div`
 const HeaderText = styled.h1`
   color: var(--color-secondary);
   margin-bottom: 30px;
+`;
+
+const GoogleBtn = styled(CustomBtn)`
+  background: var(--color-gray-1000);
+`;
+
+const GoogleIcon = styled(Google)`
+  color: var(--color-secondary);
+  width: 30px;
+  height: 30px;
 `;

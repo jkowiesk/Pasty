@@ -6,6 +6,7 @@ import Link from "next/link";
 type Props = {
   text: string;
   href?: string;
+  onClick?: any;
   className?: any;
   onHoverColor?: string;
   children: JSX.Element;
@@ -18,19 +19,24 @@ type StyleProps = {
 export default function AnimatedIcon({
   text,
   href,
+  onClick,
   className,
   onHoverColor,
   children,
 }: Props) {
   return href ? (
-    <Link href={href}>
+    <Link href={href} passHref>
       <LinkWrapper className={className} onHoverColor={onHoverColor}>
         <AnimatedText>{text}</AnimatedText>
         {children}
       </LinkWrapper>
     </Link>
   ) : (
-    <ButtonWrapper className={className} onHoverColor={onHoverColor}>
+    <ButtonWrapper
+      onClick={onClick}
+      className={className}
+      onHoverColor={onHoverColor}
+    >
       <AnimatedText>{text}</AnimatedText>
       {children}
     </ButtonWrapper>
@@ -53,11 +59,10 @@ const LinkWrapper = styled.a`
   }
 
   &:hover p {
-    transform: translateY(80%);
+    transform: translateY(100%);
     color: ${({ onHoverColor }: StyleProps) =>
       onHoverColor || "var(--color-primary-light)"};
-    transition: transform 0.6s;
-    transition-timing-function: ease-out;
+    transition: transform ease-out 0.6s;
   }
 `;
 

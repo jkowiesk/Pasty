@@ -4,7 +4,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signOut,
+  signOut as signOutFirebase,
   onAuthStateChanged,
   User as FireUser,
 } from "firebase/auth";
@@ -54,8 +54,8 @@ export const signInWithGoogle = async () => {
     });
 };
 
-export const signOutWithGoogle = async () => {
-  signOut(auth)
+export const signOut = async () => {
+  signOutFirebase(auth)
     .then(() => {
       console.log("Logged out");
     })

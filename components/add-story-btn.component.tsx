@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 type Props = { setIsOpen: any };
 
@@ -17,6 +17,17 @@ export default function AddStoryBtn({ setIsOpen }: Props) {
   );
 }
 
+const hoverAnimation = keyframes`
+  from {
+      background: var(--color-background-secondary);
+      outline: 2px solid transparent;
+    }
+    to {
+      background: var(--color-background-light);
+      outline: 2px solid var(--color-secondary);
+    }
+`;
+
 const Wrapper = styled.button`
   position: fixed;
   display: grid;
@@ -34,7 +45,6 @@ const Wrapper = styled.button`
   box-shadow: var(--shadow-elevation-medium);
 
   &:hover {
-    background: var(--color-background-light);
-    outline: 2px solid var(--color-secondary);
+    animation: ${hoverAnimation} ease-out 1s;
   }
 `;
