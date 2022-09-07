@@ -80,9 +80,11 @@ html::-webkit-scrollbar-thumb:hover {
   --color-distinct: hsl(7, 86%, 62%);
   --color-distinct-light: hsl(14, 91%, 62%);
 
+  --color-success: #4bb543;
+  --color-error: #b00020;
+
   --color-background-secondary: hsl(12, 6%, 15%);
   --color-menu: hsl(12, 6%, 17%);
-  --test: hsl(21, 6%, 20%);
 
   --color-background: hsl(30, 6%, 25%);
   --color-background-light: hsl(12, 6%, 20%);

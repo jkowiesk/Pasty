@@ -6,6 +6,7 @@ import Image from "next/image";
 import Layout from "../components/layout.component";
 import SignInForm from "../components/sign-in-form.component";
 import SignUpForm from "../components/sign-up-form.component";
+import Alert from "../components/alert.component";
 
 type Props = {};
 

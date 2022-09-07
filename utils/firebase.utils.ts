@@ -60,9 +60,9 @@ export const signUpWithEmail = (
   return returnCode;
 };
 
-export const signInWithEmail = (email: string, password: string) => {
+export const signInWithEmail = async (email: string, password: string) => {
   let returnCode: string = "0";
-  signInWithEmailAndPassword(auth, email, password)
+  await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
       console.log(user);

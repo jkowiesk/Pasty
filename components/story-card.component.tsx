@@ -37,7 +37,9 @@ export default function StoryCard({
       <Header>
         <Title>{title}</Title>
       </Header>
-      <Content>{content}</Content>
+      <Link href={`/pasty/${id}`} passHref>
+        <Content>{content}</Content>
+      </Link>
       <Footer>
         <AnimatedIcon text="Copy" onHoverColor="var(--color-secondary-light)">
           <CopyIcon />
@@ -83,9 +85,11 @@ const Title = styled.h1`
   color: var(--color-font-black);
 `;
 
-const Header = styled.div``;
+const Header = styled.div`
+  width: fit-content;
+`;
 
-const Content = styled.p`
+const Content = styled.a`
   font-size: 1.1rem;
   white-space: pre-line;
   display: -webkit-box;
@@ -93,6 +97,8 @@ const Content = styled.p`
   -webkit-line-clamp: 10;
   overflow: hidden;
   color: var(--color-font-black);
+  flex: 1;
+  text-decoration: none;
 `;
 
 const Footer = styled.footer`

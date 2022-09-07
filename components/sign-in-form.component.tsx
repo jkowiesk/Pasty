@@ -10,6 +10,7 @@ import { Google } from "@styled-icons/boxicons-logos/Google";
 import { Send } from "@styled-icons/fluentui-system-filled/Send";
 import { Card } from "./card.component";
 
+import Alert from "../components/alert.component";
 import CustomBtn from "./custom-btn.component";
 
 type Props = {
@@ -41,41 +42,59 @@ export default function SignUpForm() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const returnCode = signInWithEmail(account.email, account.password);
+    const returnCode = await signInWithEmail(account.email, account.password);
+    if (returnCode !== "0") {
+      setAlertType(returnCode);
+      setIsAlertOpen(true);
+    }
     setAccount(INIT_ACCOUNT);
   };
 
+  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
+  const [alertType, setAlertType] = useState<string>("");
+
   return (
-    <WrapperCard>
-      <HeaderText>Sign In</HeaderText>
-      <Form onSubmit={handleSubmit}>
-        <TextInput
-          type="email"
-          label="Email"
-          name="email"
-          onChange={handleChange}
-          value={account.email}
-        />
-        <TextInput
-          type="password"
-          label="Password"
-          name="password"
-          onChange={handleChange}
-          value={account.password}
-        />
-        <SubmitBtn submit text="Sign In">
-          <SubmitIcon />
-        </SubmitBtn>
-      </Form>
-      <ButtonsSection>
-        <GoogleBtn text="Sign In with Google" onClick={signInWithGoogle}>
-          <GoogleIcon />
-        </GoogleBtn>
-      </ButtonsSection>
-    </WrapperCard>
+    <>
+      <WrapperCard>
+        <HeaderText>Sign In</HeaderText>
+        <Form onSubmit={handleSubmit}>
+          <TextInput
+            type="email"
+            label="Email"
+            name="email"
+            onChange={handleChange}
+            value={account.email}
+          />
+          <TextInput
+            type="password"
+            label="Password"
+            name="password"
+            onChange={handleChange}
+            value={account.password}
+          />
+          <SubmitBtn submit text="Sign In">
+            <SubmitIcon />
+          </SubmitBtn>
+        </Form>
+        <ButtonsSection>
+          <GoogleBtn text="Sign In with Google" onClick={signInWithGoogle}>
+            <GoogleIcon />
+          </GoogleBtn>
+        </ButtonsSection>
+      </WrapperCard>
+      <>
+        {isAlertOpen && (
+          <Alert
+            type={alertType}
+            isOpen={isAlertOpen}
+            setIsOpen={setIsAlertOpen}
+          />
+        )}
+      </>
+    </>
   );
 }
 

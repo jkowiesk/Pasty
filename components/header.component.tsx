@@ -56,7 +56,7 @@ export default function Header() {
               {avatar ? (
                 <Avatar src={avatar} alt="avatar" width={40} height={40} />
               ) : (
-                <PersonIcon />
+                <LogInIcon />
               )}
             </AnimatedIcon>
             <AnimatedIcon
@@ -160,7 +160,7 @@ const HomeIcon = styled(HomeAlt)`
   z-index: 1;
 `;
 
-const PersonIcon = styled(Person)`
+const LogInIcon = styled(LogIn)`
   position: relative;
   color: var(--color-primary-dark);
   width: var(--icons-size);
