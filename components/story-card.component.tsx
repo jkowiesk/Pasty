@@ -76,6 +76,7 @@ const Card = styled.div`
   gap: 15px;
   box-shadow: var(--shadow-elevation-low);
   min-height: 400px;
+  width: 100%;
 `;
 
 const Title = styled.h1`
@@ -95,6 +96,7 @@ const Content = styled.p`
 `;
 
 const Footer = styled.footer`
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;

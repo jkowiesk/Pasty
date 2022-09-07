@@ -2,8 +2,13 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import { StoryDoc } from "../utils/types.utils";
+import { signUpWithEmail } from "../utils/firebase.utils";
 
 import TextInput from "./text-input.component";
+import CustomBtn from "./custom-btn.component";
+import { Card } from "./card.component";
+
+import { Send } from "@styled-icons/fluentui-system-filled/Send";
 
 type Props = {
   story: StoryDoc;
@@ -16,12 +21,14 @@ type Account = {
   username: string;
 };
 
+const INIT_ACCOUNT: Account = {
+  email: "",
+  password: "",
+  username: "",
+};
+
 export default function SignUpForm() {
-  const [account, setAccount] = useState<Account>({
-    email: "",
-    password: "",
-    username: "",
-  });
+  const [account, setAccount] = useState<Account>(INIT_ACCOUNT);
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -31,16 +38,22 @@ export default function SignUpForm() {
     });
   };
 
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    signUpWithEmail(account.email, account.password, account.username);
+    setAccount(INIT_ACCOUNT);
+  };
+
   return (
-    <Wrapper>
+    <WrapperCard>
       <HeaderText>Sign Up</HeaderText>
-      <Form>
+      <Form onSubmit={handleSignUp}>
         <TextInput
-          type="email"
-          label="Email"
-          name="email"
+          label="Username"
+          name="username"
           onChange={handleChange}
-          value={account.email}
+          value={account.username}
         />
         <TextInput
           type="password"
@@ -50,27 +63,46 @@ export default function SignUpForm() {
           value={account.password}
         />
         <TextInput
-          label="Username"
-          name="username"
+          type="email"
+          label="Email"
+          name="email"
           onChange={handleChange}
-          value={account.username}
+          value={account.email}
         />
+        <SubmitBtn submit text="Sign Up">
+          <SubmitIcon />
+        </SubmitBtn>
       </Form>
-    </Wrapper>
+    </WrapperCard>
   );
 }
 
-const Wrapper = styled.div`
+const WrapperCard = styled(Card)`
   gird-area: sign-up;
-`;
-
-const Form = styled.div`
+  padding: 16px 64px;
+  width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const HeaderText = styled.h1`
   color: var(--color-secondary);
-  margin-bottom: 30px;
+`;
+
+const SubmitBtn = styled(CustomBtn)`
+  margin-top: 10px;
+  background: var(--color-primary-dark);
+`;
+
+const SubmitIcon = styled(Send)`
+  color: var(--color-distinct);
+  width: 30px;
+  height: 30px;
 `;

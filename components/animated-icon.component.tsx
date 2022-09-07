@@ -46,7 +46,7 @@ export default function AnimatedIcon({
 const LinkWrapper = styled.a`
   isolation: isolate;
   position: relative;
-  padding: 5px;
+  padding: 8px;
   background: transparent;
 
   &:hover {
@@ -59,7 +59,7 @@ const LinkWrapper = styled.a`
   }
 
   &:hover p {
-    transform: translateY(100%);
+    transform: translateY(105%);
     color: ${({ onHoverColor }: StyleProps) =>
       onHoverColor || "var(--color-primary-light)"};
     transition: transform ease-out 0.6s;
@@ -81,6 +81,6 @@ const AnimatedText = styled.p`
   margin: auto;
   width: fit-content;
   height: fit-content;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: transparent;
 `;

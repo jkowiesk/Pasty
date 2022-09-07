@@ -10,6 +10,7 @@ import AnimatedIcon from "./animated-icon.component";
 import { HomeAlt } from "@styled-icons/boxicons-regular/HomeAlt";
 import { Person } from "@styled-icons/bootstrap/Person";
 import { Menu as MenuSI } from "@styled-icons/boxicons-regular/Menu";
+import { LogIn } from "@styled-icons/boxicons-regular/LogIn";
 
 import { isOpenType } from "../utils/types.utils";
 
@@ -30,9 +31,10 @@ export default function Header() {
     isLoggedIn,
     user: { username, avatar },
   } = useContext(UserContext);
+
   const [isMenuOpen, setIsMenuOpen] = useState<isOpenType>("");
 
-  console.log(username);
+  console.log(username, avatar);
 
   return (
     <Wrapper>
@@ -123,8 +125,7 @@ const HeaderWrapper = styled.div`
 
 const Avatar = styled(ImageExperimental)`
   position: relative;
-  border-radius: 20px;
-  z-index: 1;
+  border-radius: 50%;
 `;
 
 const HomeSide = styled.div`

@@ -25,11 +25,9 @@ export default function Menu({ isOpen }: Props) {
       <LeftSide></LeftSide>
       <Nav></Nav>
       <RightSide>
-        <MaxWidth>
-          <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
-            <SignOutIcon />
-          </SignOutWrapper>
-        </MaxWidth>
+        <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
+          <SignOutIcon />
+        </SignOutWrapper>
       </RightSide>
     </Wrapper>
   );
@@ -59,6 +57,9 @@ const LeftSide = styled.div`
 
 const RightSide = styled.div`
   flex: 1;
+  margin-right: 78px;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const Nav = styled.nav`

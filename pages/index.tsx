@@ -25,6 +25,7 @@ import {
 export async function getServerSideProps() {
   const stories = await getStoriesForHome();
   let storyCards: StoryCardType[] = [];
+
   for (let story of stories) {
     const user = (await getUserById(story.uid)) as UserDoc;
     storyCards.push({ story, user });
@@ -78,9 +79,7 @@ const LeftSide = styled.div`
   grid-area: left;
 `;
 
-const Main = styled.div`
-  grid-area: main;
-`;
+const Main = styled.div``;
 
 const RightSide = styled.div`
   grid-area: right;

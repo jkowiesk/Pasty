@@ -35,8 +35,7 @@ export default function TextInput({
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-
-  width: min(100%, 250px);
+  width: 100%;
 `;
 
 const Label = styled.label`

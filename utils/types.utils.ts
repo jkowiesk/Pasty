@@ -24,6 +24,10 @@ export type Story = {
   content: string;
   tags: string[];
   uid: string;
+  created: {
+    date: string;
+    time: string;
+  };
 };
 
 export type StoryTs = {
@@ -32,7 +36,7 @@ export type StoryTs = {
   content: string;
   tags: string[];
   uid: string;
-  timeStamp: Timestamp;
+  created: Timestamp;
 };
 
 export type StoryCardType = {

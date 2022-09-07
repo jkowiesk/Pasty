@@ -2,19 +2,25 @@ import styled from "styled-components";
 
 type Props = {
   text: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: any;
+  submit?: boolean;
   children?: JSX.Element;
 };
 
 export default function CustomBtn({
   text,
   onClick,
+  submit,
   className,
   children,
 }: Props) {
   return (
-    <Wrapper onClick={onClick} className={className}>
+    <Wrapper
+      type={submit ? "submit" : "button"}
+      onClick={onClick}
+      className={className}
+    >
       <ImageWrapper>{children}</ImageWrapper>
       <Label>{text}</Label>
     </Wrapper>
@@ -31,6 +37,7 @@ const Wrapper = styled.button`
   justify-content: center;
   cursor: pointer;
   padding-block: 4px;
+  width: 100%;
 `;
 
 const Label = styled.p`

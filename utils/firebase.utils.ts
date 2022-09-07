@@ -7,6 +7,8 @@ import {
   signOut as signOutFirebase,
   onAuthStateChanged,
   User as FireUser,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import {
   collection,
@@ -23,7 +25,11 @@ import {
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
-import { User, StoryDoc, Story, UserDoc } from "./types.utils";
+import { User, StoryDoc, Story, UserDoc, StoryTs } from "./types.utils";
+import { DateToJSON } from "./functions.utils";
+
+const DEFAULT_PROFILE_IMG =
+  "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
 
 const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
 
@@ -36,6 +42,38 @@ export const auth = getAuth(app);
 
 const googleProvider = new GoogleAuthProvider();
 
+export const signUpWithEmail = (
+  email: string,
+  password: string,
+  username: string
+) => {
+  let returnCode: string = "0";
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user: FireUser = userCredential.user;
+      fireAddUserToDB(user, username, DEFAULT_PROFILE_IMG);
+    })
+    .catch((error) => {
+      returnCode = error.code;
+    });
+
+  return returnCode;
+};
+
+export const signInWithEmail = (email: string, password: string) => {
+  let returnCode: string = "0";
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
+    })
+    .catch((error) => {
+      returnCode = error.code;
+    });
+
+  return returnCode;
+};
+
 export const signInWithGoogle = async () => {
   await signInWithPopup(auth, googleProvider)
     .then(async (result) => {
@@ -43,7 +81,7 @@ export const signInWithGoogle = async () => {
       const docSnap = await getDoc(doc(db, `users/${user.uid}`));
 
       if (!docSnap.exists()) {
-        await googleAddUserToDB(user);
+        await fireAddUserToDB(user);
       }
     })
     .catch((error) => {
@@ -101,11 +139,15 @@ export const addSetUpMocksToDB = async () => {
   }
 };
 
-export const googleAddUserToDB = async (user: FireUser) => {
+export const fireAddUserToDB = async (
+  user: FireUser,
+  username?: string,
+  src?: string
+) => {
   const docRef = await setDoc(doc(db, "users", user.uid), {
-    username: randUsername(),
+    username: username ? username : randUsername(),
     email: user.email,
-    avatar: user.photoURL,
+    avatar: src ? src : user.photoURL,
   });
 };
 
@@ -124,7 +166,12 @@ export const EmailAddUserToDB = async ({
 
 export const addStoryToDB = async (newStory: StoryDoc, uid: string) => {
   try {
-    await addDoc(collection(db, "stories"), { ...newStory, uid, Timestamp });
+    const docRef = await addDoc(collection(db, "stories"), {
+      ...newStory,
+      uid,
+      created: Timestamp.now(),
+    });
+    console.log(docRef.id);
   } catch (e) {
     console.log(e);
   }
@@ -160,7 +207,12 @@ export const getStoriesForHome = async () => {
   let stories: Story[] = [];
   querySnapshot.forEach((doc) => {
     const id: string = doc.id;
-    stories.push({ id, ...doc.data() } as Story);
+    const created = DateToJSON(doc.data().created.toDate());
+    stories.push({
+      id,
+      ...doc.data(),
+      created,
+    } as Story);
   });
 
   return stories;
@@ -173,7 +225,8 @@ export const getStoriesByUid = async (uid: string) => {
 
   querySnapshot.forEach((doc) => {
     const id: string = doc.id;
-    stories.push({ id, ...doc.data() } as Story);
+    const created = DateToJSON(doc.data().created.toDate());
+    stories.push({ id, ...doc.data(), created } as Story);
   });
 
   return stories;

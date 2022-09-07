@@ -4,8 +4,11 @@ import styled from "styled-components";
 import { StoryDoc } from "../utils/types.utils";
 import TextInput from "./text-input.component";
 
-import { signInWithGoogle } from "../utils/firebase.utils";
+import { signInWithGoogle, signInWithEmail } from "../utils/firebase.utils";
+
 import { Google } from "@styled-icons/boxicons-logos/Google";
+import { Send } from "@styled-icons/fluentui-system-filled/Send";
+import { Card } from "./card.component";
 
 import CustomBtn from "./custom-btn.component";
 
@@ -17,6 +20,11 @@ type Props = {
 type Account = {
   email: string;
   password: string;
+};
+
+const INIT_ACCOUNT: Account = {
+  email: "",
+  password: "",
 };
 
 export default function SignUpForm() {
@@ -33,10 +41,17 @@ export default function SignUpForm() {
     });
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const returnCode = signInWithEmail(account.email, account.password);
+    setAccount(INIT_ACCOUNT);
+  };
+
   return (
-    <Wrapper>
+    <WrapperCard>
       <HeaderText>Sign In</HeaderText>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <TextInput
           type="email"
           label="Email"
@@ -51,28 +66,49 @@ export default function SignUpForm() {
           onChange={handleChange}
           value={account.password}
         />
+        <SubmitBtn submit text="Sign In">
+          <SubmitIcon />
+        </SubmitBtn>
+      </Form>
+      <ButtonsSection>
         <GoogleBtn text="Sign In with Google" onClick={signInWithGoogle}>
           <GoogleIcon />
         </GoogleBtn>
-      </Form>
-    </Wrapper>
+      </ButtonsSection>
+    </WrapperCard>
   );
 }
 
-const Wrapper = styled.div`
+const WrapperCard = styled(Card)`
   gird-area: sign-in;
-  width: 250px;
-`;
-
-const Form = styled.div`
+  padding: 16px 64px;
+  width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const HeaderText = styled.h1`
   color: var(--color-secondary);
-  margin-bottom: 30px;
+`;
+
+const ButtonsSection = styled.div``;
+
+const SubmitBtn = styled(CustomBtn)`
+  margin-top: 10px;
+  background: var(--color-primary-dark);
+`;
+
+const SubmitIcon = styled(Send)`
+  color: var(--color-distinct);
+  width: 30px;
+  height: 30px;
 `;
 
 const GoogleBtn = styled(CustomBtn)`
