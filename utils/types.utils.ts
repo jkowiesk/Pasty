@@ -49,6 +49,10 @@ export type StoryDoc = {
   content: string;
   tags: string[];
   uid: string;
+  created: {
+    date: string;
+    time: string;
+  };
 };
 
 export type newStory = {

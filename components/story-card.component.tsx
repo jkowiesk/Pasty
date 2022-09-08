@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { useState } from "react";
 
 import { Story, StoryDoc, User, UserDoc } from "../utils/types.utils";
 
@@ -20,6 +21,15 @@ type Props = {
   className?: any;
 };
 
+type PreviewCardProps = {
+  isCardActive: boolean;
+  className?: any;
+};
+
+type LinkWrapperProps = {
+  setIsCardActive: any;
+};
+
 export default function StoryCard({
   full,
   story: { id, title, uid, content },
@@ -30,44 +40,57 @@ export default function StoryCard({
     navigator.clipboard.writeText(content);
   };
 
-  const StoryCardPreview = () => (
-    <Card className={className}>
-      <Link href={`/pasty/${id}`} passHref>
-        <LinkWrapper>
-          <Header>
-            <Title>{title}</Title>
-          </Header>
-          <ContentPreview>{content}</ContentPreview>
-        </LinkWrapper>
-      </Link>
-      <Footer>
-        <AnimatedIcon
-          onClick={handleCopy}
-          text="Copy"
-          onHoverColor="var(--color-secondary-light)"
-        >
-          <CopyIcon />
-        </AnimatedIcon>
-        <Link href={`/users/${username}`} passHref>
-          <UserBar>
-            <Avatar src={avatar!} width={40} height={40} alt="avatar" />
-            <Username>{username}</Username>
-          </UserBar>
+  const StoryCardPreview = () => {
+    const [isCardActive, setIsCardActive] = useState<boolean>(false);
+    return (
+      <PreviewCard isCardActive={isCardActive} className={className}>
+        <Link href={`/pasty/${id}`} passHref>
+          <LinkWrapper
+            onMouseDown={() => {
+              setIsCardActive(true);
+            }}
+            onMouseLeave={() => {
+              setIsCardActive(false);
+            }}
+          >
+            <Header>
+              <Title>{title}</Title>
+            </Header>
+            <ContentPreview>{content}</ContentPreview>
+          </LinkWrapper>
         </Link>
-        <RatingBar>
+        <Footer>
           <AnimatedIcon
-            text="Dislike"
+            onClick={handleCopy}
+            text="Copy"
             onHoverColor="var(--color-secondary-light)"
           >
-            <SadIcon />
+            <CopyIconPreview isCardActive={isCardActive} />
           </AnimatedIcon>
-          <AnimatedIcon text="Like" onHoverColor="var(--color-secondary-light)">
-            <HappyIcon />
-          </AnimatedIcon>
-        </RatingBar>
-      </Footer>
-    </Card>
-  );
+          <Link href={`/users/${username}`} passHref>
+            <UserBar>
+              <Avatar src={avatar!} width={40} height={40} alt="avatar" />
+              <Username>{username}</Username>
+            </UserBar>
+          </Link>
+          <RatingBar>
+            <AnimatedIcon
+              text="Dislike"
+              onHoverColor="var(--color-secondary-light)"
+            >
+              <SadIconPreview isCardActive={isCardActive} />
+            </AnimatedIcon>
+            <AnimatedIcon
+              text="Like"
+              onHoverColor="var(--color-secondary-light)"
+            >
+              <HappyIconPreview isCardActive={isCardActive} />
+            </AnimatedIcon>
+          </RatingBar>
+        </Footer>
+      </PreviewCard>
+    );
+  };
 
   const StoryCardFull = () => (
     <Card className={className}>
@@ -115,6 +138,15 @@ export default function StoryCard({
   }
 }
 
+const storyClick = keyframes`
+  from {
+    background: var(--color-gray-1000);
+  }
+  to {
+    background: var(--color-gray-800);
+  }
+`;
+
 const Card = styled.div`
   padding-inline: 8px;
   padding-block: 16px;
@@ -136,6 +168,14 @@ const LinkWrapper = styled.a`
   gap: 15px;
   text-decoration: none;
   flex: 1;
+`;
+
+const PreviewCard = styled(Card)`
+  background: ${({ isCardActive }: PreviewCardProps) =>
+    isCardActive ? "var(--color-gray-800)" : "var(--color-gray-1000)"};
+  animation: ${({ isCardActive }: PreviewCardProps) =>
+      isCardActive ? storyClick : null}
+    0.5s;
 `;
 
 const Title = styled.h1`
@@ -184,6 +224,11 @@ const CopyIcon = styled(Copy)`
   z-index: 1;
 `;
 
+const CopyIconPreview = styled(CopyIcon)`
+  background: ${({ isCardActive }: PreviewCardProps) =>
+    isCardActive ? "transparent" : "var(--color-gray-1000)"};
+`;
+
 const HappyIcon = styled(Happy)`
   width: var(--icons-size);
   height: var(--icons-size);
@@ -193,6 +238,11 @@ const HappyIcon = styled(Happy)`
   z-index: 1;
 `;
 
+const HappyIconPreview = styled(HappyIcon)`
+  background: ${({ isCardActive }: PreviewCardProps) =>
+    isCardActive ? "transparent" : "var(--color-gray-1000)"};
+`;
+
 const SadIcon = styled(Sad)`
   width: var(--icons-size);
   height: var(--icons-size);
@@ -200,6 +250,11 @@ const SadIcon = styled(Sad)`
   background: var(--color-gray-1000);
   position: relative;
   z-index: 1;
+`;
+
+const SadIconPreview = styled(SadIcon)`
+  background: ${({ isCardActive }: PreviewCardProps) =>
+    isCardActive ? "transparent" : "var(--color-gray-1000)"};
 `;
 
 const UserBar = styled.a`
