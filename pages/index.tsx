@@ -14,13 +14,8 @@ import StoryCard from "../components/story-card.component";
 import AddStoryBtn from "../components/add-story-btn.component";
 import StoryDialog from "../components/story-dialog.component";
 
-import {
-  Story,
-  StoryDoc,
-  SimpleUser,
-  StoryCardType,
-  UserDoc,
-} from "../utils/types.utils";
+import { StoryCardType, UserDoc } from "../utils/types.utils";
+import { EventsContext } from "../contexts/events.context";
 
 export async function getServerSideProps() {
   const stories = await getStoriesForHome();
@@ -44,6 +39,19 @@ export default function Home({ storyCards }: Props) {
   const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
 
   const { isLoggedIn } = useContext(UserContext);
+
+  const {
+    redirect: { isActive },
+    dispatchEvents,
+  } = useContext(EventsContext);
+
+  useEffect(() => {
+    console.log(isActive);
+    if (isActive) {
+      dispatchEvents({ type: "redirect", payload: "pasty/end" });
+      dispatchEvents({ type: "alert", payload: "pasty/logged-in" });
+    }
+  }, []);
 
   return (
     <Layout>

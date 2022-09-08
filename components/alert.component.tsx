@@ -3,13 +3,11 @@ import styled, { keyframes, css } from "styled-components";
 import { Cross } from "@styled-icons/entypo/Cross";
 
 import { Dialog } from "@headlessui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
-type Props = {
-  type: string;
-  isOpen: boolean;
-  setIsOpen: any;
-};
+import { EventsContext } from "../contexts/events.context";
+
+type Props = {};
 
 type StyleProps = {
   type: string;
@@ -17,29 +15,19 @@ type StyleProps = {
   children: JSX.Element[];
 };
 
-export default function Alert({ type, isOpen, setIsOpen }: Props) {
+export default function Alert() {
+  const {
+    alert: { isActive, message, type },
+    dispatchEvents,
+  } = useContext(EventsContext);
   const [isClosing, setIsClosing] = useState<boolean>(false);
-  let text: string;
-  let alertType: "Error" | "Success";
-  console.log(type);
-
-  switch (type) {
-    case "auth/wrong-password":
-      text = "Wrong password";
-      alertType = "Error";
-      break;
-    default:
-      text = "Something went wrong, try again later";
-      alertType = "Error";
-      break;
-  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsClosing(true);
       setTimeout(() => {
-        setIsOpen(false);
-      }, 500);
+        dispatchEvents({ type: "alert", payload: "pasty/close" });
+      }, 400);
     }, 4000);
 
     return () => {
@@ -48,16 +36,16 @@ export default function Alert({ type, isOpen, setIsOpen }: Props) {
   }, []);
 
   return (
-    <Dialog open={isOpen} onClose={() => {}}>
-      <Panel isClosing={isClosing} type={alertType}>
+    <Dialog open={isActive} onClose={() => {}}>
+      <Panel isClosing={isClosing} type={type}>
         <Cancel
           onClick={() => {
-            setIsOpen(false);
+            dispatchEvents({ type: "alert", payload: "pasty/close" });
           }}
         >
           <CrossIcon />
         </Cancel>
-        <p>{text}</p>
+        <p>{message}</p>
       </Panel>
     </Dialog>
   );
@@ -90,10 +78,10 @@ const Panel = styled(Dialog.Panel)`
   border-radius: 5px;
   border: 1px solid
     ${({ type }: StyleProps) =>
-      type === "Error" ? "var(--color-error)" : "var(--color-success)"};
+      type === "error" ? "var(--color-error)" : "var(--color-success)"};
   border-bottom: 8px solid
     ${({ type }: StyleProps) =>
-      type === "Error" ? "var(--color-error)" : "var(--color-success)"};
+      type === "error" ? "var(--color-error)" : "var(--color-success)"};
   width: 25vw;
   heigh: 100px;
   display: flex;

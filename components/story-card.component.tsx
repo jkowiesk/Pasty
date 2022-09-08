@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { Story, StoryDoc, User, UserDoc } from "../utils/types.utils";
-
-import { getUserById } from "../utils/firebase.utils";
 
 import { Copy } from "@styled-icons/boxicons-regular/Copy";
 import { Person } from "@styled-icons/bootstrap/Person";
@@ -17,31 +14,38 @@ import Link from "next/link";
 import AnimatedIcon from "./animated-icon.component";
 
 type Props = {
+  full?: boolean;
   story: Story;
   user: UserDoc;
   className?: any;
 };
 
-type SimpleUser = {
-  username: string;
-  avatar: string;
-};
-
 export default function StoryCard({
+  full,
   story: { id, title, uid, content },
   user: { username, avatar },
   className,
 }: Props) {
-  return username ? (
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content);
+  };
+
+  const StoryCardPreview = () => (
     <Card className={className}>
-      <Header>
-        <Title>{title}</Title>
-      </Header>
       <Link href={`/pasty/${id}`} passHref>
-        <Content>{content}</Content>
+        <LinkWrapper>
+          <Header>
+            <Title>{title}</Title>
+          </Header>
+          <ContentPreview>{content}</ContentPreview>
+        </LinkWrapper>
       </Link>
       <Footer>
-        <AnimatedIcon text="Copy" onHoverColor="var(--color-secondary-light)">
+        <AnimatedIcon
+          onClick={handleCopy}
+          text="Copy"
+          onHoverColor="var(--color-secondary-light)"
+        >
           <CopyIcon />
         </AnimatedIcon>
         <Link href={`/users/${username}`} passHref>
@@ -63,7 +67,52 @@ export default function StoryCard({
         </RatingBar>
       </Footer>
     </Card>
-  ) : null;
+  );
+
+  const StoryCardFull = () => (
+    <Card className={className}>
+      <Header>
+        <Title>{title}</Title>
+      </Header>
+      <Content>{content}</Content>
+      <Footer>
+        <AnimatedIcon
+          onClick={handleCopy}
+          text="Copy"
+          onHoverColor="var(--color-secondary-light)"
+        >
+          <CopyIcon />
+        </AnimatedIcon>
+        <Link href={`/users/${username}`} passHref>
+          <UserBar>
+            <Avatar src={avatar!} width={40} height={40} alt="avatar" />
+            <Username>{username}</Username>
+          </UserBar>
+        </Link>
+        <RatingBar>
+          <AnimatedIcon
+            text="Dislike"
+            onHoverColor="var(--color-secondary-light)"
+          >
+            <SadIcon />
+          </AnimatedIcon>
+          <AnimatedIcon text="Like" onHoverColor="var(--color-secondary-light)">
+            <HappyIcon />
+          </AnimatedIcon>
+        </RatingBar>
+      </Footer>
+    </Card>
+  );
+
+  if (username) {
+    if (full) {
+      return <StoryCardFull />;
+    } else {
+      return <StoryCardPreview />;
+    }
+  } else {
+    return null;
+  }
 }
 
 const Card = styled.div`
@@ -71,7 +120,7 @@ const Card = styled.div`
   padding-block: 16px;
   background: var(--color-gray-1000);
   border-radius: 5px;
-  border: 1px solid var(--color-primary-dark);
+  border: 2px solid var(--color-primary-dark);
   border-bottom: 8px solid var(--color-primary-dark);
   display: flex;
   flex-direction: column;
@@ -79,6 +128,14 @@ const Card = styled.div`
   box-shadow: var(--shadow-elevation-low);
   min-height: 400px;
   width: 100%;
+`;
+
+const LinkWrapper = styled.a`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-decoration: none;
+  flex: 1;
 `;
 
 const Title = styled.h1`
@@ -89,16 +146,18 @@ const Header = styled.div`
   width: fit-content;
 `;
 
-const Content = styled.a`
+const Content = styled.p`
   font-size: 1.1rem;
   white-space: pre-line;
+  color: var(--color-font-black);
+  flex: 1;
+`;
+
+const ContentPreview = styled(Content)`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 10;
   overflow: hidden;
-  color: var(--color-font-black);
-  flex: 1;
-  text-decoration: none;
 `;
 
 const Footer = styled.footer`

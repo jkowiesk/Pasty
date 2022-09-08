@@ -44,7 +44,6 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setIsOpen(false);
-    console.log("XD");
     await addStoryToDB({ ...newStory, tags: [newStory.tags] }, uid);
   };
 

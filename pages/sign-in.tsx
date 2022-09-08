@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useContext, useEffect } from "react";
 
 import Head from "next/head";
 import Image from "next/image";
@@ -6,11 +7,20 @@ import Image from "next/image";
 import Layout from "../components/layout.component";
 import SignInForm from "../components/sign-in-form.component";
 import SignUpForm from "../components/sign-up-form.component";
-import Alert from "../components/alert.component";
+
+import { UserContext } from "../contexts/user.context";
+import { useRouter } from "next/router";
 
 type Props = {};
 
 export default function SignIn() {
+  const { isLoggedIn } = useContext(UserContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoggedIn) router.push("/");
+  }, [isLoggedIn]);
+
   return (
     <Layout>
       <Forms>

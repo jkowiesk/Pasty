@@ -34,8 +34,6 @@ export default function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = useState<isOpenType>("");
 
-  console.log(username, avatar);
-
   return (
     <Wrapper>
       <HeaderWrapper>

@@ -61,12 +61,9 @@ export const signUpWithEmail = (
 };
 
 export const signInWithEmail = async (email: string, password: string) => {
-  let returnCode: string = "0";
+  let returnCode: string = "pasty/logged-in";
   await signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log(user);
-    })
+    .then((userCredential) => {})
     .catch((error) => {
       returnCode = error.code;
     });
@@ -75,6 +72,7 @@ export const signInWithEmail = async (email: string, password: string) => {
 };
 
 export const signInWithGoogle = async () => {
+  let returnCode: string = "pasty/logged-in";
   await signInWithPopup(auth, googleProvider)
     .then(async (result) => {
       const { user } = result;
@@ -85,11 +83,10 @@ export const signInWithGoogle = async () => {
       }
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      console.log(`${errorCode}: ${errorMessage}`);
+      returnCode = error.code;
     });
+
+  return returnCode;
 };
 
 export const signOut = async () => {
@@ -171,7 +168,6 @@ export const addStoryToDB = async (newStory: StoryDoc, uid: string) => {
       uid,
       created: Timestamp.now(),
     });
-    console.log(docRef.id);
   } catch (e) {
     console.log(e);
   }
@@ -200,6 +196,12 @@ export const getUserByUsername = async (username: string) => {
   });
 
   return user;
+};
+
+export const getStoryById = async (id: string) => {
+  const docSnap = await getDoc(doc(db, "stories", id));
+  const created = DateToJSON(docSnap.data()!.created.toDate());
+  return { id, ...docSnap.data(), created } as Story;
 };
 
 export const getStoriesForHome = async () => {

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { useRouter } from "next/router";
 
 import styled from "styled-components";
 import { StoryDoc } from "../utils/types.utils";
@@ -10,8 +12,9 @@ import { Google } from "@styled-icons/boxicons-logos/Google";
 import { Send } from "@styled-icons/fluentui-system-filled/Send";
 import { Card } from "./card.component";
 
-import Alert from "../components/alert.component";
 import CustomBtn from "./custom-btn.component";
+
+import { EventsContext } from "../contexts/events.context";
 
 type Props = {
   story: StoryDoc;
@@ -33,6 +36,8 @@ export default function SignUpForm() {
     email: "",
     password: "",
   });
+  const { dispatchEvents } = useContext(EventsContext);
+  const router = useRouter();
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -46,15 +51,25 @@ export default function SignUpForm() {
     e.preventDefault();
 
     const returnCode = await signInWithEmail(account.email, account.password);
-    if (returnCode !== "0") {
-      setAlertType(returnCode);
-      setIsAlertOpen(true);
+    if (returnCode === "pasty/logged-in") {
+      dispatchEvents({ type: "redirect", payload: returnCode });
+      router.push("/");
+    } else {
+      dispatchEvents({ type: "alert", payload: returnCode });
+      setAccount(INIT_ACCOUNT);
     }
-    setAccount(INIT_ACCOUNT);
   };
 
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
-  const [alertType, setAlertType] = useState<string>("");
+  const handelGoogleSignIn = async () => {
+    const returnCode = await signInWithGoogle();
+    if (returnCode === "pasty/logged-in") {
+      dispatchEvents({ type: "redirect", payload: returnCode });
+      router.push("/");
+    } else {
+      dispatchEvents({ type: "alert", payload: returnCode });
+      setAccount(INIT_ACCOUNT);
+    }
+  };
 
   return (
     <>
@@ -80,20 +95,11 @@ export default function SignUpForm() {
           </SubmitBtn>
         </Form>
         <ButtonsSection>
-          <GoogleBtn text="Sign In with Google" onClick={signInWithGoogle}>
+          <GoogleBtn text="Sign In with Google" onClick={handelGoogleSignIn}>
             <GoogleIcon />
           </GoogleBtn>
         </ButtonsSection>
       </WrapperCard>
-      <>
-        {isAlertOpen && (
-          <Alert
-            type={alertType}
-            isOpen={isAlertOpen}
-            setIsOpen={setIsAlertOpen}
-          />
-        )}
-      </>
     </>
   );
 }
