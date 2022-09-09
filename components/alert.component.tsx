@@ -17,12 +17,15 @@ type StyleProps = {
 
 export default function Alert() {
   const {
-    alert: { isActive, message, type },
+    alert: { message, type },
     dispatchEvents,
   } = useContext(EventsContext);
   const [isClosing, setIsClosing] = useState<boolean>(false);
 
   useEffect(() => {
+    const html = document.getElementsByTagName("html")[0];
+    html.style.overflowY = "scroll";
+    html.style.padding = "0";
     const timeout = setTimeout(() => {
       setIsClosing(true);
       setTimeout(() => {
@@ -36,7 +39,7 @@ export default function Alert() {
   }, []);
 
   return (
-    <Dialog open={isActive} onClose={() => {}}>
+    <Dialog open={true} onClose={() => {}}>
       <Panel isClosing={isClosing} type={type}>
         <Cancel
           onClick={() => {

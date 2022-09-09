@@ -25,7 +25,7 @@ import {
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
-import { User, StoryDoc, Story, UserDoc, StoryTs } from "./types.utils";
+import { User, StoryRequired, Story, UserDoc, StoryDB } from "./types.utils";
 import { DateToJSON } from "./functions.utils";
 
 const DEFAULT_PROFILE_IMG =
@@ -126,7 +126,7 @@ export const onAuthChange = (
 
 // DB
 
-export const addSetUpMocksToDB = async () => {
+/* export const addSetUpMocksToDB = async () => {
   for (const story of stories) {
     try {
       await addDoc(collection(db, "stories"), story);
@@ -134,7 +134,7 @@ export const addSetUpMocksToDB = async () => {
       console.log(e);
     }
   }
-};
+}; */
 
 export const fireAddUserToDB = async (
   user: FireUser,
@@ -161,12 +161,16 @@ export const EmailAddUserToDB = async ({
   });
 };
 
-export const addStoryToDB = async (newStory: StoryDoc, uid: string) => {
+export const addStoryToDB = async (newStory: StoryRequired, uid: string) => {
   try {
     const docRef = await addDoc(collection(db, "stories"), {
       ...newStory,
       uid,
       created: Timestamp.now(),
+      ratings: {
+        likes: [],
+        dislikes: [],
+      },
     });
   } catch (e) {
     console.log(e);

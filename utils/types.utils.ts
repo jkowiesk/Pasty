@@ -28,15 +28,23 @@ export type Story = {
     date: string;
     time: string;
   };
+  ratings: {
+    like: number;
+    dislike: number;
+  };
 };
 
-export type StoryTs = {
+export type StoryDB = {
   id: string;
   title: string;
   content: string;
   tags: string[];
   uid: string;
   created: Timestamp;
+  ratings: {
+    like: string[];
+    dislike: string[];
+  };
 };
 
 export type StoryCardType = {
@@ -53,6 +61,17 @@ export type StoryDoc = {
     date: string;
     time: string;
   };
+  ratings: {
+    like: number;
+    dislike: number;
+  };
+};
+
+export type StoryRequired = {
+  title: string;
+  content: string;
+  tags: string[];
+  uid: string;
 };
 
 export type newStory = {

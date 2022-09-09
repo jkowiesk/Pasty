@@ -40,6 +40,11 @@ export default function StoryCard({
     navigator.clipboard.writeText(content);
   };
 
+  const [isRatingActive, setIsRatingsActive] = useState<{
+    like: boolean;
+    dislike: boolean;
+  }>({ like: false, dislike: false });
+
   const StoryCardPreview = () => {
     const [isCardActive, setIsCardActive] = useState<boolean>(false);
     return (
@@ -50,7 +55,7 @@ export default function StoryCard({
               setIsCardActive(true);
             }}
             onMouseLeave={() => {
-              setIsCardActive(false);
+              if (isCardActive) setIsCardActive(false);
             }}
           >
             <Header>

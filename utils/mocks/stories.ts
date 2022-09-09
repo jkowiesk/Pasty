@@ -1,6 +1,6 @@
-import type { StoryDoc, User } from "../types.utils";
+import type { StoryRequired, User } from "../types.utils";
 
-export const stories: StoryDoc[] = [
+export const stories: StoryRequired[] = [
   {
     title: "Morawiecki odra",
     tags: ["#nice"],
