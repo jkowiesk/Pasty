@@ -21,12 +21,14 @@ import {
   query,
   where,
   Timestamp,
+  writeBatch,
 } from "firebase/firestore";
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
 import { User, StoryRequired, Story, UserDoc, StoryDB } from "./types.utils";
 import { DateToJSON } from "./functions.utils";
+import { UiRadiosDimensions } from "@styled-icons/bootstrap/UiRadios";
 
 const DEFAULT_PROFILE_IMG =
   "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
@@ -236,4 +238,71 @@ export const getStoriesByUid = async (uid: string) => {
   });
 
   return stories;
+};
+
+export const getStoryRatings = async (storyId: string, uid: string) => {
+  const docRef = doc(db, "stories", storyId);
+  const docSnap = await getDoc(docRef);
+  const { likes, dislikes }: { likes: string[]; dislikes: string[] } =
+    docSnap.data()!.ratings;
+
+  if (likes.includes(uid)) {
+    return { likes: true, dislikes: false };
+  } else if (dislikes.includes(uid)) {
+    return { likes: false, dislikes: true };
+  } else {
+    return { likes: false, dislikes: false };
+  }
+};
+
+export const updateStoryRating = async (
+  storyId: string,
+  uid: string,
+  action: string
+) => {
+  let areRatingsActive: { likes: boolean; dislikes: boolean } = {
+    likes: false,
+    dislikes: false,
+  };
+  const docRef = doc(db, "stories", storyId);
+  const docSnap = await getDoc(docRef);
+  let { likes, dislikes }: { likes: string[]; dislikes: string[] } =
+    docSnap.data()!.ratings;
+  const batch = writeBatch(db);
+
+  if (likes.includes(uid)) {
+    likes = likes.filter((tempUid: string) => tempUid !== uid);
+    batch.update(docRef, {
+      ratings: {
+        dislikes,
+        likes,
+      },
+    });
+  } else if (dislikes.includes(uid)) {
+    dislikes = dislikes.filter((tempUid: string) => tempUid !== uid);
+    batch.update(docRef, {
+      ratings: {
+        dislikes,
+        likes,
+      },
+    });
+  }
+
+  if (action === "like") {
+    likes.push(uid);
+    areRatingsActive = { likes: true, dislikes: false };
+    batch.update(docRef, {
+      ratings: { likes, dislikes },
+    });
+  } else if (action === "dislike") {
+    dislikes.push(uid);
+    areRatingsActive = { likes: false, dislikes: true };
+    batch.update(docRef, {
+      ratings: { likes, dislikes },
+    });
+  }
+
+  await batch.commit();
+
+  return areRatingsActive;
 };

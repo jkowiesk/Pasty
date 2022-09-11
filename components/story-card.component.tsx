@@ -1,10 +1,16 @@
 import styled, { keyframes } from "styled-components";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import { Story, StoryDoc, User, UserDoc } from "../utils/types.utils";
+import { getStoryRatings, updateStoryRating } from "../utils/firebase.utils";
+
+import { UserContext } from "../contexts/user.context";
+import { EventsContext } from "../contexts/events.context";
 
 import { Copy } from "@styled-icons/boxicons-regular/Copy";
 import { Person } from "@styled-icons/bootstrap/Person";
+import { BookmarkFill } from "@styled-icons/bootstrap/BookmarkFill";
+import { Bookmark } from "@styled-icons/bootstrap/Bookmark";
 
 import { Happy } from "@styled-icons/boxicons-regular/Happy";
 import { Sad } from "@styled-icons/boxicons-regular/Sad";
@@ -26,29 +32,71 @@ type PreviewCardProps = {
   className?: any;
 };
 
-type LinkWrapperProps = {
-  setIsCardActive: any;
+type RatingIconsProps = {
+  isClicked: boolean;
 };
 
 export default function StoryCard({
   full,
-  story: { id, title, uid, content },
+  story: { id, title, content, created },
   user: { username, avatar },
   className,
 }: Props) {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const {
+    isLoggedIn,
+    user: { uid: ClientsUid },
+  } = useContext(UserContext);
+
+  const { dispatchEvents } = useContext(EventsContext);
+
+  const [areRatingsActive, setAreRatingsActive] = useState<{
+    likes: boolean;
+    dislikes: boolean;
+  }>({ likes: false, dislikes: false });
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getStoryRatings(id, ClientsUid).then((data: any) => {
+        setAreRatingsActive(data);
+      });
+    } else {
+      setAreRatingsActive({ likes: false, dislikes: false });
+    }
+  }, [isLoggedIn, id, ClientsUid]);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
+    dispatchEvents({ type: "alert", payload: "pasty/copy" });
   };
 
-  const [isRatingActive, setIsRatingsActive] = useState<{
-    like: boolean;
-    dislike: boolean;
-  }>({ like: false, dislike: false });
+  const handleRatingClick = async (action: string) => {
+    console.log("handle");
+    if (isLoggedIn)
+      setAreRatingsActive(await updateStoryRating(id, ClientsUid, action));
+    else {
+      dispatchEvents({ type: "alert", payload: "pasty/rating" });
+    }
+  };
 
   const StoryCardPreview = () => {
     const [isCardActive, setIsCardActive] = useState<boolean>(false);
     return (
       <PreviewCard isCardActive={isCardActive} className={className}>
+        <Header>
+          <Title>{title}</Title>
+          <Time title={created.date}>{created.time}</Time>
+          <AnimatedFavoriteIcon
+            text="Favorite"
+            onHoverColor="var(--color-secondary-light)"
+          >
+            {isFavorite ? (
+              <FavoriteFillIconPreview isCardActive={isCardActive} />
+            ) : (
+              <FavoriteIconPreview isCardActive={isCardActive} />
+            )}
+          </AnimatedFavoriteIcon>
+        </Header>
         <Link href={`/pasty/${id}`} passHref>
           <LinkWrapper
             onMouseDown={() => {
@@ -58,9 +106,6 @@ export default function StoryCard({
               if (isCardActive) setIsCardActive(false);
             }}
           >
-            <Header>
-              <Title>{title}</Title>
-            </Header>
             <ContentPreview>{content}</ContentPreview>
           </LinkWrapper>
         </Link>
@@ -81,15 +126,39 @@ export default function StoryCard({
           <RatingBar>
             <AnimatedIcon
               text="Dislike"
-              onHoverColor="var(--color-secondary-light)"
+              onHoverColor={
+                areRatingsActive.dislikes
+                  ? "var(--color-distinct-light)"
+                  : "var(--color-secondary-light)"
+              }
+              onClick={() => {
+                areRatingsActive.dislikes
+                  ? handleRatingClick("cancel")
+                  : handleRatingClick("dislike");
+              }}
             >
-              <SadIconPreview isCardActive={isCardActive} />
+              <SadIconPreview
+                isCardActive={isCardActive}
+                isClicked={areRatingsActive.dislikes}
+              />
             </AnimatedIcon>
             <AnimatedIcon
               text="Like"
-              onHoverColor="var(--color-secondary-light)"
+              onHoverColor={
+                areRatingsActive.likes
+                  ? "var(--color-distinct-light)"
+                  : "var(--color-secondary-light)"
+              }
+              onClick={() => {
+                areRatingsActive.likes
+                  ? handleRatingClick("cancel")
+                  : handleRatingClick("like");
+              }}
             >
-              <HappyIconPreview isCardActive={isCardActive} />
+              <HappyIconPreview
+                isCardActive={isCardActive}
+                isClicked={areRatingsActive.likes}
+              />
             </AnimatedIcon>
           </RatingBar>
         </Footer>
@@ -101,6 +170,13 @@ export default function StoryCard({
     <Card className={className}>
       <Header>
         <Title>{title}</Title>
+        <Time title={created.date}>{created.time}</Time>
+        <AnimatedFavoriteIcon
+          text="Favorite"
+          onHoverColor="var(--color-secondary-light)"
+        >
+          {isFavorite ? <FavoriteFillIcon /> : <FavoriteIcon />}
+        </AnimatedFavoriteIcon>
       </Header>
       <Content>{content}</Content>
       <Footer>
@@ -120,12 +196,33 @@ export default function StoryCard({
         <RatingBar>
           <AnimatedIcon
             text="Dislike"
-            onHoverColor="var(--color-secondary-light)"
+            onHoverColor={
+              areRatingsActive.dislikes
+                ? "var(--color-distinct-light)"
+                : "var(--color-secondary-light)"
+            }
+            onClick={() => {
+              areRatingsActive.dislikes
+                ? handleRatingClick("cancel")
+                : handleRatingClick("dislike");
+            }}
           >
-            <SadIcon />
+            <SadIcon isClicked={areRatingsActive.dislikes} />
           </AnimatedIcon>
-          <AnimatedIcon text="Like" onHoverColor="var(--color-secondary-light)">
-            <HappyIcon />
+          <AnimatedIcon
+            text="Like"
+            onHoverColor={
+              areRatingsActive.likes
+                ? "var(--color-distinct-light)"
+                : "var(--color-secondary-light)"
+            }
+            onClick={() => {
+              areRatingsActive.likes
+                ? handleRatingClick("cancel")
+                : handleRatingClick("like");
+            }}
+          >
+            <HappyIcon isClicked={areRatingsActive.likes} />
           </AnimatedIcon>
         </RatingBar>
       </Footer>
@@ -168,9 +265,6 @@ const Card = styled.div`
 `;
 
 const LinkWrapper = styled.a`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
   text-decoration: none;
   flex: 1;
 `;
@@ -185,10 +279,45 @@ const PreviewCard = styled(Card)`
 
 const Title = styled.h1`
   color: var(--color-font-black);
+  justify-self: start;
 `;
 
 const Header = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-between;
+  place-items: center;
+`;
+
+const Time = styled.p`
+  color: var(--color-secondary);
   width: fit-content;
+`;
+
+const FavoriteFillIcon = styled(BookmarkFill)`
+  color: var(--color-secondary);
+`;
+
+const FavoriteFillIconPreview = styled(FavoriteFillIcon)`
+  background: ${({ isCardActive }: PreviewCardProps) =>
+    isCardActive ? "transparent" : "var(--color-gray-1000)"};
+`;
+
+const FavoriteIcon = styled(Bookmark)`
+  width: calc(var(--icons-size) - 10px);
+  height: calc(var(--icons-size) - 10px);
+  position: relative;
+  z-index: 1;
+  color: var(--color-secondary);
+`;
+
+const FavoriteIconPreview = styled(FavoriteIcon)`
+  background: ${({ isCardActive }: PreviewCardProps) =>
+    isCardActive ? "transparent" : "var(--color-gray-1000)"};
+`;
+
+const AnimatedFavoriteIcon = styled(AnimatedIcon)`
+  justify-self: end;
 `;
 
 const Content = styled.p`
@@ -223,10 +352,10 @@ const IconBtn = styled.button`
 const CopyIcon = styled(Copy)`
   width: calc(var(--icons-size) - 5px);
   height: calc(var(--icons-size) - 5px);
-  color: var(--color-secondary);
-  background: var(--color-gray-1000);
   position: relative;
   z-index: 1;
+  color: var(--color-secondary);
+  background: var(--color-gray-1000);
 `;
 
 const CopyIconPreview = styled(CopyIcon)`
@@ -237,7 +366,8 @@ const CopyIconPreview = styled(CopyIcon)`
 const HappyIcon = styled(Happy)`
   width: var(--icons-size);
   height: var(--icons-size);
-  color: var(--color-secondary);
+  color: ${({ isClicked }: RatingIconsProps) =>
+    isClicked ? "var(--color-distinct)" : "var(--color-secondary)"};
   background: var(--color-gray-1000);
   position: relative;
   z-index: 1;
@@ -251,7 +381,8 @@ const HappyIconPreview = styled(HappyIcon)`
 const SadIcon = styled(Sad)`
   width: var(--icons-size);
   height: var(--icons-size);
-  color: var(--color-secondary);
+  color: ${({ isClicked }: RatingIconsProps) =>
+    isClicked ? "var(--color-distinct)" : "var(--color-secondary)"};
   background: var(--color-gray-1000);
   position: relative;
   z-index: 1;
@@ -290,3 +421,7 @@ const PersonIcon = styled(Person)`
 `;
 
 const RatingBar = styled.div``;
+
+const Spacer = styled.div`
+  flex: 1;
+`;

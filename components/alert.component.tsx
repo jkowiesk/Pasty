@@ -31,7 +31,7 @@ export default function Alert() {
       setTimeout(() => {
         dispatchEvents({ type: "alert", payload: "pasty/close" });
       }, 400);
-    }, 4000);
+    }, 3000);
 
     return () => {
       clearTimeout(timeout);

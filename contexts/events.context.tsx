@@ -44,6 +44,24 @@ const eventsReducer = (state: any, action: any) => {
             type: "error",
           },
         };
+      case "pasty/rating":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "You need to be logged in",
+            type: "error",
+          },
+        };
+      case "pasty/copy":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Story copied to clipboard",
+            type: "success",
+          },
+        };
       case "pasty/close":
         return {
           ...state,

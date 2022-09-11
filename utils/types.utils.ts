@@ -29,8 +29,8 @@ export type Story = {
     time: string;
   };
   ratings: {
-    like: number;
-    dislike: number;
+    likes: number;
+    dislikes: number;
   };
 };
 
@@ -42,8 +42,8 @@ export type StoryDB = {
   uid: string;
   created: Timestamp;
   ratings: {
-    like: string[];
-    dislike: string[];
+    likes: string[];
+    dislikes: string[];
   };
 };
 
@@ -62,8 +62,8 @@ export type StoryDoc = {
     time: string;
   };
   ratings: {
-    like: number;
-    dislike: number;
+    likes: number;
+    dislikes: number;
   };
 };
 
