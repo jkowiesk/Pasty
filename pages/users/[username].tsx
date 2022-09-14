@@ -38,7 +38,9 @@ export default function Profile({ profileUser, stories }: Props) {
               </ImageWrapper>
               <BasicInfo>
                 <Username>{profileUser.username}</Username>
-                <FollowersCount>Followers: 9999</FollowersCount>
+                <FollowersCount>
+                  Followers: {profileUser.followers.length}
+                </FollowersCount>
               </BasicInfo>
               <FollowButton onClick={handleFollowBtnClick} text="Follow">
                 <MaskIcon />
@@ -147,7 +149,7 @@ const BasicInfo = styled.div`
 
 const FollowersCount = styled.p`
   font-size: 1.2rem;
-  color: var(--color-primary);
+  color: var(--color-secondary);
 `;
 
 const Username = styled.h3`

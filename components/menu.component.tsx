@@ -45,9 +45,13 @@ export default function Menu({ isOpen }: Props) {
         <>{isLoggedIn && <Category>My Favorites</Category>}</>
       </Nav>
       <RightSide>
-        <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
-          <SignOutIcon />
-        </SignOutWrapper>
+        <>
+          {isLoggedIn && (
+            <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
+              <SignOutIcon />
+            </SignOutWrapper>
+          )}
+        </>
       </RightSide>
     </Wrapper>
   );
@@ -71,6 +75,9 @@ const heightAnimationClose = keyframes`
   }
 `;
 
+const hoverBackground = keyframes`
+`;
+
 const LeftSide = styled.div`
   flex: 1;
   display: flex;
@@ -83,14 +90,19 @@ const RightSide = styled.div`
 
 const Category = styled.a`
   font-size: 1.5rem;
-  color: var(--color-secondary);
+  color: var(--color-primary-light);
   font-weight: bold;
   padding: 10px;
   opacity: 0.7;
+  width: 100%;
+  text-align: center;
+  transition: background, opacity;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
 
   &:hover {
     cursor: pointer;
-    animation: hoverOpacity 0.5s;
+    background: var(--color-background);
     opacity: 1;
   }
 `;
@@ -98,9 +110,9 @@ const Category = styled.a`
 const Nav = styled.nav`
   flex: 3;
   display: grid;
-  place-content: center;
-  justify-items: center;
-  align-items: center;
+  justify-content: space-between;
+  align-content: center;
+  place-items: center;
   grid-template-columns: ${({ childrenNum }: { childrenNum: number }) =>
     `repeat(auto-fill, ${100 / childrenNum}%)`};
 `;

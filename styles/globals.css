@@ -128,13 +128,3 @@ html::-webkit-scrollbar-thumb:hover {
   --scrollbar-size: 1rem;
   --icons-size: 40px;
 }
-
-@keyframes hoverOpacity {
-  from {
-    opacity: 0.7;
-  }
-
-  to {
-    opacity: 1;
-  }
-}

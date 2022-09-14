@@ -52,17 +52,24 @@ const LinkWrapper = styled.a`
   &:hover {
     cursor: pointer;
   }
+  * * {
+    transition: color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-out;
+  }
 
   &:hover * * {
     color: ${({ onHoverColor }: StyleProps) =>
       onHoverColor || "var(--color-primary-light)"};
+  }
+  p {
+    transition: transform ease-out 0.6s;
   }
 
   &:hover p {
     transform: translateY(105%);
     color: ${({ onHoverColor }: StyleProps) =>
       onHoverColor || "var(--color-primary-light)"};
-    transition: transform ease-out 0.6s;
   }
 `;
 

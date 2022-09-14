@@ -43,7 +43,13 @@ type RatingIconsProps = {
 
 export default function StoryCard({
   full,
-  story: { id, title, content, created },
+  story: {
+    id,
+    title,
+    content,
+    created,
+    ratings: { likes, dislikes },
+  },
   user: { username, avatar },
   className,
 }: Props) {
@@ -138,42 +144,48 @@ export default function StoryCard({
             </UserBar>
           </Link>
           <RatingBar>
-            <AnimatedIcon
-              text="Dislike"
-              onHoverColor={
-                areRatingsActive.dislikes
-                  ? "var(--color-distinct-light)"
-                  : "var(--color-secondary-light)"
-              }
-              onClick={() => {
-                areRatingsActive.dislikes
-                  ? handleRatingClick("cancel")
-                  : handleRatingClick("dislike");
-              }}
-            >
-              <SadIconPreview
-                isCardActive={isCardActive}
-                isClicked={areRatingsActive.dislikes}
-              />
-            </AnimatedIcon>
-            <AnimatedIcon
-              text="Like"
-              onHoverColor={
-                areRatingsActive.likes
-                  ? "var(--color-distinct-light)"
-                  : "var(--color-secondary-light)"
-              }
-              onClick={() => {
-                areRatingsActive.likes
-                  ? handleRatingClick("cancel")
-                  : handleRatingClick("like");
-              }}
-            >
-              <HappyIconPreview
-                isCardActive={isCardActive}
-                isClicked={areRatingsActive.likes}
-              />
-            </AnimatedIcon>
+            <RatingWrapper>
+              <AnimatedIcon
+                text="Dislike"
+                onHoverColor={
+                  areRatingsActive.dislikes
+                    ? "var(--color-distinct-light)"
+                    : "var(--color-secondary-light)"
+                }
+                onClick={() => {
+                  areRatingsActive.dislikes
+                    ? handleRatingClick("cancel")
+                    : handleRatingClick("dislike");
+                }}
+              >
+                <SadIconPreview
+                  isCardActive={isCardActive}
+                  isClicked={areRatingsActive.dislikes}
+                />
+              </AnimatedIcon>
+              <RatingCounter>{dislikes}</RatingCounter>
+            </RatingWrapper>
+            <RatingWrapper>
+              <AnimatedIcon
+                text="Like"
+                onHoverColor={
+                  areRatingsActive.likes
+                    ? "var(--color-distinct-light)"
+                    : "var(--color-secondary-light)"
+                }
+                onClick={() => {
+                  areRatingsActive.likes
+                    ? handleRatingClick("cancel")
+                    : handleRatingClick("like");
+                }}
+              >
+                <HappyIconPreview
+                  isCardActive={isCardActive}
+                  isClicked={areRatingsActive.likes}
+                />
+              </AnimatedIcon>
+              <RatingCounter>{likes}</RatingCounter>
+            </RatingWrapper>
           </RatingBar>
         </Footer>
       </PreviewCard>
@@ -186,6 +198,7 @@ export default function StoryCard({
         <Title>{title}</Title>
         <Time title={created.date}>{created.time}</Time>
         <AnimatedFavoriteIcon
+          onClick={handleFavoriteClick}
           text="Favorite"
           onHoverColor="var(--color-secondary-light)"
         >
@@ -208,36 +221,42 @@ export default function StoryCard({
           </UserBar>
         </Link>
         <RatingBar>
-          <AnimatedIcon
-            text="Dislike"
-            onHoverColor={
-              areRatingsActive.dislikes
-                ? "var(--color-distinct-light)"
-                : "var(--color-secondary-light)"
-            }
-            onClick={() => {
-              areRatingsActive.dislikes
-                ? handleRatingClick("cancel")
-                : handleRatingClick("dislike");
-            }}
-          >
-            <SadIcon isClicked={areRatingsActive.dislikes} />
-          </AnimatedIcon>
-          <AnimatedIcon
-            text="Like"
-            onHoverColor={
-              areRatingsActive.likes
-                ? "var(--color-distinct-light)"
-                : "var(--color-secondary-light)"
-            }
-            onClick={() => {
-              areRatingsActive.likes
-                ? handleRatingClick("cancel")
-                : handleRatingClick("like");
-            }}
-          >
-            <HappyIcon isClicked={areRatingsActive.likes} />
-          </AnimatedIcon>
+          <RatingWrapper>
+            <AnimatedIcon
+              text="Dislike"
+              onHoverColor={
+                areRatingsActive.dislikes
+                  ? "var(--color-distinct-light)"
+                  : "var(--color-secondary-light)"
+              }
+              onClick={() => {
+                areRatingsActive.dislikes
+                  ? handleRatingClick("cancel")
+                  : handleRatingClick("dislike");
+              }}
+            >
+              <SadIcon isClicked={areRatingsActive.dislikes} />
+            </AnimatedIcon>
+            <RatingCounter>{dislikes}</RatingCounter>
+          </RatingWrapper>
+          <RatingWrapper>
+            <AnimatedIcon
+              text="Like"
+              onHoverColor={
+                areRatingsActive.likes
+                  ? "var(--color-distinct-light)"
+                  : "var(--color-secondary-light)"
+              }
+              onClick={() => {
+                areRatingsActive.likes
+                  ? handleRatingClick("cancel")
+                  : handleRatingClick("like");
+              }}
+            >
+              <HappyIcon isClicked={areRatingsActive.likes} />
+            </AnimatedIcon>
+            <RatingCounter>{likes}</RatingCounter>
+          </RatingWrapper>
         </RatingBar>
       </Footer>
     </Card>
@@ -448,4 +467,22 @@ const RatingBar = styled.div`
 
 const Spacer = styled.div`
   flex: 1;
+`;
+
+const RatingWrapper = styled.span`
+  display: inline-block;
+  position: relative;
+`;
+
+const RatingCounter = styled.p`
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  width: fit-content;
+  padding-right: 3px;
+  color: var(--color-background);
 `;

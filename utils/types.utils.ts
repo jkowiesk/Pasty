@@ -41,8 +41,35 @@ export type Story = {
   };
 };
 
+export type StoryDoc = {
+  title: string;
+  content: string;
+  tags: string[];
+  uid: string;
+  created: {
+    date: string;
+    time: string;
+  };
+  ratings: {
+    likes: number;
+    dislikes: number;
+  };
+};
+
 export type StoryDB = {
   id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  uid: string;
+  created: Timestamp;
+  ratings: {
+    likes: string[];
+    dislikes: string[];
+  };
+};
+
+export type StoryDocDB = {
   title: string;
   content: string;
   tags: string[];
@@ -57,21 +84,6 @@ export type StoryDB = {
 export type StoryCardType = {
   story: Story;
   user: UserDoc;
-};
-
-export type StoryDoc = {
-  title: string;
-  content: string;
-  tags: string[];
-  uid: string;
-  created: {
-    date: string;
-    time: string;
-  };
-  ratings: {
-    likes: number;
-    dislikes: number;
-  };
 };
 
 export type StoryRequired = {

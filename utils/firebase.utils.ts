@@ -27,7 +27,14 @@ import {
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
-import { User, StoryRequired, Story, SimpleUser } from "./types.utils";
+import {
+  User,
+  StoryRequired,
+  Story,
+  SimpleUser,
+  StoryDoc,
+  StoryDocDB,
+} from "./types.utils";
 import { DateToJSON } from "./functions.utils";
 
 const DEFAULT_PROFILE_IMG =
@@ -204,8 +211,14 @@ export const getUserByUsername = async (username: string) => {
 
 export const getStoryById = async (id: string) => {
   const docSnap = await getDoc(doc(db, "stories", id));
-  const created = DateToJSON(docSnap.data()!.created.toDate());
-  return { id, ...docSnap.data(), created } as Story;
+  const story = docSnap.data()!;
+  const {
+    created: createdDB,
+    ratings: { likes, dislikes },
+  } = story;
+  const created = DateToJSON(createdDB.toDate());
+  const ratings = { likes: likes.length, dislikes: dislikes.length };
+  return { id, ...story, created, ratings } as Story;
 };
 
 export const getStoriesForHome = async () => {
@@ -213,11 +226,19 @@ export const getStoriesForHome = async () => {
   let stories: Story[] = [];
   querySnapshot.forEach((doc) => {
     const id: string = doc.id;
-    const created = DateToJSON(doc.data().created.toDate());
+    const story = doc.data() as StoryDocDB;
+    const {
+      created: createdDB,
+      ratings: { likes, dislikes },
+    } = story;
+    const created = DateToJSON(createdDB.toDate());
+    const ratings = { likes: likes.length, dislikes: dislikes.length };
+
     stories.push({
       id,
-      ...doc.data(),
+      ...story,
       created,
+      ratings,
     } as Story);
   });
 

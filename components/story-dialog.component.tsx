@@ -114,7 +114,7 @@ const Panel = styled(Dialog.Panel)`
   margin: auto;
   height: 40vh;
   width: 30vw;
-  padding-inline: 16px;
+  padding: 8px 32px;
   background: var(--color-gray-1000);
   border-radius: 5px;
   border: 1px solid var(--color-primary-dark);

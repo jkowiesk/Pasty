@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 type Props = {
@@ -15,11 +16,32 @@ export default function CustomBtn({
   className,
   children,
 }: Props) {
+  const [recentAction, setRecentAction] = useState("default");
+  let actionStyles = {};
+
+  switch (recentAction) {
+    case "depressed":
+      actionStyles = {
+        transform: "scale(0.95)",
+        transition: "all 50ms",
+      };
+      break;
+    default:
+      actionStyles = {
+        transform: "translateY(0)",
+        transition: "all 500ms",
+      };
+  }
+
   return (
     <Wrapper
       type={submit ? "submit" : "button"}
       onClick={onClick}
       className={className}
+      style={actionStyles}
+      onMouseDown={() => setRecentAction("depressed")}
+      onMouseUp={() => setRecentAction("default")}
+      onMouseLeave={() => setRecentAction("default")}
     >
       <ImageWrapper>{children}</ImageWrapper>
       <Label>{text}</Label>
@@ -38,6 +60,12 @@ const Wrapper = styled.button`
   cursor: pointer;
   padding-block: 4px;
   width: 100%;
+  opacity: 1;
+
+  &:hover {
+    opacity: 0.8;
+    transition-property: opacity;
+  }
 `;
 
 const Label = styled.p`
