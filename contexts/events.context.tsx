@@ -22,7 +22,6 @@ type Events = {
 };
 
 const eventsReducer = (state: any, action: any) => {
-  console.log(action);
   const { payload, type } = action;
   if (type === "alert") {
     switch (payload) {
@@ -44,7 +43,7 @@ const eventsReducer = (state: any, action: any) => {
             type: "error",
           },
         };
-      case "pasty/rating":
+      case "pasty/permission":
         return {
           ...state,
           alert: {
@@ -59,6 +58,15 @@ const eventsReducer = (state: any, action: any) => {
           alert: {
             isActive: true,
             message: "Story copied to clipboard",
+            type: "success",
+          },
+        };
+      case "pasty/registered":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Successfully registered",
             type: "success",
           },
         };

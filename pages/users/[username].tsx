@@ -36,7 +36,10 @@ export default function Profile({ profileUser, stories }: Props) {
               <ImageWrapper>
                 <Avatar src={profileUser.avatar!} layout="fill" />
               </ImageWrapper>
-              <FollowersCount>Followers: 9999</FollowersCount>
+              <BasicInfo>
+                <Username>{profileUser.username}</Username>
+                <FollowersCount>Followers: 9999</FollowersCount>
+              </BasicInfo>
               <FollowButton onClick={handleFollowBtnClick} text="Follow">
                 <MaskIcon />
               </FollowButton>
@@ -92,7 +95,7 @@ const HeaderCard = styled(Card)`
 const LeftSide = styled.div`
   display: grid;
   grid-template-areas:
-    "avatar followers"
+    "avatar basicInfo"
     "avatar followBtn";
   place-items: center;
   height: 128px;
@@ -135,9 +138,20 @@ const AchievementsCard = styled(Card)`
 
 const Avatar = styled(Image)``;
 
+const BasicInfo = styled.div`
+  grid-area: basicInfo;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
 const FollowersCount = styled.p`
   font-size: 1.2rem;
-  grid-area: followers;
+  color: var(--color-primary);
+`;
+
+const Username = styled.h3`
+  font-size: 1.5rem;
   color: var(--color-primary-dark);
 `;
 

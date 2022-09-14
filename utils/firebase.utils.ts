@@ -16,6 +16,7 @@ import {
   addDoc,
   getDoc,
   setDoc,
+  updateDoc,
   doc,
   getFirestore,
   query,
@@ -26,9 +27,8 @@ import {
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
-import { User, StoryRequired, Story, UserDoc, StoryDB } from "./types.utils";
+import { User, StoryRequired, Story, SimpleUser } from "./types.utils";
 import { DateToJSON } from "./functions.utils";
-import { UiRadiosDimensions } from "@styled-icons/bootstrap/UiRadios";
 
 const DEFAULT_PROFILE_IMG =
   "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
@@ -49,11 +49,11 @@ export const signUpWithEmail = (
   password: string,
   username: string
 ) => {
-  let returnCode: string = "0";
+  let returnCode: string = "pasty/registered";
   createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
       const user: FireUser = userCredential.user;
-      fireAddUserToDB(user, username, DEFAULT_PROFILE_IMG);
+      await fireAddUserToDB(user, username, DEFAULT_PROFILE_IMG);
     })
     .catch((error) => {
       returnCode = error.code;
@@ -78,11 +78,6 @@ export const signInWithGoogle = async () => {
   await signInWithPopup(auth, googleProvider)
     .then(async (result) => {
       const { user } = result;
-      const docSnap = await getDoc(doc(db, `users/${user.uid}`));
-
-      if (!docSnap.exists()) {
-        await fireAddUserToDB(user);
-      }
     })
     .catch((error) => {
       returnCode = error.code;
@@ -102,16 +97,22 @@ export const signOut = async () => {
 };
 
 export const onAuthChange = (
-  setUser: Dispatch<SetStateAction<User>>,
+  setUser: Dispatch<SetStateAction<SimpleUser>>,
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>
 ) =>
-  onAuthStateChanged(auth, async (googleUser) => {
-    if (googleUser) {
-      const user = await getUserById(googleUser.uid);
+  onAuthStateChanged(auth, async (fireUser) => {
+    if (fireUser) {
+      let user = await getUserById(fireUser.uid);
+      const isGoogleFirstSignIn = !user.uid && fireUser.displayName;
+
+      if (isGoogleFirstSignIn) {
+        await fireAddUserToDB(fireUser);
+        user = await getUserById(fireUser.uid);
+      }
+
       setUser({
-        uid: googleUser.uid,
+        uid: fireUser.uid,
         username: user.username,
-        email: user.email,
         avatar: user.avatar,
       });
       setIsLoggedIn(true);
@@ -119,7 +120,6 @@ export const onAuthChange = (
       setUser({
         uid: "",
         username: "",
-        email: "",
         avatar: "",
       });
       setIsLoggedIn(false);
@@ -143,23 +143,14 @@ export const fireAddUserToDB = async (
   username?: string,
   src?: string
 ) => {
+  console.log(`$xD:: {src}`);
   const docRef = await setDoc(doc(db, "users", user.uid), {
     username: username ? username : randUsername(),
     email: user.email,
     avatar: src ? src : user.photoURL,
-  });
-};
-
-export const EmailAddUserToDB = async ({
-  uid,
-  username,
-  email,
-  avatar,
-}: User) => {
-  const docRef = await setDoc(doc(db, "users", uid), {
-    username,
-    email,
-    avatar,
+    favorites: [],
+    followers: [],
+    follows: [],
   });
 };
 
@@ -181,7 +172,6 @@ export const addStoryToDB = async (newStory: StoryRequired, uid: string) => {
 
 export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
-
   if (docSnap.exists()) {
     return docSnap.data();
   }
@@ -194,7 +184,15 @@ export const getUserById = async (uid: string) => {
 export const getUserByUsername = async (username: string) => {
   const q = query(collection(db, "users"), where("username", "==", username));
   const querySnapshot = await getDocs(q);
-  let user: User = { uid: "", username: "", email: "", avatar: "" };
+  let user: User = {
+    uid: "",
+    username: "",
+    email: "",
+    avatar: "",
+    favorites: [],
+    followers: [],
+    follows: [],
+  };
 
   querySnapshot.forEach((doc) => {
     const uid: string = doc.id;
@@ -305,4 +303,35 @@ export const updateStoryRating = async (
   await batch.commit();
 
   return areRatingsActive;
+};
+
+export const updateFavorites = async (uid: string, storyId: string) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  let favorites: string[] = docSnap.data()!.favorites;
+
+  if (favorites.includes(storyId)) {
+    await updateDoc(docRef, {
+      favorites: favorites.filter((tempId) => tempId !== storyId),
+    });
+    return false;
+  } else {
+    favorites.push(storyId);
+    await updateDoc(docRef, {
+      favorites,
+    });
+    return true;
+  }
+};
+
+export const getFavorites = async (uid: string, storyId: string) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  const favorites: string[] = docSnap.data()!.favorites;
+
+  if (favorites.includes(storyId)) {
+    return true;
+  } else {
+    return false;
+  }
 };

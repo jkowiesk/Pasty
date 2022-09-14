@@ -2,7 +2,12 @@ import styled, { keyframes } from "styled-components";
 import { useState, useEffect, useContext } from "react";
 
 import { Story, StoryDoc, User, UserDoc } from "../utils/types.utils";
-import { getStoryRatings, updateStoryRating } from "../utils/firebase.utils";
+import {
+  getFavorites,
+  getStoryRatings,
+  updateFavorites,
+  updateStoryRating,
+} from "../utils/firebase.utils";
 
 import { UserContext } from "../contexts/user.context";
 import { EventsContext } from "../contexts/events.context";
@@ -60,8 +65,10 @@ export default function StoryCard({
       getStoryRatings(id, ClientsUid).then((data: any) => {
         setAreRatingsActive(data);
       });
+      getFavorites(ClientsUid, id).then((data: any) => setIsFavorite(data));
     } else {
       setAreRatingsActive({ likes: false, dislikes: false });
+      setIsFavorite(false);
     }
   }, [isLoggedIn, id, ClientsUid]);
 
@@ -71,11 +78,17 @@ export default function StoryCard({
   };
 
   const handleRatingClick = async (action: string) => {
-    console.log("handle");
     if (isLoggedIn)
       setAreRatingsActive(await updateStoryRating(id, ClientsUid, action));
     else {
-      dispatchEvents({ type: "alert", payload: "pasty/rating" });
+      dispatchEvents({ type: "alert", payload: "pasty/permission" });
+    }
+  };
+
+  const handleFavoriteClick = async () => {
+    if (isLoggedIn) setIsFavorite(await updateFavorites(ClientsUid, id));
+    else {
+      dispatchEvents({ type: "alert", payload: "pasty/permission" });
     }
   };
 
@@ -87,6 +100,7 @@ export default function StoryCard({
           <Title>{title}</Title>
           <Time title={created.date}>{created.time}</Time>
           <AnimatedFavoriteIcon
+            onClick={handleFavoriteClick}
             text="Favorite"
             onHoverColor="var(--color-secondary-light)"
           >
@@ -291,10 +305,15 @@ const Header = styled.div`
 
 const Time = styled.p`
   color: var(--color-secondary);
+  cursor: default;
   width: fit-content;
 `;
 
 const FavoriteFillIcon = styled(BookmarkFill)`
+  width: calc(var(--icons-size) - 10px);
+  height: calc(var(--icons-size) - 10px);
+  position: relative;
+  z-index: 1;
   color: var(--color-secondary);
 `;
 
@@ -336,8 +355,10 @@ const ContentPreview = styled(Content)`
 
 const Footer = styled.footer`
   margin-top: auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   justify-content: space-between;
+  justify-items: start;
   align-items: center;
 `;
 
@@ -399,6 +420,7 @@ const UserBar = styled.a`
   gap: 10px;
   cursor: pointer;
   text-decoration: none;
+  justify-self: center;
 
   &:hover {
     text-decoration: underline var(--color-distinct);
@@ -420,7 +442,9 @@ const PersonIcon = styled(Person)`
   height: var(--icons-size);
 `;
 
-const RatingBar = styled.div``;
+const RatingBar = styled.div`
+  justify-self: end;
+`;
 
 const Spacer = styled.div`
   flex: 1;

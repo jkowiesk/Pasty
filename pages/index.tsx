@@ -46,7 +46,6 @@ export default function Home({ storyCards }: Props) {
   } = useContext(EventsContext);
 
   useEffect(() => {
-    console.log(isActive);
     if (isActive) {
       dispatchEvents({ type: "redirect", payload: "pasty/end" });
       dispatchEvents({ type: "alert", payload: "pasty/logged-in" });

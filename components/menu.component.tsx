@@ -6,6 +6,9 @@ import { signOut } from "../utils/firebase.utils";
 import AnimatedIcon from "./animated-icon.component";
 
 import { SignOut } from "@styled-icons/fluentui-system-filled/SignOut";
+import { Settings } from "@styled-icons/fluentui-system-filled/Settings";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../contexts/user.context";
 
 type Props = {
   isOpen: isOpenType;
@@ -16,14 +19,31 @@ type WrapperProps = {
 };
 
 export default function Menu({ isOpen }: Props) {
+  const [childrenNum, setChildrenNum] = useState(4);
   const handleSignOut = () => {
     signOut();
   };
 
+  const { isLoggedIn } = useContext(UserContext);
+
+  useEffect(() => {
+    if (isLoggedIn) setChildrenNum(4);
+    else setChildrenNum(3);
+  }, [isLoggedIn]);
+
   return (
     <Wrapper isOpen={isOpen}>
-      <LeftSide></LeftSide>
-      <Nav></Nav>
+      <LeftSide>
+        <AnimatedIcon text="Settings" href="/settings">
+          <SettingsIcon />
+        </AnimatedIcon>
+      </LeftSide>
+      <Nav childrenNum={childrenNum}>
+        <Category>FAQ</Category>
+        <Category>About</Category>
+        <Category>Day Pasta</Category>
+        <>{isLoggedIn && <Category>My Favorites</Category>}</>
+      </Nav>
       <RightSide>
         <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
           <SignOutIcon />
@@ -53,17 +73,36 @@ const heightAnimationClose = keyframes`
 
 const LeftSide = styled.div`
   flex: 1;
+  display: flex;
 `;
 
 const RightSide = styled.div`
   flex: 1;
-  margin-right: 78px;
   display: flex;
-  justify-content: flex-end;
+`;
+
+const Category = styled.a`
+  font-size: 1.5rem;
+  color: var(--color-secondary);
+  font-weight: bold;
+  padding: 10px;
+  opacity: 0.7;
+
+  &:hover {
+    cursor: pointer;
+    animation: hoverOpacity 0.5s;
+    opacity: 1;
+  }
 `;
 
 const Nav = styled.nav`
   flex: 3;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: ${({ childrenNum }: { childrenNum: number }) =>
+    `repeat(auto-fill, ${100 / childrenNum}%)`};
 `;
 
 const SignOutIcon = styled(SignOut)`
@@ -75,7 +114,22 @@ const SignOutIcon = styled(SignOut)`
   z-index: 1;
 `;
 
-const SignOutWrapper = styled(AnimatedIcon)``;
+const SignOutWrapper = styled(AnimatedIcon)`
+  margin-left: auto;
+`;
+
+const SettingsWrapper = styled(AnimatedIcon)`
+  margin-left: auto;
+`;
+
+const SettingsIcon = styled(Settings)`
+  position: relative;
+  color: var(--color-primary-dark);
+  width: calc(var(--icons-size) + 5px);
+  height: calc(var(--icons-size) + 5px);
+  background: var(--color-background-secondary);
+  z-index: 1;
+`;
 
 const MaxWidth = styled.div`
   padding-inline: 8px;
@@ -86,11 +140,12 @@ const Wrapper = styled.div`
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 
   background: var(--color-background-secondary);
   border-radius: 0px 0px 30px 30px;
   border-bottom: 1px solid var(--color-gray-50);
+  padding-inline: 78px;
 
   height: ${({ isOpen }: WrapperProps) => {
     switch (isOpen) {

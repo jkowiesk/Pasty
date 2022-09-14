@@ -40,7 +40,7 @@ export default function SignUpForm() {
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log("xD");
     signUpWithEmail(account.email, account.password, account.username);
     setAccount(INIT_ACCOUNT);
   };

@@ -5,15 +5,22 @@ export type User = {
   username: string;
   email: string;
   avatar?: string;
+  favorites: string[];
+  follows: string[];
+  followers: string[];
 };
 
 export type UserDoc = {
   username: string;
   email: string;
   avatar?: string;
+  favorites: string[];
+  follows: string[];
+  followers: string[];
 };
 
 export type SimpleUser = {
+  uid: string;
   username: string;
   avatar: string;
 };
