@@ -252,8 +252,15 @@ export const getStoriesByUid = async (uid: string) => {
 
   querySnapshot.forEach((doc) => {
     const id: string = doc.id;
-    const created = DateToJSON(doc.data().created.toDate());
-    stories.push({ id, ...doc.data(), created } as Story);
+    const story = doc.data() as StoryDocDB;
+    const {
+      created: createdDB,
+      ratings: { likes, dislikes },
+    } = story;
+    const created = DateToJSON(createdDB.toDate());
+    const ratings = { likes: likes.length, dislikes: dislikes.length };
+
+    stories.push({ id, ...story, created, ratings } as Story);
   });
 
   return stories;
