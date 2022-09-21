@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback, useRef } from "react";
 
 import { UserContext } from "../contexts/user.context";
 
@@ -14,16 +14,18 @@ import StoryCard from "../components/story-card.component";
 import AddStoryBtn from "../components/add-story-btn.component";
 import StoryDialog from "../components/story-dialog.component";
 
-import { StoryCardType, UserDoc } from "../utils/types.utils";
+import { StoryCardType, User, UserDoc, UserSimple } from "../utils/types.utils";
 import { EventsContext } from "../contexts/events.context";
+import { HomeContext } from "../contexts/home.context";
+import { StoryCardLoading } from "../components/story-card-loading.component";
 
 export async function getServerSideProps() {
   const stories = await getStoriesForHome();
   let storyCards: StoryCardType[] = [];
 
   for (let story of stories) {
-    const user = (await getUserById(story.uid)) as UserDoc;
-    storyCards.push({ story, user });
+    const { uid, username, avatar } = (await getUserById(story.uid)) as User;
+    storyCards.push({ story, user: { uid, username, avatar } });
   }
 
   return {
@@ -35,10 +37,56 @@ type Props = {
   storyCards: StoryCardType[];
 };
 
-export default function Home({ storyCards }: Props) {
+export default function Home({}) {
   const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
 
   const { isLoggedIn } = useContext(UserContext);
+  const { storyCards, setStoryCards } = useContext(HomeContext);
+  const [pageNum, setPageNum] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const isObserverOn = useRef<boolean>(false);
+
+  const observer = useRef<IntersectionObserver>();
+  const lastStoryRef = useCallback(
+    (node: any) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPageNum((prev) => prev + 1);
+          isObserverOn.current = true;
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasMore]
+  );
+
+  useEffect(() => {
+    if (!isObserverOn.current) return;
+    setIsLoading(true);
+    fetch("/api/", {
+      method: "POST",
+      body: JSON.stringify(storyCards.map((storyCard) => storyCard.story.id)),
+    })
+      .then((res) => res.json())
+      .then(async (stories) => {
+        let storyCards: StoryCardType[] = [];
+        for (let story of stories) {
+          const { uid, username, avatar } = (await getUserById(
+            story.uid
+          )) as User;
+          storyCards.push({ story, user: { uid, username, avatar } });
+        }
+        setStoryCards((prevStoryCards: StoryCardType[]) => [
+          ...prevStoryCards,
+          ...storyCards,
+        ]);
+        setHasMore(storyCards.length > 0);
+      });
+    setIsLoading(false);
+  }, [pageNum]);
 
   const {
     redirect: { isActive },
@@ -62,6 +110,9 @@ export default function Home({ storyCards }: Props) {
               {storyCards.map(({ story, user }: StoryCardType, idx) => (
                 <StoryCard key={idx} story={story} user={user} />
               ))}
+              <StoryCardLoading ref={lastStoryRef} />
+              <StoryCardLoading />
+              <StoryCardLoading />
             </>
           </MaxWidthWrapper>
         </Main>

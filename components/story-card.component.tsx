@@ -1,7 +1,13 @@
 import styled, { keyframes } from "styled-components";
 import { useState, useEffect, useContext } from "react";
 
-import { Story, StoryDoc, User, UserDoc } from "../utils/types.utils";
+import {
+  Story,
+  StoryDoc,
+  User,
+  UserDoc,
+  UserSimple,
+} from "../utils/types.utils";
 import {
   getFavorites,
   getStoryRatings,
@@ -28,7 +34,7 @@ import AnimatedIcon from "./animated-icon.component";
 type Props = {
   full?: boolean;
   story: Story;
-  user: UserDoc;
+  user: UserSimple;
   className?: any;
 };
 

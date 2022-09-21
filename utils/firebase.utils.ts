@@ -18,11 +18,12 @@ import {
   setDoc,
   updateDoc,
   doc,
-  getFirestore,
   query,
   where,
   Timestamp,
   writeBatch,
+  documentId,
+  getFirestore,
 } from "firebase/firestore";
 
 import randUsername from "./rand-username.utils";
@@ -31,11 +32,11 @@ import {
   User,
   StoryRequired,
   Story,
-  SimpleUser,
-  StoryDoc,
+  UserSimple,
   StoryDocDB,
+  UserDoc,
 } from "./types.utils";
-import { DateToJSON } from "./functions.utils";
+import { DateToJSON, pickStories } from "./functions.utils";
 
 const DEFAULT_PROFILE_IMG =
   "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
@@ -104,7 +105,7 @@ export const signOut = async () => {
 };
 
 export const onAuthChange = (
-  setUser: Dispatch<SetStateAction<SimpleUser>>,
+  setUser: Dispatch<SetStateAction<UserSimple>>,
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>
 ) =>
   onAuthStateChanged(auth, async (fireUser) => {
@@ -150,7 +151,6 @@ export const fireAddUserToDB = async (
   username?: string,
   src?: string
 ) => {
-  console.log(`$xD:: {src}`);
   const docRef = await setDoc(doc(db, "users", user.uid), {
     username: username ? username : randUsername(),
     email: user.email,
@@ -179,13 +179,7 @@ export const addStoryToDB = async (newStory: StoryRequired, uid: string) => {
 
 export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
-  if (docSnap.exists()) {
-    return docSnap.data();
-  }
-
-  return {
-    uid: "",
-  };
+  return { uid, ...(docSnap.data() as UserDoc) };
 };
 
 export const getUserByUsername = async (username: string) => {
@@ -199,6 +193,7 @@ export const getUserByUsername = async (username: string) => {
     favorites: [],
     followers: [],
     follows: [],
+    description: "",
   };
 
   querySnapshot.forEach((doc) => {
@@ -243,6 +238,41 @@ export const getStoriesForHome = async () => {
   });
 
   return stories;
+};
+
+export const getNewStories = async (oldStoriesId: string[]) => {
+  let q;
+  const PAGE_SIZE = 3;
+
+  if (oldStoriesId.length > 0)
+    q = query(
+      collection(db, "stories"),
+      where(documentId(), "not-in", oldStoriesId)
+    );
+  else q = query(collection(db, "stories"));
+
+  const querySnapshot = await getDocs(q);
+
+  let stories: Story[] = [];
+
+  querySnapshot.forEach((doc) => {
+    const id: string = doc.id;
+    const story = doc.data() as StoryDocDB;
+    const {
+      created: createdDB,
+      ratings: { likes, dislikes },
+    } = story;
+    const created = DateToJSON(createdDB.toDate());
+    const ratings = { likes: likes.length, dislikes: dislikes.length };
+
+    stories.push({
+      id,
+      ...story,
+      created,
+      ratings,
+    } as Story);
+  });
+  return pickStories(stories, PAGE_SIZE);
 };
 
 export const getStoriesByUid = async (uid: string) => {

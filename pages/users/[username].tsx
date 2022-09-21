@@ -6,21 +6,22 @@ import { Card } from "../../components/card.component";
 import Image from "next/image";
 
 import { getStoriesByUid, getUserByUsername } from "../../utils/firebase.utils";
-import { Story, User, UserDoc } from "../../utils/types.utils";
+import { Story, User, UserDoc, UserProfile } from "../../utils/types.utils";
 
 import StoryCard from "../../components/story-card.component";
 import CustomBtn from "../../components/custom-btn.component";
 
 import { Mask } from "@styled-icons/entypo/Mask";
 
-type Props = { profileUser: User; stories: Story[] };
+type Props = { profileUser: UserProfile; stories: Story[] };
 
 export async function getServerSideProps({ params: { username } }: any) {
   const profileUser = await getUserByUsername(username);
+  const { uid, avatar, followers } = profileUser;
   const stories = await getStoriesByUid(profileUser.uid);
 
   return {
-    props: { profileUser, stories },
+    props: { profileUser: { uid, username, avatar, followers }, stories },
   };
 }
 
@@ -58,11 +59,7 @@ export default function Profile({ profileUser, stories }: Props) {
           <StoriesBar>
             <>
               {stories.map((story, idx) => (
-                <StoryCard
-                  key={idx}
-                  story={story}
-                  user={profileUser as UserDoc}
-                />
+                <StoryCard key={idx} story={story} user={profileUser} />
               ))}
             </>
           </StoriesBar>
@@ -126,6 +123,10 @@ const StoriesBar = styled.div`
   grid-area: stories;
   width: 100%;
   padding-left: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding-bottom: 32px;
 `;
 
 const MaxWidth = styled.div`
@@ -142,6 +143,7 @@ const Avatar = styled(Image)``;
 
 const BasicInfo = styled.div`
   grid-area: basicInfo;
+  justify-self: start;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -163,6 +165,7 @@ const FollowButton = styled(CustomBtn)`
   height: 100%;
   padding-inline: 24px;
   align-self: end;
+  width: 200px;
 `;
 
 const MaskIcon = styled(Mask)`

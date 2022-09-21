@@ -4,22 +4,32 @@ export type User = {
   uid: string;
   username: string;
   email: string;
-  avatar?: string;
+  avatar: string;
   favorites: string[];
   follows: string[];
   followers: string[];
+  description: string;
 };
 
 export type UserDoc = {
   username: string;
   email: string;
-  avatar?: string;
+  avatar: string;
   favorites: string[];
   follows: string[];
   followers: string[];
+  description: string;
 };
 
-export type SimpleUser = {
+export type UserProfile = {
+  uid: string;
+  username: string;
+  avatar: string;
+  followers: string[];
+  description: string;
+};
+
+export type UserSimple = {
   uid: string;
   username: string;
   avatar: string;
@@ -83,7 +93,7 @@ export type StoryDocDB = {
 
 export type StoryCardType = {
   story: Story;
-  user: UserDoc;
+  user: UserSimple;
 };
 
 export type StoryRequired = {
