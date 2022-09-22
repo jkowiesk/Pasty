@@ -34,9 +34,11 @@ export default function Menu({ isOpen }: Props) {
   return (
     <Wrapper isOpen={isOpen}>
       <LeftSide>
-        <AnimatedIcon text="Settings" href="/settings">
-          <SettingsIcon />
-        </AnimatedIcon>
+        {isLoggedIn && (
+          <AnimatedIcon text="Settings" href="/settings">
+            <SettingsIcon />
+          </AnimatedIcon>
+        )}
       </LeftSide>
       <Nav childrenNum={childrenNum}>
         <Category>FAQ</Category>
@@ -45,13 +47,11 @@ export default function Menu({ isOpen }: Props) {
         <>{isLoggedIn && <Category>My Favorites</Category>}</>
       </Nav>
       <RightSide>
-        <>
-          {isLoggedIn && (
-            <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
-              <SignOutIcon />
-            </SignOutWrapper>
-          )}
-        </>
+        {isLoggedIn && (
+          <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
+            <SignOutIcon />
+          </SignOutWrapper>
+        )}
       </RightSide>
     </Wrapper>
   );

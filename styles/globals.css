@@ -127,4 +127,5 @@ html::-webkit-scrollbar-thumb:hover {
 
   --scrollbar-size: 1rem;
   --icons-size: 40px;
+  --btn-icons-size: 30px;
 }

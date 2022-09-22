@@ -7,6 +7,7 @@ type Props = {
   value: string;
   onChange: any;
   type?: string;
+  className?: string;
   required?: boolean;
 };
 
@@ -16,10 +17,11 @@ export default function TextInput({
   value,
   onChange,
   type,
+  className,
   ...otherProps
 }: Props) {
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <Label>{label}</Label>
       <Input
         type={type ? type : "text"}
@@ -48,6 +50,7 @@ const Input = styled.input`
   background: var(--color-gray-1000);
   border: 1px solid var(--color-gray-50);
   outline: none;
+  height: 35px;
 
   &:focus {
     border: 1px solid var(--color-primary);

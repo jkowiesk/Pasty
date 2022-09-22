@@ -314,6 +314,7 @@ const PreviewCard = styled(Card)`
   animation: ${({ isCardActive }: PreviewCardProps) =>
       isCardActive ? storyClick : null}
     0.5s;
+  height: 450px;
 `;
 
 const Title = styled.h1`

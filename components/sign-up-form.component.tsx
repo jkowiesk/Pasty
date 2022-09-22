@@ -40,7 +40,6 @@ export default function SignUpForm() {
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("xD");
     signUpWithEmail(account.email, account.password, account.username);
     setAccount(INIT_ACCOUNT);
   };
@@ -103,6 +102,6 @@ const SubmitBtn = styled(CustomBtn)`
 
 const SubmitIcon = styled(Send)`
   color: var(--color-distinct);
-  width: 30px;
-  height: 30px;
+  width: var(--btn-icons-size);
+  height: var(--btn-icons-size);
 `;

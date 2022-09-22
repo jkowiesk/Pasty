@@ -110,9 +110,12 @@ export default function Home({}) {
               {storyCards.map(({ story, user }: StoryCardType, idx) => (
                 <StoryCard key={idx} story={story} user={user} />
               ))}
-              <StoryCardLoading ref={lastStoryRef} />
-              <StoryCardLoading />
-              <StoryCardLoading />
+              {hasMore && (
+                <>
+                  <StoryCardLoading ref={lastStoryRef} />
+                  <StoryCardLoading />
+                </>
+              )}
             </>
           </MaxWidthWrapper>
         </Main>
@@ -137,7 +140,9 @@ const LeftSide = styled.div`
   grid-area: left;
 `;
 
-const Main = styled.div``;
+const Main = styled.div`
+  grid-area: main;
+`;
 
 const RightSide = styled.div`
   grid-area: right;
