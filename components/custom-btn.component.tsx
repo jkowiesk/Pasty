@@ -61,6 +61,7 @@ const Wrapper = styled.button`
   padding-block: 4px;
   width: 100%;
   opacity: 1;
+  border:
 
   &:hover {
     opacity: 0.8;

@@ -19,7 +19,7 @@ import { EventsContext } from "../contexts/events.context";
 import { HomeContext } from "../contexts/home.context";
 import { StoryCardLoading } from "../components/story-card-loading.component";
 
-export async function getServerSideProps() {
+/* export async function getServerSideProps() {
   const stories = await getStoriesForHome();
   let storyCards: StoryCardType[] = [];
 
@@ -31,13 +31,13 @@ export async function getServerSideProps() {
   return {
     props: { storyCards },
   };
-}
+} */
 
 type Props = {
   storyCards: StoryCardType[];
 };
 
-export default function Home({}) {
+export default function Home() {
   const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
 
   const { isLoggedIn } = useContext(UserContext);

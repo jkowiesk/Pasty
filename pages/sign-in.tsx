@@ -10,6 +10,7 @@ import SignUpForm from "../components/sign-up-form.component";
 
 import { UserContext } from "../contexts/user.context";
 import { useRouter } from "next/router";
+import { signOut } from "../utils/firebase.utils";
 
 type Props = {};
 

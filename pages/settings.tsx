@@ -12,16 +12,25 @@ import { useRouter } from "next/router";
 
 import { NewMessage } from "@styled-icons/entypo/NewMessage";
 import CustomBtn from "../components/custom-btn.component";
+import { updateAvatar } from "../utils/firebase.utils";
 
 type Props = {};
 
 type Event = React.FormEvent<HTMLInputElement>;
 
 export default function Settings() {
-  const { isLoggedIn } = useContext(UserContext);
+  const {
+    isLoggedIn,
+    user: { uid },
+  } = useContext(UserContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [file, setFile] = useState<File>();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoggedIn) router.push("/");
+  }, [isLoggedIn]);
 
   return (
     <Layout>
@@ -33,7 +42,7 @@ export default function Settings() {
           <SettingsSection>
             <Setting>
               <SettingHeader>Change username</SettingHeader>
-              <InputSection>
+              <InputForm>
                 <SettingTextInput
                   label="New username"
                   name="username"
@@ -43,11 +52,11 @@ export default function Settings() {
                 <UpdateBtn text="Update">
                   <EditIcon />
                 </UpdateBtn>
-              </InputSection>
+              </InputForm>
             </Setting>
-            <Setting>
+            {/* <Setting>
               <SettingHeader>Change password</SettingHeader>
-              <InputSection>
+              <InputForm>
                 <SettingTextInput
                   label="New password"
                   name="password"
@@ -57,20 +66,31 @@ export default function Settings() {
                 <UpdateBtn text="Update">
                   <EditIcon />
                 </UpdateBtn>
-              </InputSection>
-            </Setting>
+              </InputForm>
+            </Setting> */}
             <Setting>
               <SettingHeader>Change profile picture</SettingHeader>
-              <InputSection>
+              <InputForm
+                onSubmit={(e) => {
+                  updateAvatar(uid, file!);
+                }}
+              >
                 <FileInput
                   type="file"
                   name="avatar"
+                  id="avatar"
                   accept="image/png, image/jpeg"
+                  onChange={(e) => {
+                    const input = document.getElementById(
+                      "avatar"
+                    ) as HTMLInputElement;
+                    setFile(input.files![0]);
+                  }}
                 />
-                <UpdateBtn text="Update">
+                <UpdateBtn text="Update" submit>
                   <EditIcon />
                 </UpdateBtn>
-              </InputSection>
+              </InputForm>
             </Setting>
           </SettingsSection>
         </Main>
@@ -125,9 +145,10 @@ const SettingHeader = styled.h2`
 const SettingTextInput = styled(TextInput)`
   padding: 8px;
   width: 50%;
+  font-weight: none;
 `;
 
-const InputSection = styled.section`
+const InputForm = styled.form`
   flex: 1.5;
   display: grid;
   grid-template-rows: 1fr 1fr;

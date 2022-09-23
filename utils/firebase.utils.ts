@@ -25,9 +25,11 @@ import {
   documentId,
   getFirestore,
 } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
+
 import {
   User,
   StoryRequired,
@@ -46,6 +48,8 @@ const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+
+const storage = getStorage();
 
 // Auth
 export const auth = getAuth(app);
@@ -311,6 +315,24 @@ export const getStoryRatings = async (storyId: string, uid: string) => {
   }
 };
 
+export const getIsFavorite = async (uid: string, storyId: string) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  const favorites: string[] = docSnap.data()!.favorites;
+
+  return favorites.includes(storyId);
+};
+
+export const getIsFollowing = async (
+  followerUid: string,
+  followedUid: string
+) => {
+  const follower = await getUserById(followerUid);
+  const followed = await getUserById(followedUid);
+
+  return followed.followers.includes(follower.uid);
+};
+
 export const updateStoryRating = async (
   storyId: string,
   uid: string,
@@ -382,14 +404,40 @@ export const updateFavorites = async (uid: string, storyId: string) => {
   }
 };
 
-export const getFavorites = async (uid: string, storyId: string) => {
-  const docRef = doc(db, "users", uid);
-  const docSnap = await getDoc(docRef);
-  const favorites: string[] = docSnap.data()!.favorites;
+export const updateAvatar = async (uid: string, file: File) => {
+  const storageRef = ref(storage, `users/${uid}`);
+  await uploadBytes(storageRef, file).then((snapshot) => {});
+  await getDownloadURL(storageRef).then((url) =>
+    updateDoc(doc(db, "users", uid), {
+      avatar: url,
+    })
+  );
+};
 
-  if (favorites.includes(storyId)) {
-    return true;
+export const updateFollower = async (
+  followerUid: string,
+  followedUid: string
+) => {
+  const followerRef = doc(db, "users", followerUid);
+  const followedRef = doc(db, "users", followedUid);
+  const follower = await getUserById(followerUid);
+  const followed = await getUserById(followedUid);
+  const batch = writeBatch(db);
+  let followers = followed.followers;
+  let follows = follower.follows;
+
+  if (followers.includes(follower.uid)) {
+    followers = followers.filter(
+      (tempFollower) => tempFollower !== follower.uid
+    );
+    follows = follows.filter((tempFollowed) => tempFollowed !== followed.uid);
   } else {
-    return false;
+    followers.push(follower.uid);
+    follows.push(followed.uid);
   }
+
+  batch.update(followedRef, { followers });
+  batch.update(followerRef, { follows });
+
+  await batch.commit();
 };

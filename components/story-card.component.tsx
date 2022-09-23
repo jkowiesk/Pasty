@@ -9,7 +9,7 @@ import {
   UserSimple,
 } from "../utils/types.utils";
 import {
-  getFavorites,
+  getIsFavorite,
   getStoryRatings,
   updateFavorites,
   updateStoryRating,
@@ -77,7 +77,7 @@ export default function StoryCard({
       getStoryRatings(id, ClientsUid).then((data: any) => {
         setAreRatingsActive(data);
       });
-      getFavorites(ClientsUid, id).then((data: any) => setIsFavorite(data));
+      getIsFavorite(ClientsUid, id).then((data: any) => setIsFavorite(data));
     } else {
       setAreRatingsActive({ likes: false, dislikes: false });
       setIsFavorite(false);

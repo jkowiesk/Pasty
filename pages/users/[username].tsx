@@ -1,19 +1,27 @@
 import styled from "styled-components";
+import { useContext, useEffect, useState } from "react";
 
 import Layout from "../../components/layout.component";
 import { Card } from "../../components/card.component";
 
 import Image from "next/image";
 
-import { getStoriesByUid, getUserByUsername } from "../../utils/firebase.utils";
+import {
+  getIsFollowing,
+  getStoriesByUid,
+  getUserByUsername,
+  updateFollower,
+} from "../../utils/firebase.utils";
 import { Story, User, UserDoc, UserProfile } from "../../utils/types.utils";
 
 import StoryCard from "../../components/story-card.component";
 import CustomBtn from "../../components/custom-btn.component";
 
 import { Mask } from "@styled-icons/entypo/Mask";
+import { UserContext } from "../../contexts/user.context";
 
 type Props = { profileUser: UserProfile; stories: Story[] };
+type StyleProps = { isFollowing: boolean };
 
 export async function getServerSideProps({ params: { username } }: any) {
   const profileUser = await getUserByUsername(username);
@@ -26,7 +34,21 @@ export async function getServerSideProps({ params: { username } }: any) {
 }
 
 export default function Profile({ profileUser, stories }: Props) {
-  const handleFollowBtnClick = () => {};
+  const {
+    isLoggedIn,
+    user: { uid: clientUid },
+  } = useContext(UserContext);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+
+  useEffect(() => {
+    getIsFollowing(clientUid, profileUser.uid).then((data) =>
+      setIsFollowing(data)
+    );
+  }, [isLoggedIn]);
+
+  const handleFollowBtnClick = () => {
+    updateFollower(clientUid, profileUser.uid);
+  };
 
   return (
     <Layout>
@@ -43,7 +65,11 @@ export default function Profile({ profileUser, stories }: Props) {
                   Followers: {profileUser.followers.length}
                 </FollowersCount>
               </BasicInfo>
-              <FollowButton onClick={handleFollowBtnClick} text="Follow">
+              <FollowButton
+                isFollowing={isFollowing}
+                onClick={handleFollowBtnClick}
+                text="Follow"
+              >
                 <MaskIcon />
               </FollowButton>
             </LeftSide>
@@ -161,11 +187,12 @@ const Username = styled.h3`
 
 const FollowButton = styled(CustomBtn)`
   grid-area: followBtn;
-  background: var(--color-primary);
   height: 100%;
   padding-inline: 24px;
   align-self: end;
   width: 200px;
+  background: ${({ isFollowing }: StyleProps) =>
+    isFollowing ? "var(--color-distinct-light)" : "var(--color-primary)"};
 `;
 
 const MaskIcon = styled(Mask)`
