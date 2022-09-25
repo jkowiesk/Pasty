@@ -11,6 +11,7 @@ import {
 import {
   getIsFavorite,
   getStoryRatings,
+  getStoryRatingsNum,
   updateFavorites,
   updateStoryRating,
 } from "../utils/firebase.utils";
@@ -72,6 +73,11 @@ export default function StoryCard({
     dislikes: boolean;
   }>({ likes: false, dislikes: false });
 
+  const [ratingsNum, setRatingsNum] = useState<{
+    likes: number;
+    dislikes: number;
+  }>({ likes, dislikes });
+
   useEffect(() => {
     if (isLoggedIn) {
       getStoryRatings(id, ClientsUid).then((data: any) => {
@@ -90,9 +96,10 @@ export default function StoryCard({
   };
 
   const handleRatingClick = async (action: string) => {
-    if (isLoggedIn)
+    if (isLoggedIn) {
       setAreRatingsActive(await updateStoryRating(id, ClientsUid, action));
-    else {
+      setRatingsNum(await getStoryRatingsNum(id));
+    } else {
       dispatchEvents({ type: "alert", payload: "pasty/permission" });
     }
   };
@@ -114,7 +121,7 @@ export default function StoryCard({
           <AnimatedFavoriteIcon
             onClick={handleFavoriteClick}
             text="Favorite"
-            onHoverColor="var(--color-secondary-light)"
+            hoverColor="var(--color-secondary-light)"
           >
             {isFavorite ? (
               <FavoriteFillIconPreview isCardActive={isCardActive} />
@@ -139,7 +146,7 @@ export default function StoryCard({
           <AnimatedIcon
             onClick={handleCopy}
             text="Copy"
-            onHoverColor="var(--color-secondary-light)"
+            hoverColor="var(--color-secondary-light)"
           >
             <CopyIconPreview isCardActive={isCardActive} />
           </AnimatedIcon>
@@ -153,7 +160,7 @@ export default function StoryCard({
             <RatingWrapper>
               <AnimatedIcon
                 text="Dislike"
-                onHoverColor={
+                hoverColor={
                   areRatingsActive.dislikes
                     ? "var(--color-distinct-light)"
                     : "var(--color-secondary-light)"
@@ -169,12 +176,12 @@ export default function StoryCard({
                   isClicked={areRatingsActive.dislikes}
                 />
               </AnimatedIcon>
-              <RatingCounter>{dislikes}</RatingCounter>
+              <RatingCounter>{ratingsNum.dislikes}</RatingCounter>
             </RatingWrapper>
             <RatingWrapper>
               <AnimatedIcon
                 text="Like"
-                onHoverColor={
+                hoverColor={
                   areRatingsActive.likes
                     ? "var(--color-distinct-light)"
                     : "var(--color-secondary-light)"
@@ -190,7 +197,7 @@ export default function StoryCard({
                   isClicked={areRatingsActive.likes}
                 />
               </AnimatedIcon>
-              <RatingCounter>{likes}</RatingCounter>
+              <RatingCounter>{ratingsNum.likes}</RatingCounter>
             </RatingWrapper>
           </RatingBar>
         </Footer>
@@ -206,7 +213,7 @@ export default function StoryCard({
         <AnimatedFavoriteIcon
           onClick={handleFavoriteClick}
           text="Favorite"
-          onHoverColor="var(--color-secondary-light)"
+          hoverColor="var(--color-secondary-light)"
         >
           {isFavorite ? <FavoriteFillIcon /> : <FavoriteIcon />}
         </AnimatedFavoriteIcon>
@@ -216,7 +223,7 @@ export default function StoryCard({
         <AnimatedIcon
           onClick={handleCopy}
           text="Copy"
-          onHoverColor="var(--color-secondary-light)"
+          hoverColor="var(--color-secondary-light)"
         >
           <CopyIcon />
         </AnimatedIcon>
@@ -230,7 +237,7 @@ export default function StoryCard({
           <RatingWrapper>
             <AnimatedIcon
               text="Dislike"
-              onHoverColor={
+              hoverColor={
                 areRatingsActive.dislikes
                   ? "var(--color-distinct-light)"
                   : "var(--color-secondary-light)"
@@ -248,7 +255,7 @@ export default function StoryCard({
           <RatingWrapper>
             <AnimatedIcon
               text="Like"
-              onHoverColor={
+              hoverColor={
                 areRatingsActive.likes
                   ? "var(--color-distinct-light)"
                   : "var(--color-secondary-light)"

@@ -39,15 +39,20 @@ export default function Profile({ profileUser, stories }: Props) {
     user: { uid: clientUid },
   } = useContext(UserContext);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [followersNum, setFollowersNum] = useState<number>(
+    profileUser.followers.length
+  );
 
   useEffect(() => {
-    getIsFollowing(clientUid, profileUser.uid).then((data) =>
-      setIsFollowing(data)
-    );
+    if (isLoggedIn)
+      getIsFollowing(clientUid, profileUser.uid).then((data) =>
+        setIsFollowing(data)
+      );
   }, [isLoggedIn]);
 
-  const handleFollowBtnClick = () => {
-    updateFollower(clientUid, profileUser.uid);
+  const handleFollowBtnClick = async () => {
+    setFollowersNum(await updateFollower(clientUid, profileUser.uid));
+    setIsFollowing(await getIsFollowing(clientUid, profileUser.uid));
   };
 
   return (
@@ -61,9 +66,7 @@ export default function Profile({ profileUser, stories }: Props) {
               </ImageWrapper>
               <BasicInfo>
                 <Username>{profileUser.username}</Username>
-                <FollowersCount>
-                  Followers: {profileUser.followers.length}
-                </FollowersCount>
+                <FollowersCount>Followers: {followersNum}</FollowersCount>
               </BasicInfo>
               <FollowButton
                 isFollowing={isFollowing}

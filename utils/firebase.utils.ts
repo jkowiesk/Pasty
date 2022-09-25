@@ -36,12 +36,14 @@ import {
   Story,
   UserSimple,
   StoryDocDB,
+  StoryDB,
   UserDoc,
 } from "./types.utils";
 import { DateToJSON, pickStories } from "./functions.utils";
 
 const DEFAULT_PROFILE_IMG =
   "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
+const PAGE_SIZE = 3;
 
 const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
 
@@ -246,7 +248,6 @@ export const getStoriesForHome = async () => {
 
 export const getNewStories = async (oldStoriesId: string[]) => {
   let q;
-  const PAGE_SIZE = 3;
 
   if (oldStoriesId.length > 0)
     q = query(
@@ -313,6 +314,16 @@ export const getStoryRatings = async (storyId: string, uid: string) => {
   } else {
     return { likes: false, dislikes: false };
   }
+};
+
+export const getStoryRatingsNum = async (storyId: string) => {
+  const docRef = doc(db, "stories", storyId);
+  const docSnap = await getDoc(docRef);
+  const {
+    ratings: { likes, dislikes },
+  } = docSnap.data()! as StoryDB;
+
+  return { likes: likes.length, dislikes: dislikes.length };
 };
 
 export const getIsFavorite = async (uid: string, storyId: string) => {
@@ -418,12 +429,14 @@ export const updateFollower = async (
   followerUid: string,
   followedUid: string
 ) => {
-  const followerRef = doc(db, "users", followerUid);
   const followedRef = doc(db, "users", followedUid);
-  const follower = await getUserById(followerUid);
   const followed = await getUserById(followedUid);
-  const batch = writeBatch(db);
   let followers = followed.followers;
+  if (followerUid === followedUid) return followers.length;
+
+  const batch = writeBatch(db);
+  const followerRef = doc(db, "users", followerUid);
+  const follower = await getUserById(followerUid);
   let follows = follower.follows;
 
   if (followers.includes(follower.uid)) {
@@ -440,4 +453,6 @@ export const updateFollower = async (
   batch.update(followerRef, { follows });
 
   await batch.commit();
+
+  return followers.length;
 };

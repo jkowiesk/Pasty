@@ -8,12 +8,12 @@ type Props = {
   href?: string;
   onClick?: any;
   className?: any;
-  onHoverColor?: string;
+  hoverColor?: string;
   children: JSX.Element;
 };
 
 type StyleProps = {
-  onHoverColor?: string;
+  hoverColor?: string;
 };
 
 export default function AnimatedIcon({
@@ -21,12 +21,12 @@ export default function AnimatedIcon({
   href,
   onClick,
   className,
-  onHoverColor,
+  hoverColor,
   children,
 }: Props) {
   return href ? (
     <Link href={href} passHref>
-      <LinkWrapper className={className} onHoverColor={onHoverColor}>
+      <LinkWrapper className={className} hoverColor={hoverColor}>
         <AnimatedText>{text}</AnimatedText>
         {children}
       </LinkWrapper>
@@ -35,7 +35,7 @@ export default function AnimatedIcon({
     <ButtonWrapper
       onClick={onClick}
       className={className}
-      onHoverColor={onHoverColor}
+      hoverColor={hoverColor}
     >
       <AnimatedText>{text}</AnimatedText>
       {children}
@@ -59,8 +59,8 @@ const LinkWrapper = styled.a`
   }
 
   &:hover * * {
-    color: ${({ onHoverColor }: StyleProps) =>
-      onHoverColor || "var(--color-primary-light)"};
+    color: ${({ hoverColor }: StyleProps) =>
+      hoverColor || "var(--color-primary-light)"};
   }
   p {
     transition: transform ease-out 0.6s;
@@ -68,8 +68,8 @@ const LinkWrapper = styled.a`
 
   &:hover p {
     transform: translateY(105%);
-    color: ${({ onHoverColor }: StyleProps) =>
-      onHoverColor || "var(--color-primary-light)"};
+    color: ${({ hoverColor }: StyleProps) =>
+      hoverColor || "var(--color-primary-light)"};
   }
 `;
 
