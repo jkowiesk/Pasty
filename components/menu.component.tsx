@@ -11,6 +11,7 @@ import { SignOut } from "@styled-icons/fluentui-system-filled/SignOut";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/user.context";
 import Link from "next/link";
+import SearchDialog from "./search-dialog.component";
 
 type Props = {
   isOpen: isOpenType;
@@ -21,6 +22,7 @@ type WrapperProps = {
 };
 
 export default function Menu({ isOpen }: Props) {
+  const [isSearchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
   const [childrenNum, setChildrenNum] = useState(4);
   const handleSignOut = () => {
     signOut();
@@ -34,36 +36,50 @@ export default function Menu({ isOpen }: Props) {
   }, [isLoggedIn]);
 
   return (
-    <Wrapper isOpen={isOpen}>
-      <LeftSide>
-        <AnimatedIcon text="Search">
-          <SearchIcon />
-        </AnimatedIcon>
-      </LeftSide>
-      <Nav childrenNum={childrenNum}>
-        {isLoggedIn && (
-          <Link href="/settings" passHref>
-            <Category>Settings</Category>
+    <>
+      <Wrapper isOpen={isOpen}>
+        <LeftSide>
+          <AnimatedIcon
+            text="Search"
+            onClick={async () => {
+              await setSearchDialogOpen(true);
+              const html = document.getElementsByTagName("html")[0];
+              html.style.overflowY = "none";
+              html.style.padding = "0";
+            }}
+          >
+            <SearchIcon />
+          </AnimatedIcon>
+        </LeftSide>
+        <Nav childrenNum={childrenNum}>
+          {isLoggedIn && (
+            <Link href="/settings" passHref>
+              <Category>Settings</Category>
+            </Link>
+          )}
+          <Link href="/about" passHref>
+            <Category>About</Category>
           </Link>
-        )}
-        <Link href="/about" passHref>
-          <Category>About</Category>
-        </Link>
-        <Category>Day Pasta</Category>
-        {isLoggedIn && (
-          <Link href="/favorites" passHref>
-            <Category>Favorites</Category>
-          </Link>
-        )}
-      </Nav>
-      <RightSide>
-        {isLoggedIn && (
-          <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
-            <SignOutIcon />
-          </SignOutWrapper>
-        )}
-      </RightSide>
-    </Wrapper>
+          <Category>Day Pasta</Category>
+          {isLoggedIn && (
+            <Link href="/favorites" passHref>
+              <Category>Favorites</Category>
+            </Link>
+          )}
+        </Nav>
+        <RightSide>
+          {isLoggedIn && (
+            <SignOutWrapper text="Sign Out" onClick={handleSignOut}>
+              <SignOutIcon />
+            </SignOutWrapper>
+          )}
+        </RightSide>
+      </Wrapper>
+      <SearchDialog
+        isOpen={isSearchDialogOpen}
+        setIsOpen={setSearchDialogOpen}
+      />
+    </>
   );
 }
 
@@ -141,12 +157,12 @@ const SignOutWrapper = styled(AnimatedIcon)`
 `;
 
 const SearchIcon = styled(Search)`
-  position: relative;
   color: var(--color-primary-dark);
   padding-top: 5px;
   width: 45px;
   height: 50px;
   background: var(--color-background-secondary);
+  position: relative;
   z-index: 1;
 `;
 

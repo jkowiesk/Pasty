@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 import { EventsContext } from "../contexts/events.context";
 import Alert from "./alert.component";
 import Header from "./header.component";
+import SearchDialog from "./search-dialog.component";
 
 type Props = {
   fullMain?: boolean;
@@ -13,11 +14,17 @@ export default function Layout({ children }: Props) {
   const {
     alert: { isActive },
   } = useContext(EventsContext);
+  const [isSearchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
+
   return (
     <Overlay>
       <Header />
       <Main>{children}</Main>
-      <>{isActive && <Alert />}</>
+      {isActive && <Alert />}
+      <SearchDialog
+        isOpen={isSearchDialogOpen}
+        setIsOpen={setSearchDialogOpen}
+      />
     </Overlay>
   );
 }

@@ -11,6 +11,9 @@ import { TagsInput } from "react-tag-input-component";
 import { Cross } from "@styled-icons/entypo/Cross";
 
 import { addStoryToDB } from "../utils/firebase.utils";
+import { Send } from "@styled-icons/fluentui-system-filled/Send";
+
+import CustomBtn from "./custom-btn.component";
 
 type Props = {
   isOpen: any;
@@ -64,31 +67,29 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
     >
       <Overlay />
       <Panel>
-        <Form onSubmit={handleSubmit}>
-          <MaxWidth>
-            <TitleInput
-              label="Title"
-              name="title"
-              value={newStory.title}
-              onChange={handleChange}
-              required
-            />
-          </MaxWidth>
+        <Form>
+          <TitleInput
+            label="Title"
+            name="title"
+            value={newStory.title}
+            onChange={handleChange}
+            required
+          />
           <TextArea
             name="content"
             value={newStory.content}
             onChange={handleChange}
             required
           />
-          <MaxWidth>
-            <TagsInputStyled
-              value={tags}
-              onChange={setTags}
-              name="fruits"
-              placeHolder="enter fruits"
-            />
-          </MaxWidth>
-          <Submit type="submit">Submit</Submit>
+          <TagsInputStyled
+            value={tags}
+            onChange={setTags}
+            name="tags"
+            placeHolder="tag"
+          />
+          <SubmitBtn text="Submit" onClick={handleSubmit}>
+            <SubmitIcon />
+          </SubmitBtn>
         </Form>
         <Cancel
           onClick={() => {
@@ -119,9 +120,9 @@ const Panel = styled(Dialog.Panel)`
   left: 0;
   right: 0;
   margin: auto;
-  height: 40vh;
+  height: 50vh;
   width: 30vw;
-  padding: 8px 32px;
+  padding: 16px 32px;
   background: var(--color-gray-1000);
   border-radius: 5px;
   border: 1px solid var(--color-primary-dark);
@@ -131,6 +132,7 @@ const Panel = styled(Dialog.Panel)`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 16px;
   width: 100%;
   height: 100%;
@@ -144,6 +146,7 @@ const TextArea = styled.textarea`
   background: var(--color-gray-1000);
   border: 1px solid var(--color-gray-50);
   outline: none;
+  flex: 2;
 
   &:focus {
     border: 1px solid var(--color-primary);
@@ -182,16 +185,8 @@ const CrossIcon = styled(Cross)`
   width: 100%;
 `;
 
-const MaxWidth = styled.div`
-  padding-inline: 8px;
-  display: grid;
-  justify-content: center;
-  padding-top: 8px;
-  width: 100%;
-`;
-
-const Submit = styled.button`
-  grid-area: submit;
+const SubmitBtn = styled(CustomBtn)`
+  margin-top: 10px;
   background: linear-gradient(
     180deg,
     #f7bf50,
@@ -201,14 +196,13 @@ const Submit = styled.button`
     #f5a018,
     #f5970a
   );
-  color: var(--color-font-black);
-  padding: 0;
-  border: 0;
-  height: 30px;
-  align-self: center;
-  cursor: pointer;
+  border: 1px solid var(--color-background);
+  width: 40%;
+  margin: auto;
+`;
 
-  &:hover {
-    background: var(--color-primary);
-  }
+const SubmitIcon = styled(Send)`
+  color: var(--color-distinct);
+  width: 30px;
+  height: 30px;
 `;
