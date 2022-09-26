@@ -5,10 +5,12 @@ import { signOut } from "../utils/firebase.utils";
 
 import AnimatedIcon from "./animated-icon.component";
 
+import { Search } from "@styled-icons/material/Search";
 import { SignOut } from "@styled-icons/fluentui-system-filled/SignOut";
-import { Settings } from "@styled-icons/fluentui-system-filled/Settings";
+
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/user.context";
+import Link from "next/link";
 
 type Props = {
   isOpen: isOpenType;
@@ -28,23 +30,31 @@ export default function Menu({ isOpen }: Props) {
 
   useEffect(() => {
     if (isLoggedIn) setChildrenNum(4);
-    else setChildrenNum(3);
+    else setChildrenNum(2);
   }, [isLoggedIn]);
 
   return (
     <Wrapper isOpen={isOpen}>
       <LeftSide>
-        {isLoggedIn && (
-          <AnimatedIcon text="Settings" href="/settings">
-            <SettingsIcon />
-          </AnimatedIcon>
-        )}
+        <AnimatedIcon text="Search">
+          <SearchIcon />
+        </AnimatedIcon>
       </LeftSide>
       <Nav childrenNum={childrenNum}>
-        <Category>FAQ</Category>
-        <Category>About</Category>
+        {isLoggedIn && (
+          <Link href="/settings" passHref>
+            <Category>Settings</Category>
+          </Link>
+        )}
+        <Link href="/about" passHref>
+          <Category>About</Category>
+        </Link>
         <Category>Day Pasta</Category>
-        <>{isLoggedIn && <Category>My Favorites</Category>}</>
+        {isLoggedIn && (
+          <Link href="/favorites" passHref>
+            <Category>Favorites</Category>
+          </Link>
+        )}
       </Nav>
       <RightSide>
         {isLoggedIn && (
@@ -75,17 +85,16 @@ const heightAnimationClose = keyframes`
   }
 `;
 
-const hoverBackground = keyframes`
-`;
-
 const LeftSide = styled.div`
   flex: 1;
   display: flex;
+  padding-bottom: 10px;
 `;
 
 const RightSide = styled.div`
   flex: 1;
   display: flex;
+  padding-bottom: 10px;
 `;
 
 const Category = styled.a`
@@ -99,6 +108,7 @@ const Category = styled.a`
   transition: background, opacity;
   transition-duration: 0.5s;
   transition-timing-function: ease-out;
+  text-decoration: none;
 
   &:hover {
     cursor: pointer;
@@ -130,22 +140,14 @@ const SignOutWrapper = styled(AnimatedIcon)`
   margin-left: auto;
 `;
 
-const SettingsWrapper = styled(AnimatedIcon)`
-  margin-left: auto;
-`;
-
-const SettingsIcon = styled(Settings)`
+const SearchIcon = styled(Search)`
   position: relative;
   color: var(--color-primary-dark);
-  width: calc(var(--icons-size) + 5px);
-  height: calc(var(--icons-size) + 5px);
+  padding-top: 5px;
+  width: 45px;
+  height: 50px;
   background: var(--color-background-secondary);
   z-index: 1;
-`;
-
-const MaxWidth = styled.div`
-  padding-inline: 8px;
-  display: grid;
 `;
 
 const Wrapper = styled.div`
@@ -157,7 +159,7 @@ const Wrapper = styled.div`
   background: var(--color-background-secondary);
   border-radius: 0px 0px 30px 30px;
   border-bottom: 1px solid var(--color-gray-50);
-  padding-inline: 78px;
+  padding-inline: 80px;
 
   height: ${({ isOpen }: WrapperProps) => {
     switch (isOpen) {

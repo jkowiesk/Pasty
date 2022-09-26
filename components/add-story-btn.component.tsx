@@ -8,7 +8,7 @@ export default function AddStoryBtn({ setIsOpen }: Props) {
       onClick={async () => {
         await setIsOpen(true);
         const html = document.getElementsByTagName("html")[0];
-        html.style.overflowY = "scroll";
+        html.style.overflowY = "none";
         html.style.padding = "0";
       }}
     >
@@ -36,7 +36,7 @@ const Wrapper = styled.button`
   color: var(--color-primary);
   font-size: 3.5rem;
   bottom: 40px;
-  right: 40px;
+  left: 92vw;
   width: 80px;
   height: 80px;
   border-radius: 50%;

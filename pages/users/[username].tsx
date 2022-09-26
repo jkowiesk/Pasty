@@ -12,7 +12,7 @@ import {
   getUserByUsername,
   updateFollower,
 } from "../../utils/firebase.utils";
-import { Story, User, UserDoc, UserProfile } from "../../utils/types.utils";
+import { Story, UserProfile } from "../../utils/types.utils";
 
 import StoryCard from "../../components/story-card.component";
 import CustomBtn from "../../components/custom-btn.component";

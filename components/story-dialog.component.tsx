@@ -1,10 +1,12 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/user.context";
 import styled from "styled-components";
 
 import { Dialog } from "@headlessui/react";
 import TextInput from "./text-input.component";
 import { newStory, User } from "../utils/types.utils";
+
+import { TagsInput } from "react-tag-input-component";
 
 import { Cross } from "@styled-icons/entypo/Cross";
 
@@ -30,6 +32,7 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
   } = useContext(UserContext);
 
   const [newStory, setNewStory] = useState<newStory>(newStoryInit(uid));
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleChange = (
     e: React.FormEvent<HTMLInputElement> | React.FormEvent<HTMLTextAreaElement>
@@ -46,6 +49,10 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
     setIsOpen(false);
     await addStoryToDB({ ...newStory, tags: [newStory.tags] }, uid);
   };
+
+  useEffect(() => {
+    console.log(tags);
+  }, [tags]);
 
   return (
     <Dialog
@@ -67,20 +74,20 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
               required
             />
           </MaxWidth>
-          <MaxWidth>
-            <TagsInput
-              label="Tags"
-              name="tags"
-              value={newStory.tags}
-              onChange={handleChange}
-            />
-          </MaxWidth>
           <TextArea
             name="content"
             value={newStory.content}
             onChange={handleChange}
             required
           />
+          <MaxWidth>
+            <TagsInputStyled
+              value={tags}
+              onChange={setTags}
+              name="fruits"
+              placeHolder="enter fruits"
+            />
+          </MaxWidth>
           <Submit type="submit">Submit</Submit>
         </Form>
         <Cancel
@@ -122,9 +129,9 @@ const Panel = styled(Dialog.Panel)`
 `;
 
 const Form = styled.form`
-  display: grid;
-  grid-template-areas: "title tags" "content content" "submit submit";
-  grid-template-rows: 80px 1fr 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
   height: 100%;
 `;
@@ -148,9 +155,8 @@ const TitleInput = styled(TextInput)`
   width: 100%;
 `;
 
-const TagsInput = styled(TextInput)`
+const TagsInputStyled = styled(TagsInput)`
   grid-area: tags;
-  width: 100%;
 `;
 
 const Cancel = styled.button`
@@ -181,6 +187,7 @@ const MaxWidth = styled.div`
   display: grid;
   justify-content: center;
   padding-top: 8px;
+  width: 100%;
 `;
 
 const Submit = styled.button`

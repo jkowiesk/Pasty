@@ -38,6 +38,7 @@ import {
   StoryDocDB,
   StoryDB,
   UserDoc,
+  StoryCardType,
 } from "./types.utils";
 import { DateToJSON, pickStories } from "./functions.utils";
 
@@ -183,6 +184,8 @@ export const addStoryToDB = async (newStory: StoryRequired, uid: string) => {
   }
 };
 
+export const getFireUser = async () => getAuth(app).currentUser;
+
 export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
   return { uid, ...(docSnap.data() as UserDoc) };
@@ -299,6 +302,42 @@ export const getStoriesByUid = async (uid: string) => {
   });
 
   return stories;
+};
+
+export const getFavoriteStoryCards = async (clientUid: string) => {
+  const { favorites } = await getUserById(clientUid);
+
+  if (favorites.length === 0) return [];
+  const q = query(
+    collection(db, "stories"),
+    where(documentId(), "in", favorites)
+  );
+  const { docs } = await getDocs(q);
+  let storyCards: StoryCardType[] = [];
+
+  for (let doc of docs) {
+    const id: string = doc.id;
+    const story = doc.data() as StoryDocDB;
+    const {
+      created: createdDB,
+      ratings: { likes, dislikes },
+      uid,
+    } = story;
+    const created = DateToJSON(createdDB.toDate());
+    const ratings = { likes: likes.length, dislikes: dislikes.length };
+    const { username, avatar } = await getUserById(uid);
+
+    storyCards.push({
+      story: { id, ...story, created, ratings },
+      user: {
+        uid,
+        username,
+        avatar,
+      },
+    });
+  }
+
+  return storyCards;
 };
 
 export const getStoryRatings = async (storyId: string, uid: string) => {

@@ -34,7 +34,6 @@ const Overlay = styled.div`
     "main";
   grid-template-rows: 100px 1fr;
   grid-template-columns: 1fr;
-
   min-height: 100%;
 `;
 

@@ -115,9 +115,11 @@ export default function StoryCard({
     const [isCardActive, setIsCardActive] = useState<boolean>(false);
     return (
       <PreviewCard isCardActive={isCardActive} className={className}>
+        <SuperHeader>
+          <Time title={created.date}>{created.time}</Time>
+        </SuperHeader>
         <Header>
           <Title>{title}</Title>
-          <Time title={created.date}>{created.time}</Time>
           <AnimatedFavoriteIcon
             onClick={handleFavoriteClick}
             text="Favorite"
@@ -207,9 +209,11 @@ export default function StoryCard({
 
   const StoryCardFull = () => (
     <Card className={className}>
+      <SuperHeader>
+        <Time title={created.date}>{created.time}</Time>
+      </SuperHeader>
       <Header>
         <Title>{title}</Title>
-        <Time title={created.date}>{created.time}</Time>
         <AnimatedFavoriteIcon
           onClick={handleFavoriteClick}
           text="Favorite"
@@ -297,16 +301,16 @@ const storyClick = keyframes`
 
 const Card = styled.div`
   padding-inline: 8px;
-  padding-block: 16px;
+  padding-block: 4px 16px;
   background: var(--color-gray-1000);
   border-radius: 5px;
   border: 2px solid var(--color-primary-dark);
   border-bottom: 8px solid var(--color-primary-dark);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   box-shadow: var(--shadow-elevation-low);
-  min-height: 400px;
+  min-height: 450px;
   width: 100%;
 `;
 
@@ -321,19 +325,26 @@ const PreviewCard = styled(Card)`
   animation: ${({ isCardActive }: PreviewCardProps) =>
       isCardActive ? storyClick : null}
     0.5s;
-  height: 450px;
+  height: 450x;
 `;
 
 const Title = styled.h1`
   color: var(--color-font-black);
+  font-size: 1.8rem;
   justify-self: start;
 `;
 
 const Header = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 50px;
   justify-content: space-between;
   place-items: center;
+`;
+
+const SuperHeader = styled.div`
+  display: grid;
+  place-items: center;
+  margin-bottom: -16px;
 `;
 
 const Time = styled.p`
@@ -497,6 +508,6 @@ const RatingCounter = styled.p`
   transform: translateY(-50%);
   font-size: 0.8rem;
   width: fit-content;
-  padding-right: 3px;
+  padding-right: 1px;
   color: var(--color-background);
 `;
