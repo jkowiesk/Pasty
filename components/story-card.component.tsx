@@ -31,6 +31,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import AnimatedIcon from "./animated-icon.component";
+import StoryCardDropdown from "./story-card-dropdown.component";
 
 type Props = {
   full?: boolean;
@@ -120,7 +121,8 @@ export default function StoryCard({
         </SuperHeader>
         <Header>
           <Title>{title}</Title>
-          <AnimatedFavoriteIcon
+          <StoryCardDropdown />
+          {/* <AnimatedFavoriteIcon
             onClick={handleFavoriteClick}
             text="Favorite"
             hoverColor="var(--color-secondary-light)"
@@ -130,7 +132,7 @@ export default function StoryCard({
             ) : (
               <FavoriteIconPreview isCardActive={isCardActive} />
             )}
-          </AnimatedFavoriteIcon>
+          </AnimatedFavoriteIcon> */}
         </Header>
         <Link href={`/pasty/${id}`} passHref>
           <LinkWrapper
