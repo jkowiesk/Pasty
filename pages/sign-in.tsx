@@ -18,9 +18,13 @@ export default function SignIn() {
   const { isLoggedIn } = useContext(UserContext);
   const router = useRouter();
 
-  useEffect(() => {
+  /* useEffect(() => {
+    signOut();
+  }, []); */
+
+  /* useEffect(() => {
     if (isLoggedIn) router.push("/");
-  }, [isLoggedIn]);
+  }, [isLoggedIn]); */
 
   return (
     <Layout>

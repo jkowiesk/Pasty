@@ -41,10 +41,7 @@ export type Story = {
   content: string;
   tags: string[];
   uid: string;
-  created: {
-    date: string;
-    time: string;
-  };
+  created: Date;
   ratings: {
     likes: number;
     dislikes: number;
@@ -56,10 +53,7 @@ export type StoryDoc = {
   content: string;
   tags: string[];
   uid: string;
-  created: {
-    date: string;
-    time: string;
-  };
+  created: Date;
   ratings: {
     likes: number;
     dislikes: number;
@@ -108,6 +102,11 @@ export type newStory = {
   content: string;
   tags: string;
   uid: string;
+};
+
+export type Result<T> = {
+  result?: T;
+  returnCode: string;
 };
 
 export type isOpenType = "true" | "false" | "";

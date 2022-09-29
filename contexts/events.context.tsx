@@ -7,6 +7,7 @@ type Props = {
 type Context = {
   alert: Event;
   redirect: Event;
+  confirmation: DataEvent;
   dispatchEvents: any;
 };
 
@@ -16,8 +17,16 @@ type Event = {
   type: string;
 };
 
+type DataEvent = {
+  isActive: boolean;
+  message?: string;
+  data: any;
+  type: string;
+};
+
 type Events = {
   alert: Event;
+  confirmation: DataEvent;
   redirect: Event;
 };
 
@@ -43,7 +52,7 @@ const eventsReducer = (state: any, action: any) => {
             type: "error",
           },
         };
-      case "pasty/permission":
+      case "pasty/not-logged":
         return {
           ...state,
           alert: {
@@ -70,12 +79,62 @@ const eventsReducer = (state: any, action: any) => {
             type: "success",
           },
         };
+      case "pasty/delete/not-owner":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Users can only delete stories created by them",
+            type: "error",
+          },
+        };
+      case "pasty/delete/success":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Successfully deleted story",
+            type: "success",
+          },
+        };
       case "pasty/close":
         return {
           ...state,
           alert: {
             isActive: false,
             message: "",
+            type: "",
+          },
+        };
+      default:
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Something went wrong, try again later",
+            type: "error",
+          },
+        };
+    }
+  } else if (type === "confirmation") {
+    switch (payload.code) {
+      case "pasty/delete":
+        return {
+          ...state,
+          confirmation: {
+            isActive: true,
+            message: "Do you really want to delete this story ?",
+            data: payload.data,
+            type: "important",
+          },
+        };
+      case "pasty/close":
+        return {
+          ...state,
+          confirmation: {
+            isActive: false,
+            message: "",
+            data: "",
             type: "",
           },
         };
@@ -96,6 +155,7 @@ const eventsReducer = (state: any, action: any) => {
           ...state,
           redirect: {
             isActive: true,
+            message: "",
             type: "pasty/logged-in",
           },
         };
@@ -104,6 +164,7 @@ const eventsReducer = (state: any, action: any) => {
           ...state,
           redirect: {
             isActive: false,
+            message: "",
             type: "",
           },
         };
@@ -114,6 +175,7 @@ const eventsReducer = (state: any, action: any) => {
 };
 
 const INIT_VALUE_EVENTS: Events = {
+  confirmation: { isActive: false, message: "", type: "", data: {} },
   alert: { isActive: false, message: "", type: "" },
   redirect: { isActive: false, message: "", type: "" },
 };

@@ -61,7 +61,6 @@ export default function StoryCard({
   user: { username, avatar },
   className,
 }: Props) {
-  const [isFavorite, setIsFavorite] = useState(false);
   const {
     isLoggedIn,
     user: { uid: ClientsUid },
@@ -79,15 +78,18 @@ export default function StoryCard({
     dislikes: number;
   }>({ likes, dislikes });
 
+  const formatter = new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
   useEffect(() => {
     if (isLoggedIn) {
       getStoryRatings(id, ClientsUid).then((data: any) => {
         setAreRatingsActive(data);
       });
-      getIsFavorite(ClientsUid, id).then((data: any) => setIsFavorite(data));
     } else {
       setAreRatingsActive({ likes: false, dislikes: false });
-      setIsFavorite(false);
     }
   }, [isLoggedIn, id, ClientsUid]);
 
@@ -101,14 +103,7 @@ export default function StoryCard({
       setAreRatingsActive(await updateStoryRating(id, ClientsUid, action));
       setRatingsNum(await getStoryRatingsNum(id));
     } else {
-      dispatchEvents({ type: "alert", payload: "pasty/permission" });
-    }
-  };
-
-  const handleFavoriteClick = async () => {
-    if (isLoggedIn) setIsFavorite(await updateFavorites(ClientsUid, id));
-    else {
-      dispatchEvents({ type: "alert", payload: "pasty/permission" });
+      dispatchEvents({ type: "alert", payload: "pasty/not-logged" });
     }
   };
 
@@ -117,22 +112,13 @@ export default function StoryCard({
     return (
       <PreviewCard isCardActive={isCardActive} className={className}>
         <SuperHeader>
-          <Time title={created.date}>{created.time}</Time>
+          <Time>{formatter.format(new Date(created))}</Time>
         </SuperHeader>
         <Header>
           <Title>{title}</Title>
-          <StoryCardDropdown />
-          {/* <AnimatedFavoriteIcon
-            onClick={handleFavoriteClick}
-            text="Favorite"
-            hoverColor="var(--color-secondary-light)"
-          >
-            {isFavorite ? (
-              <FavoriteFillIconPreview isCardActive={isCardActive} />
-            ) : (
-              <FavoriteIconPreview isCardActive={isCardActive} />
-            )}
-          </AnimatedFavoriteIcon> */}
+          {isLoggedIn && (
+            <StoryCardDropdown id={id} isCardActive={isCardActive} />
+          )}
         </Header>
         <Link href={`/pasty/${id}`} passHref>
           <LinkWrapper
@@ -150,7 +136,7 @@ export default function StoryCard({
           <AnimatedIcon
             onClick={handleCopy}
             text="Copy"
-            hoverColor="var(--color-secondary-light)"
+            hovercolor="var(--color-secondary-light)"
           >
             <CopyIconPreview isCardActive={isCardActive} />
           </AnimatedIcon>
@@ -164,7 +150,7 @@ export default function StoryCard({
             <RatingWrapper>
               <AnimatedIcon
                 text="Dislike"
-                hoverColor={
+                hovercolor={
                   areRatingsActive.dislikes
                     ? "var(--color-distinct-light)"
                     : "var(--color-secondary-light)"
@@ -185,7 +171,7 @@ export default function StoryCard({
             <RatingWrapper>
               <AnimatedIcon
                 text="Like"
-                hoverColor={
+                hovercolor={
                   areRatingsActive.likes
                     ? "var(--color-distinct-light)"
                     : "var(--color-secondary-light)"
@@ -212,24 +198,18 @@ export default function StoryCard({
   const StoryCardFull = () => (
     <Card className={className}>
       <SuperHeader>
-        <Time title={created.date}>{created.time}</Time>
+        <Time>{formatter.format(new Date(created))}</Time>
       </SuperHeader>
       <Header>
         <Title>{title}</Title>
-        <AnimatedFavoriteIcon
-          onClick={handleFavoriteClick}
-          text="Favorite"
-          hoverColor="var(--color-secondary-light)"
-        >
-          {isFavorite ? <FavoriteFillIcon /> : <FavoriteIcon />}
-        </AnimatedFavoriteIcon>
+        {isLoggedIn && <StoryCardDropdown id={id} />}
       </Header>
       <Content>{content}</Content>
       <Footer>
         <AnimatedIcon
           onClick={handleCopy}
           text="Copy"
-          hoverColor="var(--color-secondary-light)"
+          hovercolor="var(--color-secondary-light)"
         >
           <CopyIcon />
         </AnimatedIcon>
@@ -243,7 +223,7 @@ export default function StoryCard({
           <RatingWrapper>
             <AnimatedIcon
               text="Dislike"
-              hoverColor={
+              hovercolor={
                 areRatingsActive.dislikes
                   ? "var(--color-distinct-light)"
                   : "var(--color-secondary-light)"
@@ -261,7 +241,7 @@ export default function StoryCard({
           <RatingWrapper>
             <AnimatedIcon
               text="Like"
-              hoverColor={
+              hovercolor={
                 areRatingsActive.likes
                   ? "var(--color-distinct-light)"
                   : "var(--color-secondary-light)"
@@ -353,36 +333,6 @@ const Time = styled.p`
   color: var(--color-secondary);
   cursor: default;
   width: fit-content;
-`;
-
-const FavoriteFillIcon = styled(BookmarkFill)`
-  width: calc(var(--icons-size) - 10px);
-  height: calc(var(--icons-size) - 10px);
-  position: relative;
-  z-index: 1;
-  color: var(--color-secondary);
-`;
-
-const FavoriteFillIconPreview = styled(FavoriteFillIcon)`
-  background: ${({ isCardActive }: PreviewCardProps) =>
-    isCardActive ? "transparent" : "var(--color-gray-1000)"};
-`;
-
-const FavoriteIcon = styled(Bookmark)`
-  width: calc(var(--icons-size) - 10px);
-  height: calc(var(--icons-size) - 10px);
-  position: relative;
-  z-index: 1;
-  color: var(--color-secondary);
-`;
-
-const FavoriteIconPreview = styled(FavoriteIcon)`
-  background: ${({ isCardActive }: PreviewCardProps) =>
-    isCardActive ? "transparent" : "var(--color-gray-1000)"};
-`;
-
-const AnimatedFavoriteIcon = styled(AnimatedIcon)`
-  justify-self: end;
 `;
 
 const Content = styled.p`
@@ -482,18 +432,8 @@ const Username = styled.p`
   padding-top: 5px;
 `;
 
-const PersonIcon = styled(Person)`
-  color: var(--color-primary-dark);
-  width: var(--icons-size);
-  height: var(--icons-size);
-`;
-
 const RatingBar = styled.div`
   justify-self: end;
-`;
-
-const Spacer = styled.div`
-  flex: 1;
 `;
 
 const RatingWrapper = styled.span`

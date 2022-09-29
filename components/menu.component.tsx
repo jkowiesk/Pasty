@@ -45,7 +45,7 @@ export default function Menu({ isOpen }: Props) {
               await setSearchDialogOpen(true);
               const html = document.getElementsByTagName("html")[0];
               html.style.overflowY = "none";
-              html.style.padding = "0";
+              html.style.paddingRight = "var(--scrollbar-size)";
             }}
           >
             <SearchIcon />

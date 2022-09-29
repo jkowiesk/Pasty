@@ -8,8 +8,7 @@ export default function AddStoryBtn({ setIsOpen }: Props) {
       onClick={async () => {
         await setIsOpen(true);
         const html = document.getElementsByTagName("html")[0];
-        html.style.overflowY = "none";
-        html.style.padding = "0";
+        html.style.paddingRight = "var(--scrollbar-size)";
       }}
     >
       +

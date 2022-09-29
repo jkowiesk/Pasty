@@ -66,26 +66,33 @@ export default function Home() {
   useEffect(() => {
     if (!isObserverOn.current) return;
     setIsLoading(true);
-    fetch("/api/", {
-      method: "POST",
-      body: JSON.stringify(storyCards.map((storyCard) => storyCard.story.id)),
-    })
-      .then((res) => res.json())
-      .then(async (stories) => {
-        let storyCards: StoryCardType[] = [];
-        for (let story of stories) {
-          const { uid, username, avatar } = (await getUserById(
-            story.uid
-          )) as User;
-          storyCards.push({ story, user: { uid, username, avatar } });
-        }
-        setStoryCards((prevStoryCards: StoryCardType[]) => [
-          ...prevStoryCards,
-          ...storyCards,
-        ]);
-        setHasMore(storyCards.length > 0);
-      });
-    setIsLoading(false);
+
+    const fetchData = async () => {
+      await fetch("/api/", {
+        method: "POST",
+        body: JSON.stringify(storyCards.map((storyCard) => storyCard.story.id)),
+      })
+        .then((res) => res.json())
+        .then(async (stories) => {
+          let storyCards: StoryCardType[] = [];
+          for (let story of stories) {
+            const { uid, username, avatar } = (await getUserById(
+              story.uid
+            )) as User;
+            storyCards.push({ story, user: { uid, username, avatar } });
+          }
+          setStoryCards((prevStoryCards: StoryCardType[]) => [
+            ...prevStoryCards,
+            ...storyCards,
+          ]);
+          setHasMore(storyCards.length > 0);
+        })
+        .catch((e) => console.log(e));
+
+      setIsLoading(false);
+    };
+
+    fetchData();
   }, [pageNum]);
 
   const {

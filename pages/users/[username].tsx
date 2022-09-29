@@ -62,7 +62,11 @@ export default function Profile({ profileUser, stories }: Props) {
           <HeaderCard>
             <LeftSide>
               <ImageWrapper>
-                <Avatar src={profileUser.avatar!} layout="fill" />
+                <Avatar
+                  src={profileUser.avatar!}
+                  layout="fill"
+                  priority={true}
+                />
               </ImageWrapper>
               <BasicInfo>
                 <Username>{profileUser.username}</Username>
@@ -193,6 +197,7 @@ const FollowButton = styled(CustomBtn)`
   height: 100%;
   padding-inline: 24px;
   align-self: end;
+  justify-self: start;
   width: 200px;
   background: ${({ isFollowing }: StyleProps) =>
     isFollowing ? "var(--color-distinct-light)" : "var(--color-primary)"};

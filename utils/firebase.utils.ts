@@ -24,6 +24,7 @@ import {
   writeBatch,
   documentId,
   getFirestore,
+  deleteDoc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -39,6 +40,7 @@ import {
   StoryDB,
   UserDoc,
   StoryCardType,
+  Result,
 } from "./types.utils";
 import { DateToJSON, pickStories } from "./functions.utils";
 
@@ -54,10 +56,16 @@ const db = getFirestore(app);
 
 const storage = getStorage();
 
-// Auth
 export const auth = getAuth(app);
 
 const googleProvider = new GoogleAuthProvider();
+
+const isStoryOwner = async (uid: string, storyId: string) => {
+  const { uid: ownerUid } = await getStoryById(storyId);
+
+  return ownerUid === uid;
+};
+// Auth
 
 export const signUpWithEmail = (
   email: string,
@@ -165,6 +173,7 @@ export const fireAddUserToDB = async (
     favorites: [],
     followers: [],
     follows: [],
+    description: "",
   });
 };
 
@@ -188,7 +197,17 @@ export const getFireUser = async () => getAuth(app).currentUser;
 
 export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
-  return { uid, ...(docSnap.data() as UserDoc) };
+  if (docSnap.exists()) return { uid, ...(docSnap.data() as UserDoc) };
+  return {
+    uid: "",
+    username: "",
+    email: "",
+    avatar: "",
+    favorites: [],
+    followers: [],
+    follows: [],
+    description: "",
+  };
 };
 
 export const getUserByUsername = async (username: string) => {
@@ -220,7 +239,7 @@ export const getStoryById = async (id: string) => {
     created: createdDB,
     ratings: { likes, dislikes },
   } = story;
-  const created = DateToJSON(createdDB.toDate());
+  const created = createdDB.toDate();
   const ratings = { likes: likes.length, dislikes: dislikes.length };
   return { id, ...story, created, ratings } as Story;
 };
@@ -235,7 +254,7 @@ export const getStoriesForHome = async () => {
       created: createdDB,
       ratings: { likes, dislikes },
     } = story;
-    const created = DateToJSON(createdDB.toDate());
+    const created = createdDB.toDate();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
 
     stories.push({
@@ -270,7 +289,7 @@ export const getNewStories = async (oldStoriesId: string[]) => {
       created: createdDB,
       ratings: { likes, dislikes },
     } = story;
-    const created = DateToJSON(createdDB.toDate());
+    const created = createdDB.toDate();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
 
     stories.push({
@@ -295,7 +314,7 @@ export const getStoriesByUid = async (uid: string) => {
       created: createdDB,
       ratings: { likes, dislikes },
     } = story;
-    const created = DateToJSON(createdDB.toDate());
+    const created = createdDB.toDate();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
 
     stories.push({ id, ...story, created, ratings } as Story);
@@ -323,7 +342,7 @@ export const getFavoriteStoryCards = async (clientUid: string) => {
       ratings: { likes, dislikes },
       uid,
     } = story;
-    const created = DateToJSON(createdDB.toDate());
+    const created = createdDB.toDate();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
     const { username, avatar } = await getUserById(uid);
 
@@ -494,4 +513,12 @@ export const updateFollower = async (
   await batch.commit();
 
   return followers.length;
+};
+
+export const deleteStory = async (id: string, uid: string) => {
+  if (!(await isStoryOwner(uid, id))) return "pasty/delete/not-owner";
+
+  await deleteDoc(doc(db, "stories", id));
+
+  return "pasty/delete/success";
 };

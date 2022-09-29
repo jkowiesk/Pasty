@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { EventsContext } from "../contexts/events.context";
 import Alert from "./alert.component";
+import ConfirmationDialog from "./confirmation-dialog.component";
 import Header from "./header.component";
 
 type Props = {
@@ -11,14 +12,16 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   const {
-    alert: { isActive },
+    alert: { isActive: isAlertActive },
+    confirmation: { isActive: isConfirmationActive },
   } = useContext(EventsContext);
 
   return (
     <Overlay>
       <Header />
       <Main>{children}</Main>
-      {isActive && <Alert />}
+      {isAlertActive && <Alert />}
+      {isConfirmationActive && <ConfirmationDialog />}
     </Overlay>
   );
 }

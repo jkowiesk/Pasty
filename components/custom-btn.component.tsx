@@ -26,13 +26,19 @@ export default function CustomBtn({
         transition: "all 50ms",
       };
       break;
+    case "hover":
+      actionStyles = {
+        transform: "scale(0.99)",
+        transition: "all 50ms",
+      };
+      break;
     default:
       actionStyles = {
         transform: "translateY(0)",
         transition: "all 500ms",
       };
   }
-
+  const areChildren = Boolean(children);
   return (
     <Wrapper
       type={submit ? "submit" : "button"}
@@ -41,10 +47,17 @@ export default function CustomBtn({
       style={actionStyles}
       onMouseDown={() => setRecentAction("depressed")}
       onMouseUp={() => setRecentAction("default")}
+      onMouseEnter={() => setRecentAction("hover")}
       onMouseLeave={() => setRecentAction("default")}
     >
-      <ImageWrapper>{children}</ImageWrapper>
-      <Label>{text}</Label>
+      {areChildren ? (
+        <>
+          <ImageWrapper>{children}</ImageWrapper>
+          <Label>{text}</Label>
+        </>
+      ) : (
+        <LabelOnly>{text}</LabelOnly>
+      )}
     </Wrapper>
   );
 }
@@ -61,7 +74,6 @@ const Wrapper = styled.button`
   padding-block: 4px;
   width: 100%;
   opacity: 1;
-  border:
 
   &:hover {
     opacity: 0.8;
@@ -74,3 +86,5 @@ const Label = styled.p`
   border-left: 1px solid var(--color-background-secondary);
   padding-left: 16px;
 `;
+
+const LabelOnly = styled.p``;

@@ -24,8 +24,9 @@ export default function Alert() {
 
   useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
-    html.style.overflowY = "none";
+    html.style.overflowY = "scroll";
     html.style.padding = "0";
+
     const timeout = setTimeout(() => {
       setIsClosing(true);
       setTimeout(() => {

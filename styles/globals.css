@@ -14,11 +14,17 @@ body {
   height: 100%;
 }
 
+html {
+  background: var(--color-background);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  /* overflow-x: hidden;
+  overflow-y: scroll; */
 }
 
 img,
@@ -53,19 +59,19 @@ h6 {
   height: 100%;
 }
 
-body::-webkit-scrollbar {
+html::-webkit-scrollbar {
   width: var(--scrollbar-size);
   background: var(--color-background-light);
 }
 
-body::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb {
   background: var(--color-scrollbar);
   border-radius: 100vw;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
-body::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover {
   background: var(--color-scrollbar-hover);
   border-radius: 100vw;
   border: 2px solid transparent;

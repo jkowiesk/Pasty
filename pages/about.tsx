@@ -19,7 +19,7 @@ export default function About() {
             <Header>
               About Pasty
               <PastyIconWrapper>
-                <Image src={Icon} alt="Icon" />
+                <Image src={Icon} alt="Icon" priority={true} />
               </PastyIconWrapper>
             </Header>
             <Hr />

@@ -53,10 +53,6 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
     await addStoryToDB({ ...newStory, tags: [newStory.tags] }, uid);
   };
 
-  useEffect(() => {
-    console.log(tags);
-  }, [tags]);
-
   return (
     <Dialog
       open={isOpen}

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import React from "react";
 
 import Link from "next/link";
@@ -8,12 +8,12 @@ type Props = {
   href?: string;
   onClick?: any;
   className?: any;
-  hoverColor?: string;
+  hovercolor?: string;
   children: JSX.Element;
 };
 
 type StyleProps = {
-  hoverColor?: string;
+  hovercolor?: string;
 };
 
 export default function AnimatedIcon({
@@ -21,12 +21,12 @@ export default function AnimatedIcon({
   href,
   onClick,
   className,
-  hoverColor,
+  hovercolor,
   children,
 }: Props) {
   return href ? (
     <Link href={href} passHref>
-      <LinkWrapper className={className} hoverColor={hoverColor}>
+      <LinkWrapper className={className} hovercolor={hovercolor}>
         <AnimatedText>{text}</AnimatedText>
         {children}
       </LinkWrapper>
@@ -35,13 +35,24 @@ export default function AnimatedIcon({
     <ButtonWrapper
       onClick={onClick}
       className={className}
-      hoverColor={hoverColor}
+      hovercolor={hovercolor}
     >
       <AnimatedText>{text}</AnimatedText>
       {children}
     </ButtonWrapper>
   );
 }
+
+const slideIn = (hovercolor: string) => keyframes`
+  from {
+    color: transparent;
+    transform: translate(0%);
+  }
+  to {
+    color: ${hovercolor};
+    transform: translateY(105%);
+  }
+`;
 
 const LinkWrapper = styled.a`
   isolation: isolate;
@@ -59,17 +70,16 @@ const LinkWrapper = styled.a`
   }
 
   &:hover * * {
-    color: ${({ hoverColor }: StyleProps) =>
-      hoverColor || "var(--color-primary-light)"};
-  }
-  p {
-    transition: transform ease-out 0.6s;
+    color: ${({ hovercolor }: StyleProps) =>
+      hovercolor || "var(--color-primary-light)"};
   }
 
   &:hover p {
-    transform: translateY(105%);
-    color: ${({ hoverColor }: StyleProps) =>
-      hoverColor || "var(--color-primary-light)"};
+    animation-duration: 1s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+    animation-name: ${({ hovercolor }: StyleProps) =>
+      slideIn(hovercolor || "var(--color-primary-light)")};
   }
 `;
 
