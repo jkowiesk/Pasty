@@ -239,7 +239,7 @@ export const getStoryById = async (id: string) => {
     created: createdDB,
     ratings: { likes, dislikes },
   } = story;
-  const created = createdDB.toDate();
+  const created: string = createdDB.toDate().toString();
   const ratings = { likes: likes.length, dislikes: dislikes.length };
   return { id, ...story, created, ratings } as Story;
 };
@@ -254,7 +254,7 @@ export const getStoriesForHome = async () => {
       created: createdDB,
       ratings: { likes, dislikes },
     } = story;
-    const created = createdDB.toDate();
+    const created: string = createdDB.toDate().toString();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
 
     stories.push({
@@ -289,7 +289,7 @@ export const getNewStories = async (oldStoriesId: string[]) => {
       created: createdDB,
       ratings: { likes, dislikes },
     } = story;
-    const created = createdDB.toDate();
+    const created: string = createdDB.toDate().toString();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
 
     stories.push({
@@ -314,7 +314,7 @@ export const getStoriesByUid = async (uid: string) => {
       created: createdDB,
       ratings: { likes, dislikes },
     } = story;
-    const created = createdDB.toDate();
+    const created: string = createdDB.toDate().toString();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
 
     stories.push({ id, ...story, created, ratings } as Story);
@@ -342,7 +342,7 @@ export const getFavoriteStoryCards = async (clientUid: string) => {
       ratings: { likes, dislikes },
       uid,
     } = story;
-    const created = createdDB.toDate();
+    const created: string = createdDB.toDate().toString();
     const ratings = { likes: likes.length, dislikes: dislikes.length };
     const { username, avatar } = await getUserById(uid);
 

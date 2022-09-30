@@ -19,15 +19,15 @@ export default function Layout({ children }: Props) {
   return (
     <Overlay>
       <Header />
-      <Main>{children}</Main>
+      <Content>{children}</Content>
       {isAlertActive && <Alert />}
       {isConfirmationActive && <ConfirmationDialog />}
     </Overlay>
   );
 }
 
-export const Main = styled.div`
-  grid-area: main;
+export const Content = styled.div`
+  grid-area: content;
 `;
 
 const Overlay = styled.div`
@@ -35,7 +35,7 @@ const Overlay = styled.div`
   display: grid;
   grid-template-areas:
     "header"
-    "main";
+    "content";
   grid-template-rows: 100px 1fr;
   grid-template-columns: 1fr;
   min-height: 100%;

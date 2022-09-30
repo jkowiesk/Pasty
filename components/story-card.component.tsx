@@ -56,6 +56,7 @@ export default function StoryCard({
     title,
     content,
     created,
+    tags,
     ratings: { likes, dislikes },
   },
   user: { username, avatar },
@@ -107,6 +108,8 @@ export default function StoryCard({
     }
   };
 
+  useEffect(() => console.log(!!tags[0]), []);
+
   const StoryCardPreview = () => {
     const [isCardActive, setIsCardActive] = useState<boolean>(false);
     return (
@@ -116,9 +119,28 @@ export default function StoryCard({
         </SuperHeader>
         <Header>
           <Title>{title}</Title>
-          {isLoggedIn && (
-            <StoryCardDropdown id={id} isCardActive={isCardActive} />
-          )}
+          <RightHeader>
+            {!!tags[0] && (
+              <Tags>
+                {tags.map((tag, idx) => (
+                  <Tag key={idx}>
+                    <Link
+                      href={{
+                        pathname: "/search",
+                        query: { tag },
+                      }}
+                      passHref
+                    >
+                      <A>#{tag}</A>
+                    </Link>
+                  </Tag>
+                ))}
+              </Tags>
+            )}
+            {isLoggedIn && (
+              <StoryCardDropdownStyled id={id} isCardActive={isCardActive} />
+            )}
+          </RightHeader>
         </Header>
         <Link href={`/pasty/${id}`} passHref>
           <LinkWrapper
@@ -318,9 +340,17 @@ const Title = styled.h1`
 
 const Header = styled.div`
   display: grid;
-  grid-template-columns: 1fr 50px;
+  grid-template-columns: 1fr fit-content(220px);
   justify-content: space-between;
   place-items: center;
+`;
+
+const RightHeader = styled.div`
+  width: 100%;
+  justify-self: end;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const SuperHeader = styled.div`
@@ -452,4 +482,31 @@ const RatingCounter = styled.p`
   width: fit-content;
   padding-right: 1px;
   color: var(--color-background);
+`;
+
+const Tags = styled.ul`
+  height: 100%;
+  display: grid;
+  max-width: 168px;
+  gap: 0 8px;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const Tag = styled.li``;
+
+const StoryCardDropdownStyled = styled(StoryCardDropdown)`
+  margin-left: auto;
+`;
+
+const A = styled.a`
+  color: var(--color-distinct);
+  font-size: 0.8rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

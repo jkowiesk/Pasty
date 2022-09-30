@@ -11,6 +11,7 @@ import Layout from "../../components/layout.component";
 import StoryCard from "../../components/story-card.component";
 
 import { StoryCardType, UserDoc, Story } from "../../utils/types.utils";
+import MainOverlay from "../../components/main-overlay-component";
 
 export async function getServerSideProps({ params: { storyId } }: any) {
   const story = await getStoryById(storyId);
@@ -28,34 +29,14 @@ type Props = {
 export default function StoryPage({ storyCard: { story, user } }: Props) {
   return (
     <Layout>
-      <Overlay>
-        <LeftSide></LeftSide>
-        <Main>
-          <MaxWidthWrapper>
-            <StoryCard full story={story} user={user} />
-          </MaxWidthWrapper>
-        </Main>
-        <RightSide></RightSide>
-      </Overlay>
+      <MainOverlay>
+        <MaxWidthWrapper>
+          <StoryCard full story={story} user={user} />
+        </MaxWidthWrapper>
+      </MainOverlay>
     </Layout>
   );
 }
-
-const Overlay = styled.div`
-  display: grid;
-  grid-template-areas: "left main right";
-  grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
-`;
-
-const LeftSide = styled.div`
-  grid-area: left;
-`;
-
-const Main = styled.div``;
-
-const RightSide = styled.div`
-  grid-area: right;
-`;
 
 const MaxWidthWrapper = styled.div`
   padding-block: 32px;

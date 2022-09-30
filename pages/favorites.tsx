@@ -9,6 +9,7 @@ import { getFavoriteStoryCards, getFireUser } from "../utils/firebase.utils";
 import { StoryCardType } from "../utils/types.utils";
 import StoryCard from "../components/story-card.component";
 import { StoryCardLoading } from "../components/story-card-loading.component";
+import MainOverlay from "../components/main-overlay-component";
 
 type Props = {};
 
@@ -31,45 +32,23 @@ export default function Settings() {
 
   return (
     <Layout>
-      <Overlay>
-        <LeftSide></LeftSide>
-        <Main>
-          <MaxWidthWrapper>
-            {storyCards.length ? (
-              storyCards.map(({ story, user }: StoryCardType, idx) => (
-                <StoryCard key={idx} story={story} user={user} />
-              ))
-            ) : (
-              <>
-                <StoryCardLoading />
-                <StoryCardLoading />
-              </>
-            )}
-          </MaxWidthWrapper>
-        </Main>
-        <RightSide></RightSide>
-      </Overlay>
+      <MainOverlay>
+        <MaxWidthWrapper>
+          {storyCards.length ? (
+            storyCards.map(({ story, user }: StoryCardType, idx) => (
+              <StoryCard key={idx} story={story} user={user} />
+            ))
+          ) : (
+            <>
+              <StoryCardLoading />
+              <StoryCardLoading />
+            </>
+          )}
+        </MaxWidthWrapper>
+      </MainOverlay>
     </Layout>
   );
 }
-
-const Overlay = styled.div`
-  display: grid;
-  grid-template-areas: "left main right";
-  grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
-`;
-
-const LeftSide = styled.div`
-  grid-area: left;
-`;
-
-const Main = styled.div`
-  grid-area: main;
-`;
-
-const RightSide = styled.div`
-  grid-area: right;
-`;
 
 const MaxWidthWrapper = styled.div`
   display: flex;

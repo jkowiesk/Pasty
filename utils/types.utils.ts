@@ -41,7 +41,7 @@ export type Story = {
   content: string;
   tags: string[];
   uid: string;
-  created: Date;
+  created: string;
   ratings: {
     likes: number;
     dislikes: number;
@@ -53,7 +53,7 @@ export type StoryDoc = {
   content: string;
   tags: string[];
   uid: string;
-  created: Date;
+  created: string;
   ratings: {
     likes: number;
     dislikes: number;

@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { NewMessage } from "@styled-icons/entypo/NewMessage";
 import CustomBtn from "../components/custom-btn.component";
 import { updateAvatar } from "../utils/firebase.utils";
+import MainOverlay from "../components/main-overlay-component";
 
 type Props = {};
 
@@ -34,27 +35,25 @@ export default function Settings() {
 
   return (
     <Layout>
-      <Overlay>
-        <LeftSide></LeftSide>
-        <Main>
-          <Header>User Settings</Header>
-          <Hr />
-          <SettingsSection>
-            <Setting>
-              <SettingHeader>Change username</SettingHeader>
-              <InputForm>
-                <SettingTextInput
-                  label="New username"
-                  name="username"
-                  value={username}
-                  onChange={(e: Event) => setUsername(e.currentTarget.value)}
-                />
-                <UpdateBtn text="Update">
-                  <EditIcon />
-                </UpdateBtn>
-              </InputForm>
-            </Setting>
-            {/* <Setting>
+      <MainOverlay>
+        <Header>User Settings</Header>
+        <Hr />
+        <SettingsSection>
+          <Setting>
+            <SettingHeader>Change username</SettingHeader>
+            <InputForm>
+              <SettingTextInput
+                label="New username"
+                name="username"
+                value={username}
+                onChange={(e: Event) => setUsername(e.currentTarget.value)}
+              />
+              <UpdateBtn text="Update">
+                <EditIcon />
+              </UpdateBtn>
+            </InputForm>
+          </Setting>
+          {/* <Setting>
               <SettingHeader>Change password</SettingHeader>
               <InputForm>
                 <SettingTextInput
@@ -68,56 +67,35 @@ export default function Settings() {
                 </UpdateBtn>
               </InputForm>
             </Setting> */}
-            <Setting>
-              <SettingHeader>Change profile picture</SettingHeader>
-              <InputForm
-                onSubmit={(e) => {
-                  updateAvatar(uid, file!);
+          <Setting>
+            <SettingHeader>Change profile picture</SettingHeader>
+            <InputForm
+              onSubmit={(e) => {
+                updateAvatar(uid, file!);
+              }}
+            >
+              <FileInput
+                type="file"
+                name="avatar"
+                id="avatar"
+                accept="image/png, image/jpeg"
+                onChange={(e) => {
+                  const input = document.getElementById(
+                    "avatar"
+                  ) as HTMLInputElement;
+                  setFile(input.files![0]);
                 }}
-              >
-                <FileInput
-                  type="file"
-                  name="avatar"
-                  id="avatar"
-                  accept="image/png, image/jpeg"
-                  onChange={(e) => {
-                    const input = document.getElementById(
-                      "avatar"
-                    ) as HTMLInputElement;
-                    setFile(input.files![0]);
-                  }}
-                />
-                <UpdateBtn text="Update" submit>
-                  <EditIcon />
-                </UpdateBtn>
-              </InputForm>
-            </Setting>
-          </SettingsSection>
-        </Main>
-        <RightSide></RightSide>
-      </Overlay>
+              />
+              <UpdateBtn text="Update" submit>
+                <EditIcon />
+              </UpdateBtn>
+            </InputForm>
+          </Setting>
+        </SettingsSection>
+      </MainOverlay>
     </Layout>
   );
 }
-
-const Overlay = styled.div`
-  display: grid;
-  grid-template-areas: "left main right";
-  grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
-  padding-block: 64px;
-`;
-
-const LeftSide = styled.div`
-  grid-area: left;
-`;
-
-const Main = styled.div`
-  grid-area: main;
-`;
-
-const RightSide = styled.div`
-  grid-area: right;
-`;
 
 const SettingsSection = styled.section`
   display: flex;

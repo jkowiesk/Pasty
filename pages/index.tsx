@@ -18,20 +18,7 @@ import { StoryCardType, User, UserDoc, UserSimple } from "../utils/types.utils";
 import { EventsContext } from "../contexts/events.context";
 import { HomeContext } from "../contexts/home.context";
 import { StoryCardLoading } from "../components/story-card-loading.component";
-
-/* export async function getServerSideProps() {
-  const stories = await getStoriesForHome();
-  let storyCards: StoryCardType[] = [];
-
-  for (let story of stories) {
-    const { uid, username, avatar } = (await getUserById(story.uid)) as User;
-    storyCards.push({ story, user: { uid, username, avatar } });
-  }
-
-  return {
-    props: { storyCards },
-  };
-} */
+import MainOverlay from "../components/main-overlay-component";
 
 type Props = {
   storyCards: StoryCardType[];
@@ -109,51 +96,26 @@ export default function Home() {
 
   return (
     <Layout>
-      <Overlay>
-        <LeftSide></LeftSide>
-        <Main>
-          <MaxWidthWrapper>
-            <>
-              {storyCards.map(({ story, user }: StoryCardType, idx) => (
-                <StoryCard key={idx} story={story} user={user} />
-              ))}
-              {hasMore && (
-                <>
-                  <StoryCardLoading ref={lastStoryRef} />
-                  <StoryCardLoading />
-                </>
-              )}
-            </>
-          </MaxWidthWrapper>
-        </Main>
-        <>{isLoggedIn && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}</>
-        <StoryDialog
-          isOpen={isStoryDialogOpen}
-          setIsOpen={setStoryDialogOpen}
-        />
-        <RightSide></RightSide>
-      </Overlay>
+      <MainOverlay>
+        <MaxWidthWrapper>
+          <>
+            {storyCards.map(({ story, user }: StoryCardType, idx) => (
+              <StoryCard key={idx} story={story} user={user} />
+            ))}
+            {hasMore && (
+              <>
+                <StoryCardLoading ref={lastStoryRef} />
+                <StoryCardLoading />
+              </>
+            )}
+          </>
+        </MaxWidthWrapper>
+      </MainOverlay>
+      <>{!!isLoggedIn && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}</>
+      <StoryDialog isOpen={isStoryDialogOpen} setIsOpen={setStoryDialogOpen} />
     </Layout>
   );
 }
-
-const Overlay = styled.div`
-  display: grid;
-  grid-template-areas: "left main right";
-  grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
-`;
-
-const LeftSide = styled.div`
-  grid-area: left;
-`;
-
-const Main = styled.div`
-  grid-area: main;
-`;
-
-const RightSide = styled.div`
-  grid-area: right;
-`;
 
 const MaxWidthWrapper = styled.div`
   display: flex;

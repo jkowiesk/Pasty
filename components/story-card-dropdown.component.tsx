@@ -19,9 +19,14 @@ type StyleProps = {
 type Props = {
   id: string;
   isCardActive?: boolean;
+  className?: any;
 };
 
-export default function StoryCardDropdown({ id, isCardActive }: Props) {
+export default function StoryCardDropdown({
+  id,
+  isCardActive,
+  className,
+}: Props) {
   const { dispatchEvents } = useContext(EventsContext);
   const {
     isLoggedIn,
@@ -53,7 +58,7 @@ export default function StoryCardDropdown({ id, isCardActive }: Props) {
 
   return (
     <Menu>
-      <Wrapper>
+      <Wrapper className={className}>
         <DropdownWrapper hovercolor="var(--color-secondary-light)">
           <AnimatedText>Actions</AnimatedText>
           <DropdownIcon isCardActive={isCardActive} />

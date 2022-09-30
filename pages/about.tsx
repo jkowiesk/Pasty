@@ -4,6 +4,7 @@ import Image from "next/image";
 import Icon from "../public/images/pasty_icon_rotR.png";
 
 import Layout from "../components/layout.component";
+import MainOverlay from "../components/main-overlay-component";
 
 type Props = {};
 
@@ -12,53 +13,30 @@ type Event = React.FormEvent<HTMLInputElement>;
 export default function About() {
   return (
     <Layout>
-      <Overlay>
-        <LeftSide></LeftSide>
-        <Main>
-          <MaxWidthWrapper>
-            <Header>
-              About Pasty
-              <PastyIconWrapper>
-                <Image src={Icon} alt="Icon" priority={true} />
-              </PastyIconWrapper>
-            </Header>
-            <Hr />
-            <Paragraph>
-              Internet forum, where everyone can share, copy and paste
-              copypastas. With many built-in features and an easy to navigate
-              interface, users now can enjoy stories like never before.
-            </Paragraph>
-            <Paragraph>
-              Search feature enables fast and intuitive way to find content
-              using simple tags. Account system gives user ability to rate
-              copypastas, add them to favorites or even follow other users.
-            </Paragraph>
-          </MaxWidthWrapper>
-        </Main>
-        <RightSide></RightSide>
-      </Overlay>
+      <MainOverlay>
+        <MaxWidthWrapper>
+          <Header>
+            About Pasty
+            <PastyIconWrapper>
+              <Image src={Icon} alt="Icon" priority={true} />
+            </PastyIconWrapper>
+          </Header>
+          <Hr />
+          <Paragraph>
+            Internet forum, where everyone can share, copy and paste copypastas.
+            With many built-in features and an easy to navigate interface, users
+            now can enjoy stories like never before.
+          </Paragraph>
+          <Paragraph>
+            Search feature enables fast and intuitive way to find content using
+            simple tags. Account system gives user ability to rate copypastas,
+            add them to favorites or even follow other users.
+          </Paragraph>
+        </MaxWidthWrapper>
+      </MainOverlay>
     </Layout>
   );
 }
-
-const Overlay = styled.div`
-  display: grid;
-  grid-template-areas: "left main right";
-  grid-template-columns: 1fr minmax(40ch, 3.5fr) 1fr;
-  padding-block: 64px;
-`;
-
-const LeftSide = styled.div`
-  grid-area: left;
-`;
-
-const Main = styled.div`
-  grid-area: main;
-`;
-
-const RightSide = styled.div`
-  grid-area: right;
-`;
 
 const Header = styled.h1`
   color: var(--color-secondary);
