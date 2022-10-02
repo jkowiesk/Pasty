@@ -38,7 +38,6 @@ export default function SignUpForm() {
   });
   const { dispatchEvents } = useContext(EventsContext);
   const router = useRouter();
-
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 

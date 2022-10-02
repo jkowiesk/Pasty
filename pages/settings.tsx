@@ -19,7 +19,7 @@ type Props = {};
 
 type Event = React.FormEvent<HTMLInputElement>;
 
-export default function Settings() {
+export default function Settings({ query }: any) {
   const {
     isLoggedIn,
     user: { uid },

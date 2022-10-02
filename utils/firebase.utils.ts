@@ -46,6 +46,7 @@ import { DateToJSON, pickStories } from "./functions.utils";
 
 const DEFAULT_PROFILE_IMG =
   "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
+
 const PAGE_SIZE = 3;
 
 const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG!);
@@ -150,16 +151,6 @@ export const onAuthChange = (
   });
 
 // DB
-
-/* export const addSetUpMocksToDB = async () => {
-  for (const story of stories) {
-    try {
-      await addDoc(collection(db, "stories"), story);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-}; */
 
 export const fireAddUserToDB = async (
   user: FireUser,
@@ -270,7 +261,6 @@ export const getStoriesForHome = async () => {
 
 export const getNewStories = async (oldStoriesId: string[]) => {
   let q;
-
   if (oldStoriesId.length > 0)
     q = query(
       collection(db, "stories"),
@@ -283,6 +273,49 @@ export const getNewStories = async (oldStoriesId: string[]) => {
   let stories: Story[] = [];
 
   querySnapshot.forEach((doc) => {
+    const id: string = doc.id;
+    const story = doc.data() as StoryDocDB;
+    const {
+      created: createdDB,
+      ratings: { likes, dislikes },
+    } = story;
+    const created: string = createdDB.toDate().toString();
+    const ratings = { likes: likes.length, dislikes: dislikes.length };
+
+    stories.push({
+      id,
+      ...story,
+      created,
+      ratings,
+    } as Story);
+  });
+  return pickStories(stories, PAGE_SIZE);
+};
+
+export const getNewSearchStories = async (
+  oldStoriesId: string[],
+  tags: string[]
+) => {
+  let q;
+
+  if (oldStoriesId.length > 0)
+    q = query(
+      collection(db, "stories"),
+      where(documentId(), "not-in", oldStoriesId),
+      where("tags", "array-contains-any", tags)
+    );
+  else
+    q = query(
+      collection(db, "stories"),
+      where("tags", "array-contains-any", tags)
+    );
+
+  const querySnapshot = await getDocs(q);
+
+  let stories: Story[] = [];
+  console.log(querySnapshot.docs);
+  querySnapshot.forEach((doc) => {
+    console.log(doc);
     const id: string = doc.id;
     const story = doc.data() as StoryDocDB;
     const {

@@ -9,6 +9,7 @@ import { Cross } from "@styled-icons/entypo/Cross";
 
 import { Search } from "@styled-icons/material/Search";
 import CustomBtn from "./custom-btn.component";
+import { useRouter } from "next/router";
 
 type Props = {
   isOpen: any;
@@ -26,7 +27,14 @@ const newStoryInit = (uid: string) => {
 
 export default function SearchDialog({ isOpen, setIsOpen }: Props) {
   const [tags, setTags] = useState<string[]>([]);
-  const handleClick = () => {};
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push({
+      pathname: "/search",
+      query: { tags },
+    });
+  };
 
   return (
     <Dialog

@@ -127,7 +127,7 @@ export default function StoryCard({
                     <Link
                       href={{
                         pathname: "/search",
-                        query: { tag },
+                        query: { tags: tag },
                       }}
                       passHref
                     >
