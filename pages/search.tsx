@@ -15,7 +15,6 @@ import StoryCard from "../components/story-card.component";
 import { StoryCardLoading } from "../components/story-card-loading.component";
 import MainOverlay from "../components/main-overlay-component";
 import { GetServerSideProps } from "next";
-import { ParsedUrlQuery } from "querystring";
 
 type Props = { tags: string[] };
 
@@ -29,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: { tags } };
 };
 
-export default function Search({ tags }: Props) {
+export default function SearchPage({ tags }: Props) {
   const [storyCards, setStoryCards] = useState<StoryCardType[]>([]);
   const [pageNum, setPageNum] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,6 +36,8 @@ export default function Search({ tags }: Props) {
   const isObserverOn = useRef<boolean>(false);
 
   const observer = useRef<IntersectionObserver>();
+  const router = useRouter();
+
   const lastStoryRef = useCallback(
     (node: any) => {
       if (isLoading) return;
@@ -55,9 +56,6 @@ export default function Search({ tags }: Props) {
   useEffect(() => {
     if (!isObserverOn.current) return;
     setIsLoading(true);
-    console.log(
-      "/api/search?" + new URLSearchParams(tags.map((tag) => ["tags", tag]))
-    );
     const fetchData = async () => {
       await fetch(
         "/api/search?" + new URLSearchParams(tags.map((tag) => ["tags", tag])),
@@ -70,7 +68,6 @@ export default function Search({ tags }: Props) {
       )
         .then((res) => res.json())
         .then(async (stories) => {
-          console.log(stories);
           let storyCards: StoryCardType[] = [];
           for (let story of stories) {
             const { uid, username, avatar } = (await getUserById(
@@ -92,9 +89,16 @@ export default function Search({ tags }: Props) {
     fetchData();
   }, [pageNum]);
 
+  let tagString: string = "";
+
+  for (let tag of tags) {
+    tagString += `#${tag} `;
+  }
+
   return (
     <Layout>
       <MainOverlay>
+        <Header>{tagString}</Header>
         <MaxWidthWrapper>
           {storyCards.length ? (
             storyCards.map(({ story, user }: StoryCardType, idx) => (
@@ -121,4 +125,12 @@ const MaxWidthWrapper = styled.div`
   justify-content: center;
   width: min(100%, 700px);
   margin: 0 auto;
+`;
+
+const Header = styled.h1`
+  padding-bottom: 8px;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-background-secondary);
+  color: var(--color-secondary);
+  font-size: 2.5rem;
 `;

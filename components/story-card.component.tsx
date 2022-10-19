@@ -108,8 +108,6 @@ export default function StoryCard({
     }
   };
 
-  useEffect(() => console.log(!!tags[0]), []);
-
   const StoryCardPreview = () => {
     const [isCardActive, setIsCardActive] = useState<boolean>(false);
     return (
@@ -224,7 +222,26 @@ export default function StoryCard({
       </SuperHeader>
       <Header>
         <Title>{title}</Title>
-        {isLoggedIn && <StoryCardDropdown id={id} />}
+        <RightHeader>
+          {!!tags[0] && (
+            <Tags>
+              {tags.map((tag, idx) => (
+                <Tag key={idx}>
+                  <Link
+                    href={{
+                      pathname: "/search",
+                      query: { tags: tag },
+                    }}
+                    passHref
+                  >
+                    <A>#{tag}</A>
+                  </Link>
+                </Tag>
+              ))}
+            </Tags>
+          )}
+          {isLoggedIn && <StoryCardDropdownStyled id={id} />}
+        </RightHeader>
       </Header>
       <Content>{content}</Content>
       <Footer>
@@ -258,7 +275,7 @@ export default function StoryCard({
             >
               <SadIcon isClicked={areRatingsActive.dislikes} />
             </AnimatedIcon>
-            <RatingCounter>{dislikes}</RatingCounter>
+            <RatingCounter>{ratingsNum.dislikes}</RatingCounter>
           </RatingWrapper>
           <RatingWrapper>
             <AnimatedIcon
@@ -276,7 +293,7 @@ export default function StoryCard({
             >
               <HappyIcon isClicked={areRatingsActive.likes} />
             </AnimatedIcon>
-            <RatingCounter>{likes}</RatingCounter>
+            <RatingCounter>{ratingsNum.likes}</RatingCounter>
           </RatingWrapper>
         </RatingBar>
       </Footer>
@@ -334,7 +351,7 @@ const PreviewCard = styled(Card)`
 
 const Title = styled.h1`
   color: var(--color-font-black);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   justify-self: start;
 `;
 
@@ -445,6 +462,7 @@ const UserBar = styled.a`
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  min-width: max-content;
   text-decoration: none;
   justify-self: center;
 

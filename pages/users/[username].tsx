@@ -12,24 +12,29 @@ import {
   getUserByUsername,
   updateFollower,
 } from "../../utils/firebase.utils";
-import { Story, UserProfile } from "../../utils/types.utils";
+import { Story, UserProfile, AchievementName } from "../../utils/types.utils";
 
 import StoryCard from "../../components/story-card.component";
 import CustomBtn from "../../components/custom-btn.component";
 
 import { Mask } from "@styled-icons/entypo/Mask";
 import { UserContext } from "../../contexts/user.context";
+import { EventsContext } from "../../contexts/events.context";
+import { achievementsMap } from "../../utils/objects.utils";
 
 type Props = { profileUser: UserProfile; stories: Story[] };
 type StyleProps = { isFollowing: boolean };
 
 export async function getServerSideProps({ params: { username } }: any) {
   const profileUser = await getUserByUsername(username);
-  const { uid, avatar, followers } = profileUser;
+  const { uid, avatar, followers, achievements } = profileUser;
   const stories = await getStoriesByUid(profileUser.uid);
 
   return {
-    props: { profileUser: { uid, username, avatar, followers }, stories },
+    props: {
+      profileUser: { uid, username, avatar, followers, achievements },
+      stories,
+    },
   };
 }
 
@@ -38,6 +43,8 @@ export default function Profile({ profileUser, stories }: Props) {
     isLoggedIn,
     user: { uid: clientUid },
   } = useContext(UserContext);
+  const { dispatchEvents } = useContext(EventsContext);
+
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [followersNum, setFollowersNum] = useState<number>(
     profileUser.followers.length
@@ -51,7 +58,12 @@ export default function Profile({ profileUser, stories }: Props) {
   }, [isLoggedIn]);
 
   const handleFollowBtnClick = async () => {
-    setFollowersNum(await updateFollower(clientUid, profileUser.uid));
+    const followers = await updateFollower(clientUid, profileUser.uid);
+    if (followers === -1) {
+      dispatchEvents({ type: "alert", payload: "pasty/follow/self" });
+      return;
+    }
+    setFollowersNum(followers);
     setIsFollowing(await getIsFollowing(clientUid, profileUser.uid));
   };
 
@@ -85,16 +97,26 @@ export default function Profile({ profileUser, stories }: Props) {
             <AchievementsCard>
               <AchievementsTitle>Achievements</AchievementsTitle>
               <MaxWidth>
-                <Achievements>achievement</Achievements>
+                <Achievements>
+                  {profileUser.achievements.map((achievement, idx) => (
+                    <label key={idx} title={achievement}>
+                      <Achievement>
+                        <Image
+                          src={achievementsMap[achievement]}
+                          layout="fill"
+                          alt="first_achievement"
+                        />
+                      </Achievement>
+                    </label>
+                  ))}
+                </Achievements>
               </MaxWidth>
             </AchievementsCard>
           </Sidebar>
           <StoriesBar>
-            <>
-              {stories.map((story, idx) => (
-                <StoryCard key={idx} story={story} user={profileUser} />
-              ))}
-            </>
+            {stories.map((story, idx) => (
+              <StoryCard key={idx} story={story} user={profileUser} />
+            ))}
           </StoriesBar>
         </Overlay>
       </MaxWidth>
@@ -116,7 +138,7 @@ const Overlay = styled.div`
 
 const HeaderCard = styled(Card)`
   grid-area: header;
-  height: 75%;
+  height: 74%;
   width: 100%;
   padding-inline: 64px;
   display: flex;
@@ -150,6 +172,8 @@ const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
+  position: sticky;
+  top: 135px;
 `;
 
 const StoriesBar = styled.div`
@@ -169,7 +193,8 @@ const MaxWidth = styled.div`
 
 const AchievementsCard = styled(Card)`
   width: 100%;
-  height: 100px;
+  height: fit-content;
+  padding-bottom: 32px;
 `;
 
 const Avatar = styled(Image)``;
@@ -216,3 +241,9 @@ const AchievementsTitle = styled.h2`
 `;
 
 const Achievements = styled.div``;
+
+const Achievement = styled.div`
+  position: relative;
+  width: 50px;
+  height: 50px;
+`;

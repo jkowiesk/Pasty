@@ -46,9 +46,10 @@ const Header = styled.h1`
 `;
 
 const Hr = styled.hr`
-  border: 1px solid var(--color-background-secondary);
   margin-bottom: 32px;
   width: 100%;
+  border: 5px solid var(--color-background-secondary);
+  border-radius: 0 0 200% 200%;
 `;
 
 const Paragraph = styled.p`

@@ -8,6 +8,7 @@ type Props = {
   onChange: any;
   type?: string;
   className?: string;
+  labelColor?: string;
   required?: boolean;
 };
 
@@ -17,12 +18,13 @@ export default function TextInput({
   value,
   onChange,
   type,
+  labelColor,
   className,
   ...otherProps
 }: Props) {
   return (
     <Wrapper className={className}>
-      <Label>{label}</Label>
+      <Label labelColor={labelColor}>{label}</Label>
       <Input
         type={type ? type : "text"}
         name={name}
@@ -42,7 +44,8 @@ const Wrapper = styled.div`
 
 const Label = styled.label`
   padding-left: 4px;
-  color: var(--color-secondary);
+  color: ${({ labelColor }: { labelColor: string | undefined }) =>
+    labelColor ? labelColor : "var(--color-secondary)"};
 `;
 
 const Input = styled.input`

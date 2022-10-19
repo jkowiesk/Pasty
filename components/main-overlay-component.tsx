@@ -1,19 +1,24 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
-import { EventsContext } from "../contexts/events.context";
-import Alert from "./alert.component";
-import ConfirmationDialog from "./confirmation-dialog.component";
+import AddStoryBtn from "./add-story-btn.component";
+import StoryDialog from "./story-dialog.component";
 
 type Props = {
+  index?: boolean;
   children: JSX.Element | JSX.Element[];
 };
 
-export default function MainOverlay({ children }: Props) {
+export default function MainOverlay({ index, children }: Props) {
+  const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
+
   return (
     <Wrapper>
       <LeftSide></LeftSide>
       <Main>{children}</Main>
-      <RightSide></RightSide>
+      <RightSide>
+        {index && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}
+      </RightSide>
+      <StoryDialog isOpen={isStoryDialogOpen} setIsOpen={setStoryDialogOpen} />
     </Wrapper>
   );
 }
@@ -33,5 +38,6 @@ const RightSide = styled.div`
 const Wrapper = styled.div`
   display: grid;
   grid-template-areas: "left main right";
-  grid-template-columns: minmax(80px, auto) 3.5fr minmax(80px, auto);
+  grid-template-columns: minmax(80px, 1fr) 4fr minmax(80px, 1fr);
+  grid-template-rows: 1fr;
 `;

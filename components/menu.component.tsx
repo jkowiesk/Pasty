@@ -60,7 +60,10 @@ export default function Menu({ isOpen }: Props) {
           <Link href="/about" passHref>
             <Category>About</Category>
           </Link>
-          <Category>Day Pasta</Category>
+          <Link href="/day-pasta" passHref>
+            <Category>Day Pasta</Category>
+          </Link>
+
           {isLoggedIn && (
             <Link href="/favorites" passHref>
               <Category>Favorites</Category>
@@ -78,6 +81,7 @@ export default function Menu({ isOpen }: Props) {
       <SearchDialog
         isOpen={isSearchDialogOpen}
         setIsOpen={setSearchDialogOpen}
+        setMenuIsOpen={setSearchDialogOpen}
       />
     </>
   );

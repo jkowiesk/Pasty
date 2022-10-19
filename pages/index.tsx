@@ -25,8 +25,6 @@ type Props = {
 };
 
 export default function Home() {
-  const [isStoryDialogOpen, setStoryDialogOpen] = useState<boolean>(false);
-
   const { isLoggedIn } = useContext(UserContext);
   const { storyCards, setStoryCards } = useContext(HomeContext);
   const [pageNum, setPageNum] = useState<number>(0);
@@ -96,7 +94,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <MainOverlay>
+      <MainOverlay index={isLoggedIn}>
         <MaxWidthWrapper>
           <>
             {storyCards.map(({ story, user }: StoryCardType, idx) => (
@@ -111,8 +109,6 @@ export default function Home() {
           </>
         </MaxWidthWrapper>
       </MainOverlay>
-      <>{!!isLoggedIn && <AddStoryBtn setIsOpen={setStoryDialogOpen} />}</>
-      <StoryDialog isOpen={isStoryDialogOpen} setIsOpen={setStoryDialogOpen} />
     </Layout>
   );
 }

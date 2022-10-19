@@ -7,6 +7,7 @@ export type User = {
   avatar: string;
   favorites: string[];
   follows: string[];
+  achievements: AchievementName[];
   followers: string[];
   description: string;
 };
@@ -17,6 +18,7 @@ export type UserDoc = {
   avatar: string;
   favorites: string[];
   follows: string[];
+  achievements: AchievementName[];
   followers: string[];
   description: string;
 };
@@ -26,6 +28,7 @@ export type UserProfile = {
   username: string;
   avatar: string;
   followers: string[];
+  achievements: AchievementName[];
   description: string;
 };
 
@@ -110,3 +113,5 @@ export type Result<T> = {
 };
 
 export type isOpenType = "true" | "false" | "";
+
+export type AchievementName = "First Achievement";

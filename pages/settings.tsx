@@ -41,16 +41,17 @@ export default function Settings({ query }: any) {
         <SettingsSection>
           <Setting>
             <SettingHeader>Change username</SettingHeader>
-            <InputForm>
+            <InputForm onSubmit={() => {}}>
               <SettingTextInput
                 label="New username"
                 name="username"
                 value={username}
+                labelColor="var(--color-primary-light)"
                 onChange={(e: Event) => setUsername(e.currentTarget.value)}
               />
-              <UpdateBtn text="Update">
+              <InputUpdatedBtn text="Update" submit>
                 <EditIcon />
-              </UpdateBtn>
+              </InputUpdatedBtn>
             </InputForm>
           </Setting>
           {/* <Setting>
@@ -70,8 +71,10 @@ export default function Settings({ query }: any) {
           <Setting>
             <SettingHeader>Change profile picture</SettingHeader>
             <InputForm
-              onSubmit={(e) => {
-                updateAvatar(uid, file!);
+              onSubmit={async (e) => {
+                e.preventDefault();
+                await updateAvatar(uid, file!);
+                window.location.reload();
               }}
             >
               <FileInput
@@ -104,6 +107,7 @@ const SettingsSection = styled.section`
 `;
 
 const Header = styled.h1`
+  margin-top: 32px;
   color: var(--color-secondary);
   font-size: 2.5rem;
 `;
@@ -112,6 +116,7 @@ const Setting = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  padding-block: 32px;
 `;
 
 const SettingHeader = styled.h2`
@@ -122,14 +127,14 @@ const SettingHeader = styled.h2`
 
 const SettingTextInput = styled(TextInput)`
   padding: 8px;
-  width: 50%;
+  width: 80%;
   font-weight: none;
 `;
 
 const InputForm = styled.form`
   flex: 1.5;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 150px;
   place-items: center;
 `;
 
@@ -141,17 +146,25 @@ const EditIcon = styled(NewMessage)`
 
 const UpdateBtn = styled(CustomBtn)`
   height: 45px;
-  width: 30%;
+  width: 150px;
+  scale: 0.9;
+`;
+
+const InputUpdatedBtn = styled(UpdateBtn)`
+  margin-top: 16px;
 `;
 
 const Hr = styled.hr`
-  border: 1px solid var(--color-background-secondary);
+  border: 5px solid var(--color-background-secondary);
+  border-radius: 0 0 200% 200%;
   margin-bottom: 32px;
 `;
 
 const FileInput = styled.input`
   margin-bottom: 8px;
-  color: var(--color-secondary);
+  padding-inline: 8px;
+  color: var(--color-primary-light);
   border-radius: 5px;
   font-size: 1rem;
+  width: 80%;
 `;

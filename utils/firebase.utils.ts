@@ -30,6 +30,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import randUsername from "./rand-username.utils";
 import { stories } from "./mocks/stories";
+import { default_profile_img } from "./objects.utils";
 
 import {
   User,
@@ -43,9 +44,6 @@ import {
   Result,
 } from "./types.utils";
 import { DateToJSON, pickStories } from "./functions.utils";
-
-const DEFAULT_PROFILE_IMG =
-  "https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fprofile_default.png?alt=media&token=be82b164-6eba-47ec-bc4d-8c752fc78a12";
 
 const PAGE_SIZE = 3;
 
@@ -77,7 +75,7 @@ export const signUpWithEmail = (
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user: FireUser = userCredential.user;
-      await fireAddUserToDB(user, username, DEFAULT_PROFILE_IMG);
+      await fireAddUserToDB(user, username, default_profile_img);
     })
     .catch((error) => {
       returnCode = error.code;
@@ -164,6 +162,7 @@ export const fireAddUserToDB = async (
     favorites: [],
     followers: [],
     follows: [],
+    achievements: ["First achievement"],
     description: "",
   });
 };
@@ -195,10 +194,11 @@ export const getUserById = async (uid: string) => {
     email: "",
     avatar: "",
     favorites: [],
+    achievements: [],
     followers: [],
     follows: [],
     description: "",
-  };
+  } as User;
 };
 
 export const getUserByUsername = async (username: string) => {
@@ -211,6 +211,7 @@ export const getUserByUsername = async (username: string) => {
     avatar: "",
     favorites: [],
     followers: [],
+    achievements: [],
     follows: [],
     description: "",
   };
@@ -313,9 +314,7 @@ export const getNewSearchStories = async (
   const querySnapshot = await getDocs(q);
 
   let stories: Story[] = [];
-  console.log(querySnapshot.docs);
   querySnapshot.forEach((doc) => {
-    console.log(doc);
     const id: string = doc.id;
     const story = doc.data() as StoryDocDB;
     const {
@@ -435,6 +434,15 @@ export const getIsFollowing = async (
   return followed.followers.includes(follower.uid);
 };
 
+export const getDayPasta = async () => {
+  const docRef = doc(db, "special/dayPasta");
+  const docSnap = await getDoc(docRef);
+  const { id } = docSnap.data() as { id: string };
+  const story = await getStoryById(id);
+
+  return story;
+};
+
 export const updateStoryRating = async (
   storyId: string,
   uid: string,
@@ -507,13 +515,14 @@ export const updateFavorites = async (uid: string, storyId: string) => {
 };
 
 export const updateAvatar = async (uid: string, file: File) => {
+  console.log(uid);
   const storageRef = ref(storage, `users/${uid}`);
   await uploadBytes(storageRef, file).then((snapshot) => {});
-  await getDownloadURL(storageRef).then((url) =>
+  await getDownloadURL(storageRef).then((url) => {
     updateDoc(doc(db, "users", uid), {
       avatar: url,
-    })
-  );
+    });
+  });
 };
 
 export const updateFollower = async (
@@ -523,7 +532,7 @@ export const updateFollower = async (
   const followedRef = doc(db, "users", followedUid);
   const followed = await getUserById(followedUid);
   let followers = followed.followers;
-  if (followerUid === followedUid) return followers.length;
+  if (followerUid === followedUid) return -1;
 
   const batch = writeBatch(db);
   const followerRef = doc(db, "users", followerUid);

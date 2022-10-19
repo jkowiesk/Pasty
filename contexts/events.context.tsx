@@ -106,6 +106,15 @@ const eventsReducer = (state: any, action: any) => {
             type: "",
           },
         };
+      case "pasty/follow/self":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "You cannot follow yourself!",
+            type: "error",
+          },
+        };
       default:
         return {
           ...state,

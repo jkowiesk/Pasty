@@ -1,12 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
-
 import { Dialog } from "@headlessui/react";
-
 import { TagsInput } from "react-tag-input-component";
-
 import { Cross } from "@styled-icons/entypo/Cross";
-
 import { Search } from "@styled-icons/material/Search";
 import CustomBtn from "./custom-btn.component";
 import { useRouter } from "next/router";
@@ -14,6 +10,7 @@ import { useRouter } from "next/router";
 type Props = {
   isOpen: any;
   setIsOpen: any;
+  setMenuIsOpen: any;
 };
 
 const newStoryInit = (uid: string) => {
@@ -25,15 +22,21 @@ const newStoryInit = (uid: string) => {
   };
 };
 
-export default function SearchDialog({ isOpen, setIsOpen }: Props) {
+export default function SearchDialog({
+  isOpen,
+  setIsOpen,
+  setMenuIsOpen,
+}: Props) {
   const [tags, setTags] = useState<string[]>([]);
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push({
+  const handleClick = async () => {
+    const pathName = router.pathname;
+    await router.push({
       pathname: "/search",
       query: { tags },
     });
+    if (router.pathname === pathName) window.location.reload();
   };
 
   return (

@@ -82,6 +82,7 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
             onChange={setTags}
             name="tags"
             placeHolder="tag"
+            beforeAddValidate={() => tags.length <= 5}
           />
           <SubmitBtn text="Submit" onClick={handleSubmit}>
             <SubmitIcon />

@@ -35,7 +35,7 @@ const Wrapper = styled.button`
   color: var(--color-primary);
   font-size: 3.5rem;
   bottom: 40px;
-  left: 92vw;
+  left: calc(80vw + 60px);
   width: 80px;
   height: 80px;
   border-radius: 50%;
