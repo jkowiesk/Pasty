@@ -188,17 +188,7 @@ export const getFireUser = async () => getAuth(app).currentUser;
 export const getUserById = async (uid: string) => {
   const docSnap = await getDoc(doc(db, "users", uid));
   if (docSnap.exists()) return { uid, ...(docSnap.data() as UserDoc) };
-  return {
-    uid: "",
-    username: "",
-    email: "",
-    avatar: "",
-    favorites: [],
-    achievements: [],
-    followers: [],
-    follows: [],
-    description: "",
-  } as User;
+  throw Error("No User with That Id");
 };
 
 export const getUserByUsername = async (username: string) => {

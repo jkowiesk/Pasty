@@ -27,12 +27,19 @@ type StyleProps = { isFollowing: boolean };
 
 export async function getServerSideProps({ params: { username } }: any) {
   const profileUser = await getUserByUsername(username);
-  const { uid, avatar, followers, achievements } = profileUser;
+  const {
+    uid,
+    avatar,
+    followers,
+    follows: followsUIDs,
+    achievements,
+  } = profileUser;
   const stories = await getStoriesByUid(profileUser.uid);
+  let follows;
 
   return {
     props: {
-      profileUser: { uid, username, avatar, followers, achievements },
+      profileUser: { uid, username, avatar, followers, achievements, follows },
       stories,
     },
   };
@@ -94,24 +101,38 @@ export default function Profile({ profileUser, stories }: Props) {
             </LeftSide>
           </HeaderCard>
           <Sidebar>
-            <AchievementsCard>
-              <AchievementsTitle>Achievements</AchievementsTitle>
+            <SlideCard>
+              <SideCardTitle>Achievement</SideCardTitle>
               <MaxWidth>
-                <Achievements>
-                  {profileUser.achievements.map((achievement, idx) => (
-                    <label key={idx} title={achievement}>
-                      <Achievement>
-                        <Image
-                          src={achievementsMap[achievement]}
-                          layout="fill"
-                          alt="first_achievement"
-                        />
-                      </Achievement>
-                    </label>
-                  ))}
-                </Achievements>
+                {profileUser.achievements.map((achievement, idx) => (
+                  <label key={idx} title={achievement}>
+                    <SideCardElement>
+                      <Image
+                        src={achievementsMap[achievement]}
+                        layout="fill"
+                        alt="first_achievement"
+                      />
+                    </SideCardElement>
+                  </label>
+                ))}
               </MaxWidth>
-            </AchievementsCard>
+            </SlideCard>
+            <SlideCard>
+              <SideCardTitle>Follows</SideCardTitle>
+              <MaxWidth>
+                {/* {profileUser.follows.map((idol, idx) => (
+                  <label key={idx} title={idol}>
+                    <SideCardElement as="a">
+                      <FollowAvatar
+                        src={achievementsMap[achievement]}
+                        layout="fill"
+                        alt="first_achievement"
+                      />
+                    </SideCardElement>
+                  </label>
+                ))} */}
+              </MaxWidth>
+            </SlideCard>
           </Sidebar>
           <StoriesBar>
             {stories.map((story, idx) => (
@@ -191,13 +212,13 @@ const MaxWidth = styled.div`
   padding-inline: 10%;
 `;
 
-const AchievementsCard = styled(Card)`
-  width: 100%;
-  height: fit-content;
-  padding-bottom: 32px;
-`;
-
 const Avatar = styled(Image)``;
+
+const FollowAvatar = styled(Image)`
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+`;
 
 const BasicInfo = styled.div`
   grid-area: basicInfo;
@@ -233,16 +254,19 @@ const MaskIcon = styled(Mask)`
   height: 25px;
 `;
 
-const AchievementsTitle = styled.h2`
+const SlideCard = styled(Card)`
+  width: 100%;
+  height: fit-content;
+  padding-bottom: 32px;
+`;
+const SideCardTitle = styled.h2`
   color: var(--color-primary-dark);
   width: 100%;
   text-align: center;
   padding-block: 10px;
 `;
 
-const Achievements = styled.div``;
-
-const Achievement = styled.div`
+const SideCardElement = styled.div`
   position: relative;
   width: 50px;
   height: 50px;

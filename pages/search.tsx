@@ -15,6 +15,7 @@ import StoryCard from "../components/story-card.component";
 import { StoryCardLoading } from "../components/story-card-loading.component";
 import MainOverlay from "../components/main-overlay-component";
 import { GetServerSideProps } from "next";
+import NoStories from "../components/no-stories.component";
 
 type Props = { tags: string[] };
 
@@ -34,6 +35,8 @@ export default function SearchPage({ tags }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const isObserverOn = useRef<boolean>(false);
+
+  const [firstLoad, setFirstLoad] = useState<boolean>(false);
 
   const observer = useRef<IntersectionObserver>();
   const router = useRouter();
@@ -56,6 +59,7 @@ export default function SearchPage({ tags }: Props) {
   useEffect(() => {
     if (!isObserverOn.current) return;
     setIsLoading(true);
+
     const fetchData = async () => {
       await fetch(
         "/api/search?" + new URLSearchParams(tags.map((tag) => ["tags", tag])),
@@ -82,11 +86,14 @@ export default function SearchPage({ tags }: Props) {
           setHasMore(storyCards.length > 0);
         })
         .catch((e) => console.log(e));
-
       setIsLoading(false);
     };
 
     fetchData();
+    if (!firstLoad)
+      setTimeout(() => {
+        setFirstLoad(true);
+      }, 1000);
   }, [pageNum]);
 
   let tagString: string = "";
@@ -94,22 +101,32 @@ export default function SearchPage({ tags }: Props) {
   for (let tag of tags) {
     tagString += `#${tag} `;
   }
+  const SearchComponent = () => {
+    if (storyCards.length) {
+      return (
+        <>
+          {storyCards.map(({ story, user }: StoryCardType, idx) => (
+            <StoryCard key={idx} story={story} user={user} />
+          ))}
+        </>
+      );
+    } else if (firstLoad) {
+      return <NoStories text="No search results found" />;
+    }
+    return (
+      <>
+        <StoryCardLoading ref={lastStoryRef} />
+        <StoryCardLoading />
+      </>
+    );
+  };
 
   return (
     <Layout>
       <MainOverlay>
         <Header>{tagString}</Header>
         <MaxWidthWrapper>
-          {storyCards.length ? (
-            storyCards.map(({ story, user }: StoryCardType, idx) => (
-              <StoryCard key={idx} story={story} user={user} />
-            ))
-          ) : (
-            <>
-              <StoryCardLoading ref={lastStoryRef} />
-              <StoryCardLoading />
-            </>
-          )}
+          <SearchComponent />
         </MaxWidthWrapper>
       </MainOverlay>
     </Layout>

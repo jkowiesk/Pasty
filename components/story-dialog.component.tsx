@@ -50,6 +50,7 @@ export default function StoryDialog({ isOpen, setIsOpen }: Props) {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setIsOpen(false);
+    console.log("CO JEST KURWA");
     await addStoryToDB({ ...newStory, tags }, uid);
   };
 
@@ -117,8 +118,8 @@ const Panel = styled(Dialog.Panel)`
   left: 0;
   right: 0;
   margin: auto;
-  height: 50vh;
-  width: 30vw;
+  height: 60vh;
+  width: max(500px, 30vw);
   padding: 16px 32px;
   background: var(--color-gray-1000);
   border-radius: 5px;
@@ -138,12 +139,14 @@ const Form = styled.form`
 const TextArea = styled.textarea`
   grid-area: content;
   width: 100%;
+  height: 100%;
   resize: none;
   border-radius: 5px;
   background: var(--color-gray-1000);
   border: 1px solid var(--color-gray-50);
   outline: none;
-  flex: 2;
+
+  flex: 4;
 
   &:focus {
     border: 1px solid var(--color-primary);

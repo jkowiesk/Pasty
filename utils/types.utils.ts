@@ -28,6 +28,7 @@ export type UserProfile = {
   username: string;
   avatar: string;
   followers: string[];
+  follows: UserSimple[];
   achievements: AchievementName[];
   description: string;
 };
