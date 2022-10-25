@@ -1,34 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<a name="readme-top"></a>
 
-## Getting Started
+<div align="center">
+  <a href="https://github.com/jkowiesk/Pasty.git">
+    <img src="public/images/logo-header.png" alt="logo">
+  </a>
 
-First, run the development server:
+  <h3 align="center">CopyPasty</h3>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+  <p align="center">
+    Social media, where everyone can share, copy and paste copypastas
+    <br />
+    <a href="https://github.com/jkowiesk/Pasty/issues">Report Bug</a>
+  </p>
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### About The Project
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+<div align="center">
+    <img src="https://firebasestorage.googleapis.com/v0/b/pasty-69ef6.appspot.com/o/images%2Fpreview.png?alt=media&token=6bbf42de-9b7c-4852-afa8-16540c49bbfd" alt="preview">
+ </div>
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+With many built-in features and an easy to navigate interface, users now can enjoy stories like never before. Account system gives user ability to rate copypastas, add them to favorites or even follow other users.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+### Built With
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [![React][react.js]][react-url]
+- [![Next][next.js]][next-url]
+- [![StyledComponents][styled-components]][styled-components-url]
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Deploy on Vercel
+<!-- MARKDOWN LINKS & IMAGES -->
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[react.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[react-url]: https://reactjs.org
+[next.js]: https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white
+[next-url]: https://nextjs.org
+[styled-components]: https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white
+[styled-components-url]: https://styled-components.com/
