@@ -191,6 +191,23 @@ export const getUserById = async (uid: string) => {
   throw Error("No User with That Id");
 };
 
+export const getFollowersNum = async (uid: string) => {
+  const { followers } = await getUserById(uid);
+
+  return followers.length;
+};
+
+export const getFollows = async (uid: string) => {
+  const { follows: followUids } = await getUserById(uid);
+  let simpleFollows: UserSimple[] = [];
+  for (let followUid of followUids) {
+    const { uid, username, avatar } = await getUserById(followUid);
+    simpleFollows.push({ uid, username, avatar } as UserSimple);
+  }
+
+  return simpleFollows;
+};
+
 export const getUserByUsername = async (username: string) => {
   const q = query(collection(db, "users"), where("username", "==", username));
   const querySnapshot = await getDocs(q);
@@ -414,6 +431,16 @@ export const getIsFavorite = async (uid: string, storyId: string) => {
   return favorites.includes(storyId);
 };
 
+export const getIsUsernameTaken = async (username: string) => {
+  const q = query(collection(db, "users"), where("username", "==", username));
+  const docSnap = await getDocs(q);
+
+  if (docSnap.size > 0) {
+    return true;
+  }
+  return false;
+};
+
 export const getIsFollowing = async (
   followerUid: string,
   followedUid: string
@@ -505,14 +532,31 @@ export const updateFavorites = async (uid: string, storyId: string) => {
 };
 
 export const updateAvatar = async (uid: string, file: File) => {
-  console.log(uid);
   const storageRef = ref(storage, `users/${uid}`);
-  await uploadBytes(storageRef, file).then((snapshot) => {});
-  await getDownloadURL(storageRef).then((url) => {
-    updateDoc(doc(db, "users", uid), {
-      avatar: url,
-    });
-  });
+  let returnCode: string = "pasty/avatar/success";
+  await uploadBytes(storageRef, file)
+    .then((snapshot) => {})
+    .catch((e) => (returnCode = e));
+  if (returnCode !== "pasty/avatar/success") return returnCode;
+  await getDownloadURL(storageRef)
+    .then((url) => {
+      updateDoc(doc(db, "users", uid), {
+        avatar: url,
+      }).catch((e) => (returnCode = e));
+    })
+    .catch((e) => (returnCode = e));
+
+  return returnCode;
+};
+
+export const updateUsername = async (uid: string, username: string) => {
+  const isTaken = await getIsUsernameTaken(username);
+
+  if (isTaken) return "pasty/username/taken";
+  const docRef = doc(db, `users/${uid}`);
+  let returnCode: string = "pasty/username/success";
+  await updateDoc(docRef, { username }).catch((e) => (returnCode = e));
+  return returnCode;
 };
 
 export const updateFollower = async (

@@ -7,12 +7,19 @@ import { Card } from "../../components/card.component";
 import Image from "next/image";
 
 import {
+  getFollowersNum,
+  getFollows,
   getIsFollowing,
   getStoriesByUid,
   getUserByUsername,
   updateFollower,
 } from "../../utils/firebase.utils";
-import { Story, UserProfile, AchievementName } from "../../utils/types.utils";
+import {
+  Story,
+  UserProfile,
+  AchievementName,
+  UserSimple,
+} from "../../utils/types.utils";
 
 import StoryCard from "../../components/story-card.component";
 import CustomBtn from "../../components/custom-btn.component";
@@ -21,22 +28,19 @@ import { Mask } from "@styled-icons/entypo/Mask";
 import { UserContext } from "../../contexts/user.context";
 import { EventsContext } from "../../contexts/events.context";
 import { achievementsMap } from "../../utils/objects.utils";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 type Props = { profileUser: UserProfile; stories: Story[] };
 type StyleProps = { isFollowing: boolean };
 
 export async function getServerSideProps({ params: { username } }: any) {
   const profileUser = await getUserByUsername(username);
-  const {
-    uid,
-    avatar,
-    followers,
-    follows: followsUIDs,
-    achievements,
-  } = profileUser;
-  const stories = await getStoriesByUid(profileUser.uid);
-  let follows;
 
+  const { uid, avatar, followers, achievements } = profileUser;
+  const stories = await getStoriesByUid(profileUser.uid);
+  const follows = await getFollows(profileUser.uid);
+  console.log(follows);
   return {
     props: {
       profileUser: { uid, username, avatar, followers, achievements, follows },
@@ -62,7 +66,8 @@ export default function Profile({ profileUser, stories }: Props) {
       getIsFollowing(clientUid, profileUser.uid).then((data) =>
         setIsFollowing(data)
       );
-  }, [isLoggedIn]);
+    getFollowersNum(profileUser.uid).then((data) => setFollowersNum(data));
+  }, [isLoggedIn, profileUser, clientUid]);
 
   const handleFollowBtnClick = async () => {
     const followers = await updateFollower(clientUid, profileUser.uid);
@@ -103,7 +108,7 @@ export default function Profile({ profileUser, stories }: Props) {
           <Sidebar>
             <SlideCard>
               <SideCardTitle>Achievement</SideCardTitle>
-              <MaxWidth>
+              <SideCardWrapper>
                 {profileUser.achievements.map((achievement, idx) => (
                   <label key={idx} title={achievement}>
                     <SideCardElement>
@@ -115,23 +120,27 @@ export default function Profile({ profileUser, stories }: Props) {
                     </SideCardElement>
                   </label>
                 ))}
-              </MaxWidth>
+              </SideCardWrapper>
             </SlideCard>
             <SlideCard>
               <SideCardTitle>Follows</SideCardTitle>
-              <MaxWidth>
-                {/* {profileUser.follows.map((idol, idx) => (
-                  <label key={idx} title={idol}>
-                    <SideCardElement as="a">
-                      <FollowAvatar
-                        src={achievementsMap[achievement]}
-                        layout="fill"
-                        alt="first_achievement"
-                      />
-                    </SideCardElement>
+              <SideCardWrapper>
+                {profileUser.follows.map((idol: UserSimple, idx) => (
+                  <label key={idx} title={idol.username}>
+                    <Link href={`/users/${idol.username}`}>
+                      <a>
+                        <SideCardElement>
+                          <FollowAvatar
+                            src={idol.avatar}
+                            layout="fill"
+                            alt="first_achievement"
+                          />
+                        </SideCardElement>
+                      </a>
+                    </Link>
                   </label>
-                ))} */}
-              </MaxWidth>
+                ))}
+              </SideCardWrapper>
             </SlideCard>
           </Sidebar>
           <StoriesBar>
@@ -216,8 +225,6 @@ const Avatar = styled(Image)``;
 
 const FollowAvatar = styled(Image)`
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
 `;
 
 const BasicInfo = styled.div`
@@ -254,6 +261,13 @@ const MaskIcon = styled(Mask)`
   height: 25px;
 `;
 
+const SideCardWrapper = styled.section`
+  display: flex;
+  width: 100%;
+  padding-inline: 10%;
+  gap: 32px;
+`;
+
 const SlideCard = styled(Card)`
   width: 100%;
   height: fit-content;
@@ -270,4 +284,10 @@ const SideCardElement = styled.div`
   position: relative;
   width: 50px;
   height: 50px;
+`;
+
+const SideCardLink = styled.a`
+  position: relative;
+  width: 40px;
+  height: 40px;
 `;

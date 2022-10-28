@@ -97,15 +97,6 @@ const eventsReducer = (state: any, action: any) => {
             type: "success",
           },
         };
-      case "pasty/close":
-        return {
-          ...state,
-          alert: {
-            isActive: false,
-            message: "",
-            type: "",
-          },
-        };
       case "pasty/follow/self":
         return {
           ...state,
@@ -113,6 +104,33 @@ const eventsReducer = (state: any, action: any) => {
             isActive: true,
             message: "You cannot follow yourself!",
             type: "error",
+          },
+        };
+      case "pasty/username/success":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Successfully changed username",
+            type: "success",
+          },
+        };
+      case "pasty/username/taken":
+        return {
+          ...state,
+          alert: {
+            isActive: true,
+            message: "Given username is already taken, try different one",
+            type: "error",
+          },
+        };
+      case "pasty/close":
+        return {
+          ...state,
+          alert: {
+            isActive: false,
+            message: "",
+            type: "",
           },
         };
       default:

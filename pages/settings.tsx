@@ -12,8 +12,9 @@ import { useRouter } from "next/router";
 
 import { NewMessage } from "@styled-icons/entypo/NewMessage";
 import CustomBtn from "../components/custom-btn.component";
-import { updateAvatar } from "../utils/firebase.utils";
+import { updateAvatar, updateUsername } from "../utils/firebase.utils";
 import MainOverlay from "../components/main-overlay-component";
+import { EventsContext } from "../contexts/events.context";
 
 type Props = {};
 
@@ -24,6 +25,10 @@ export default function Settings({ query }: any) {
     isLoggedIn,
     user: { uid },
   } = useContext(UserContext);
+  const {
+    alert: { message, type },
+    dispatchEvents,
+  } = useContext(EventsContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [file, setFile] = useState<File>();
@@ -41,7 +46,21 @@ export default function Settings({ query }: any) {
         <SettingsSection>
           <Setting>
             <SettingHeader>Change username</SettingHeader>
-            <InputForm onSubmit={() => {}}>
+            <InputForm
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const returnCode = await updateUsername(uid, username);
+                setUsername("");
+
+                dispatchEvents({ type: "alert", payload: returnCode });
+                if (returnCode === "pasty/username/success") {
+                  router.push("/");
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 500);
+                }
+              }}
+            >
               <SettingTextInput
                 label="New username"
                 name="username"
@@ -73,10 +92,20 @@ export default function Settings({ query }: any) {
             <InputForm
               onSubmit={async (e) => {
                 e.preventDefault();
-                await updateAvatar(uid, file!);
-                window.location.reload();
+                const returnCode = await updateAvatar(uid, file!);
+                setFile(undefined);
+                dispatchEvents({ type: "alert", payload: returnCode });
+                if (returnCode === "pasty/username/success") {
+                  router.push("/");
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 500);
+                }
               }}
             >
+              <Label htmlFor="avatar">
+                {file?.name ? file.name : "Select avatar"}
+              </Label>
               <FileInput
                 type="file"
                 name="avatar"
@@ -164,7 +193,22 @@ const FileInput = styled.input`
   margin-bottom: 8px;
   padding-inline: 8px;
   color: var(--color-primary-light);
-  border-radius: 5px;
+
   font-size: 1rem;
-  width: 80%;
+
+  &[type="file"] {
+    display: none;
+  }
+`;
+
+const Label = styled.label`
+  background: var(--color-secondary);
+  border-radius: 5px;
+  padding: 5px;
+  width: max(100px, 50%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  cursor: pointer;
 `;

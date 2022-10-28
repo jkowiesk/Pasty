@@ -50,6 +50,7 @@ export default function DayPastaPage({ storyCard: { story, user } }: Props) {
 const MaxWidthWrapper = styled.div`
   padding-bottom: 32px;
   width: min(100%, 700px);
+
   margin: 0 auto;
 `;
 

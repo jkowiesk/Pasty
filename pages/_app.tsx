@@ -6,18 +6,24 @@ import { useEffect, useRef } from "react";
 import UserProvider from "../contexts/user.context";
 import EventProvider from "../contexts/events.context";
 import HomeProvider from "../contexts/home.context";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   usePreserveHomeScroll();
 
   return (
-    <EventProvider>
-      <UserProvider>
-        <HomeProvider>
-          <Component {...pageProps} />
-        </HomeProvider>
-      </UserProvider>
-    </EventProvider>
+    <>
+      <Head>
+        <title>CopyPasty</title>
+      </Head>
+      <EventProvider>
+        <UserProvider>
+          <HomeProvider>
+            <Component {...pageProps} />
+          </HomeProvider>
+        </UserProvider>
+      </EventProvider>
+    </>
   );
 }
 
