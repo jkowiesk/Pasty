@@ -4,17 +4,12 @@ import { Menu } from "@headlessui/react";
 
 import { BookmarkFill } from "@styled-icons/bootstrap/BookmarkFill";
 import { Bookmark } from "@styled-icons/bootstrap/Bookmark";
-import { ArrowDropDown } from "@styled-icons/material/ArrowDropDown";
 import { Trash } from "@styled-icons/bootstrap/Trash";
+import { ThreeDots } from "@styled-icons/bootstrap/ThreeDots";
 
 import { EventsContext } from "../contexts/events.context";
 import { UserContext } from "../contexts/user.context";
 import { getIsFavorite, updateFavorites } from "../utils/firebase.utils";
-
-type StyleProps = {
-  children: any;
-  hovercolor: any;
-};
 
 type Props = {
   id: string;
@@ -59,8 +54,7 @@ export default function StoryCardDropdown({
   return (
     <Menu>
       <Wrapper className={className}>
-        <DropdownWrapper hovercolor="var(--color-secondary-light)">
-          <AnimatedText>Actions</AnimatedText>
+        <DropdownWrapper>
           <DropdownIcon isCardActive={isCardActive} />
         </DropdownWrapper>
         <Items>
@@ -161,50 +155,27 @@ const DropdownWrapper = styled(Menu.Button)`
   padding: 0;
   position: relative;
   border: none;
+  color: var(--color-secondary);
 
   &:hover {
     cursor: pointer;
   }
+
   * * {
-    transition: color;
+    transition: opacity;
     transition-duration: 0.5s;
     transition-timing-function: ease-out;
   }
 
   &:hover * * {
-    color: ${({ hovercolor }: StyleProps) =>
-      hovercolor || "var(--color-primary-light)"};
-  }
-  p {
-    transition: transform ease-out 0.6s;
-  }
-
-  &:hover p {
-    transform: translateY(105%);
-    color: ${({ hovercolor }: StyleProps) =>
-      hovercolor || "var(--color-primary-light)"};
+    opacity: 0.6;
   }
 `;
 
-const AnimatedText = styled.p`
-  position: absolute;
-  right: 0;
-  left: 0;
-  top: 20px;
-  bottom: 0;
-  margin: auto;
-  width: fit-content;
-  height: fit-content;
-  font-size: 0.8rem;
-  color: transparent;
-`;
-
-const DropdownIcon = styled(ArrowDropDown)`
-  width: 45px;
-  height: 45px;
-  position: relative;
-  z-index: 1;
-  color: var(--color-secondary);
+const DropdownIcon = styled(ThreeDots)`
+  width: 40px;
+  height: 30px;
+  color: var(--color-secondary-dark);
   background: ${({ isCardActive }: { isCardActive?: boolean }) =>
     isCardActive ? "transparent" : "var(--color-gray-1000)"};
 `;

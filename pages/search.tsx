@@ -16,6 +16,7 @@ import { StoryCardLoading } from "../components/story-card-loading.component";
 import MainOverlay from "../components/main-overlay-component";
 import { GetServerSideProps } from "next";
 import NoStories from "../components/no-stories.component";
+import { validateStoryCards } from "../utils/functions.utils";
 
 type Props = { tags: string[] };
 
@@ -34,9 +35,8 @@ export default function SearchPage({ tags }: Props) {
   const [pageNum, setPageNum] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const isObserverOn = useRef<boolean>(false);
 
-  const [firstLoad, setFirstLoad] = useState<boolean>(false);
+  const [firstLoadEnded, setFirstLoadEnded] = useState<boolean>(false);
 
   const observer = useRef<IntersectionObserver>();
   const router = useRouter();
@@ -48,7 +48,6 @@ export default function SearchPage({ tags }: Props) {
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
           setPageNum((prev) => prev + 1);
-          isObserverOn.current = true;
         }
       });
       if (node) observer.current.observe(node);
@@ -57,7 +56,14 @@ export default function SearchPage({ tags }: Props) {
   );
 
   useEffect(() => {
-    if (!isObserverOn.current) return;
+    setFirstLoadEnded(false);
+    setStoryCards([]);
+    setIsLoading(false);
+    setHasMore(true);
+    setPageNum(0);
+  }, [router.query]);
+
+  useEffect(() => {
     setIsLoading(true);
 
     const fetchData = async () => {
@@ -79,10 +85,10 @@ export default function SearchPage({ tags }: Props) {
             )) as User;
             storyCards.push({ story, user: { uid, username, avatar } });
           }
-          setStoryCards((prevStoryCards: StoryCardType[]) => [
-            ...prevStoryCards,
-            ...storyCards,
-          ]);
+
+          setStoryCards((prevStoryCards: StoryCardType[]) =>
+            validateStoryCards([...prevStoryCards, ...storyCards])
+          );
           setHasMore(storyCards.length > 0);
         })
         .catch((e) => console.log(e));
@@ -90,9 +96,9 @@ export default function SearchPage({ tags }: Props) {
     };
 
     fetchData();
-    if (!firstLoad)
+    if (!firstLoadEnded)
       setTimeout(() => {
-        setFirstLoad(true);
+        setFirstLoadEnded(true);
       }, 1000);
   }, [pageNum]);
 
@@ -110,7 +116,7 @@ export default function SearchPage({ tags }: Props) {
           ))}
         </>
       );
-    } else if (firstLoad) {
+    } else if (firstLoadEnded) {
       return <NoStories text="No search results found" />;
     }
     return (

@@ -31,12 +31,13 @@ export default function SearchDialog({
   const router = useRouter();
 
   const handleClick = async () => {
-    const pathName = router.pathname;
+    if (router.pathname == "/search") {
+      setIsOpen(false);
+    }
     await router.push({
       pathname: "/search",
       query: { tags },
     });
-    if (router.pathname === pathName) window.location.reload();
   };
 
   return (

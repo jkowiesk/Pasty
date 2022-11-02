@@ -40,7 +40,6 @@ export async function getServerSideProps({ params: { username } }: any) {
   const { uid, avatar, followers, achievements } = profileUser;
   const stories = await getStoriesByUid(profileUser.uid);
   const follows = await getFollows(profileUser.uid);
-  console.log(follows);
   return {
     props: {
       profileUser: { uid, username, avatar, followers, achievements, follows },

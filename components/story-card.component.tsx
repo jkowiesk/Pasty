@@ -20,9 +20,6 @@ import { UserContext } from "../contexts/user.context";
 import { EventsContext } from "../contexts/events.context";
 
 import { Copy } from "@styled-icons/boxicons-regular/Copy";
-import { Person } from "@styled-icons/bootstrap/Person";
-import { BookmarkFill } from "@styled-icons/bootstrap/BookmarkFill";
-import { Bookmark } from "@styled-icons/bootstrap/Bookmark";
 
 import { Happy } from "@styled-icons/boxicons-regular/Happy";
 import { Sad } from "@styled-icons/boxicons-regular/Sad";
@@ -114,6 +111,9 @@ export default function StoryCard({
       <PreviewCard isCardActive={isCardActive} className={className}>
         <SuperHeader>
           <Time>{formatter.format(new Date(created))}</Time>
+          {isLoggedIn && (
+            <StoryCardDropdown id={id} isCardActive={isCardActive} />
+          )}
         </SuperHeader>
         <Header>
           <Title>{title}</Title>
@@ -134,9 +134,6 @@ export default function StoryCard({
                   </Tag>
                 ))}
               </Tags>
-            )}
-            {isLoggedIn && (
-              <StoryCardDropdownStyled id={id} isCardActive={isCardActive} />
             )}
           </RightHeader>
         </Header>
@@ -219,6 +216,7 @@ export default function StoryCard({
     <Card className={className}>
       <SuperHeader>
         <Time>{formatter.format(new Date(created))}</Time>
+        {isLoggedIn && <StoryCardDropdown id={id} />}
       </SuperHeader>
       <Header>
         <Title>{title}</Title>
@@ -240,7 +238,6 @@ export default function StoryCard({
               ))}
             </Tags>
           )}
-          {isLoggedIn && <StoryCardDropdownStyled id={id} />}
         </RightHeader>
       </Header>
       <Content>{content}</Content>
@@ -346,7 +343,7 @@ const PreviewCard = styled(Card)`
   animation: ${({ isCardActive }: PreviewCardProps) =>
       isCardActive ? storyClick : null}
     0.5s;
-  height: 450x;
+  height: 450px;
 `;
 
 const Title = styled.h1`
@@ -371,8 +368,9 @@ const RightHeader = styled.div`
 `;
 
 const SuperHeader = styled.div`
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: -16px;
 `;
 
@@ -403,14 +401,6 @@ const Footer = styled.footer`
   justify-content: space-between;
   justify-items: start;
   align-items: center;
-`;
-
-const IconBtn = styled.button`
-  padding: 5px;
-  border: 0;
-  background: transparent;
-  color: var(--color-secondary);
-  cursor: pointer;
 `;
 
 const CopyIcon = styled(Copy)`
@@ -514,10 +504,6 @@ const Tags = styled.ul`
 `;
 
 const Tag = styled.li``;
-
-const StoryCardDropdownStyled = styled(StoryCardDropdown)`
-  margin-left: auto;
-`;
 
 const A = styled.a`
   color: var(--color-distinct);
