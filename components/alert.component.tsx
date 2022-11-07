@@ -76,7 +76,8 @@ const close = keyframes`
 `;
 
 const Panel = styled(Dialog.Panel)`
-  padding-inline: 8px;
+  padding-left: 8px;
+  padding-right: 32px;
   padding-block: 16px;
   background: var(--color-gray-1000);
   border-radius: 5px;
@@ -86,7 +87,7 @@ const Panel = styled(Dialog.Panel)`
   border-bottom: 8px solid
     ${({ type }: StyleProps) =>
       type === "error" ? "var(--color-error)" : "var(--color-success)"};
-  width: 25vw;
+  width: max(300px, 25vw);
   heigh: 100px;
   display: flex;
   flex-direction: column;

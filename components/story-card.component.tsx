@@ -16,6 +16,8 @@ import {
   updateStoryRating,
 } from "../utils/firebase.utils";
 
+import { phoneAndSmaller, tabletAndSmaller } from "../utils/constants.utils";
+
 import { UserContext } from "../contexts/user.context";
 import { EventsContext } from "../contexts/events.context";
 
@@ -159,7 +161,9 @@ export default function StoryCard({
           </AnimatedIcon>
           <Link href={`/users/${username}`} passHref>
             <UserBar>
-              <Avatar src={avatar!} width={40} height={40} alt="avatar" />
+              <AvatarWrapper>
+                <Avatar src={avatar!} layout="fill" alt="avatar" />
+              </AvatarWrapper>
               <Username>{username}</Username>
             </UserBar>
           </Link>
@@ -251,7 +255,9 @@ export default function StoryCard({
         </AnimatedIcon>
         <Link href={`/users/${username}`} passHref>
           <UserBar>
-            <Avatar src={avatar!} width={40} height={40} alt="avatar" />
+            <AvatarWrapper>
+              <Avatar src={avatar!} layout="fill" alt="avatar" />
+            </AvatarWrapper>
             <Username>{username}</Username>
           </UserBar>
         </Link>
@@ -330,6 +336,10 @@ const Card = styled.div`
   box-shadow: var(--shadow-elevation-low);
   min-height: 450px;
   width: 100%;
+
+  @media ${phoneAndSmaller} {
+    width: 100%;
+  }
 `;
 
 const LinkWrapper = styled.a`
@@ -344,16 +354,22 @@ const PreviewCard = styled(Card)`
       isCardActive ? storyClick : null}
     0.5s;
   height: 450px;
+
+  @media ${tabletAndSmaller} {
+    height: 350px;
+    min-height: 350px;
+  }
 `;
 
 const Title = styled.h1`
   color: var(--color-font-black);
-  font-size: 1.5rem;
+  font-size: clamp(0.8rem, 3vw, 1.5rem);
   justify-self: start;
 `;
 
 const Header = styled.div`
   display: grid;
+  gap: 0 4px;
   grid-template-columns: 1fr fit-content(220px);
   justify-content: space-between;
   place-items: center;
@@ -385,6 +401,10 @@ const Content = styled.p`
   white-space: pre-line;
   color: var(--color-font-black);
   flex: 1;
+
+  @media ${tabletAndSmaller} {
+    font-size: 0.9rem;
+  }
 `;
 
 const ContentPreview = styled(Content)`
@@ -392,6 +412,10 @@ const ContentPreview = styled(Content)`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 10;
   overflow: hidden;
+
+  @media ${tabletAndSmaller} {
+    -webkit-line-clamp: 8;
+  }
 `;
 
 const Footer = styled.footer`
@@ -461,13 +485,25 @@ const UserBar = styled.a`
   }
 `;
 
+const AvatarWrapper = styled.a`
+  position: relative;
+
+  width: calc(var(--icons-size));
+  height: calc(var(--icons-size));
+`;
+
 const Avatar = styled(Image)`
   border-radius: 50%;
 `;
 
 const Username = styled.p`
+  font-size: 1rem;
   color: var(--color-secondary);
   padding-top: 5px;
+
+  @media ${tabletAndSmaller} {
+    font-size: 0.7rem;
+  }
 `;
 
 const RatingBar = styled.div`
@@ -495,12 +531,18 @@ const RatingCounter = styled.p`
 const Tags = styled.ul`
   height: 100%;
   display: grid;
-  max-width: 168px;
+  max-width: 186px;
   gap: 0 8px;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   list-style-type: none;
   padding: 0;
   margin: 0;
+
+  @media ${tabletAndSmaller} {
+    max-width: 140px;
+    gap: 0 4px;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
 `;
 
 const Tag = styled.li``;
@@ -512,5 +554,9 @@ const A = styled.a`
 
   &:hover {
     text-decoration: underline;
+  }
+
+  @media ${tabletAndSmaller} {
+    font-size: 0.6rem;
   }
 `;

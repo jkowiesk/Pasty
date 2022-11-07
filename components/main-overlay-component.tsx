@@ -3,6 +3,8 @@ import styled from "styled-components";
 import AddStoryBtn from "./add-story-btn.component";
 import StoryDialog from "./story-dialog.component";
 
+import { phoneAndSmaller, tabletAndSmaller } from "../utils/constants.utils";
+
 type Props = {
   index?: boolean;
   children: JSX.Element | JSX.Element[];
@@ -38,6 +40,10 @@ const RightSide = styled.div`
 const Wrapper = styled.div`
   display: grid;
   grid-template-areas: "left main right";
-  grid-template-columns: minmax(80px, 1fr) 4fr minmax(80px, 1fr);
+  grid-template-columns: minmax(80px, 1fr) 3fr minmax(80px, 1fr);
   grid-template-rows: 1fr;
+
+  @media ${phoneAndSmaller} {
+    grid-template-columns: minmax(10px, 1fr) 15fr minmax(10px, 1fr);
+  }
 `;

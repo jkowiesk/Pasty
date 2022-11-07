@@ -16,6 +16,8 @@ type StyleProps = {
   hovercolor?: string;
 };
 
+import { tabletAndSmaller } from "../utils/constants.utils";
+
 export default function AnimatedIcon({
   text,
   href,
@@ -80,6 +82,10 @@ const LinkWrapper = styled.a`
     animation-fill-mode: forwards;
     animation-name: ${({ hovercolor }: StyleProps) =>
       slideIn(hovercolor || "var(--color-primary-light)")};
+  }
+
+  @media ${tabletAndSmaller} {
+    padding: 4px;
   }
 `;
 

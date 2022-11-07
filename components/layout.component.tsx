@@ -44,5 +44,3 @@ const Overlay = styled.div`
 const Footer = styled.div`
   grid-area: header;
 `;
-
-/* minmax(40ch, 3.5fr) */
