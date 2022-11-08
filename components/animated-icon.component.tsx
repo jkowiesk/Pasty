@@ -16,7 +16,7 @@ type StyleProps = {
   hovercolor?: string;
 };
 
-import { tabletAndSmaller } from "../utils/constants.utils";
+import { phoneAndSmaller, tabletAndSmaller } from "../utils/constants.utils";
 
 export default function AnimatedIcon({
   text,
@@ -56,6 +56,17 @@ const slideIn = (hovercolor: string) => keyframes`
   }
 `;
 
+const slideInPhone = (hovercolor: string) => keyframes`
+  from {
+    color: transparent;
+    transform: translate(0%);
+  }
+  to {
+    color: ${hovercolor};
+    transform: translateY(80%);
+  }
+`;
+
 const LinkWrapper = styled.a`
   isolation: isolate;
   position: relative;
@@ -82,6 +93,11 @@ const LinkWrapper = styled.a`
     animation-fill-mode: forwards;
     animation-name: ${({ hovercolor }: StyleProps) =>
       slideIn(hovercolor || "var(--color-primary-light)")};
+
+    @media ${phoneAndSmaller} {
+      animation-name: ${({ hovercolor }: StyleProps) =>
+        slideInPhone(hovercolor || "var(--color-primary-light)")};
+    }
   }
 
   @media ${tabletAndSmaller} {
@@ -106,4 +122,9 @@ const AnimatedText = styled.p`
   height: fit-content;
   font-size: 0.8rem;
   color: transparent;
+
+  @media ${phoneAndSmaller} {
+    padding: 4px;
+    font-size: 0.6rem;
+  }
 `;

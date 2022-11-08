@@ -31,6 +31,8 @@ import { achievementsMap } from "../../utils/objects.utils";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+import { phoneAndSmaller, tabletAndSmaller } from "../../utils/constants.utils";
+
 type Props = { profileUser: UserProfile; stories: Story[] };
 type StyleProps = { isFollowing: boolean };
 
@@ -53,6 +55,7 @@ export default function Profile({ profileUser, stories }: Props) {
     isLoggedIn,
     user: { uid: clientUid },
   } = useContext(UserContext);
+
   const { dispatchEvents } = useContext(EventsContext);
 
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
@@ -69,7 +72,12 @@ export default function Profile({ profileUser, stories }: Props) {
   }, [isLoggedIn, profileUser, clientUid]);
 
   const handleFollowBtnClick = async () => {
+    if (!isLoggedIn) {
+      dispatchEvents({ type: "alert", payload: "pasty/not-logged" });
+      return;
+    }
     const followers = await updateFollower(clientUid, profileUser.uid);
+
     if (followers === -1) {
       dispatchEvents({ type: "alert", payload: "pasty/follow/self" });
       return;
@@ -81,9 +89,9 @@ export default function Profile({ profileUser, stories }: Props) {
   return (
     <Layout>
       <MaxWidth>
-        <Overlay>
+        <ProfileOverlay>
           <HeaderCard>
-            <LeftSide>
+            <ProfileInfo>
               <ImageWrapper>
                 <Avatar
                   src={profileUser.avatar!}
@@ -102,11 +110,11 @@ export default function Profile({ profileUser, stories }: Props) {
               >
                 <MaskIcon />
               </FollowButton>
-            </LeftSide>
+            </ProfileInfo>
           </HeaderCard>
           <Sidebar>
             <SlideCard>
-              <SideCardTitle>Achievement</SideCardTitle>
+              <SideCardTitle>Achievements</SideCardTitle>
               <SideCardWrapper>
                 {profileUser.achievements.map((achievement, idx) => (
                   <label key={idx} title={achievement}>
@@ -147,13 +155,13 @@ export default function Profile({ profileUser, stories }: Props) {
               <StoryCard key={idx} story={story} user={profileUser} />
             ))}
           </StoriesBar>
-        </Overlay>
+        </ProfileOverlay>
       </MaxWidth>
     </Layout>
   );
 }
 
-const Overlay = styled.div`
+const ProfileOverlay = styled.div`
   display: grid;
   grid-template-areas:
     "header header"
@@ -162,7 +170,25 @@ const Overlay = styled.div`
   grid-template-columns: 1fr 1fr;
   place-items: center;
 
-  height: 100%;
+  @media ${tabletAndSmaller} {
+    grid-template-areas:
+      "header"
+      "achievements"
+      "stories";
+    grid-template-rows: 300px auto 1fr;
+    grid-template-columns: 1fr;
+  }
+`;
+
+const MaxWidth = styled.div`
+  width: 100%;
+  padding-inline: 6%;
+
+  @media ${phoneAndSmaller} {
+    padding-inline: 3%;
+  }
+
+  --story-card-width: 500px;
 `;
 
 const HeaderCard = styled(Card)`
@@ -173,9 +199,17 @@ const HeaderCard = styled(Card)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media ${tabletAndSmaller} {
+    padding-inline: 32px;
+  }
+
+  @media ${phoneAndSmaller} {
+    padding-inline: 16px;
+  }
 `;
 
-const LeftSide = styled.div`
+const ProfileInfo = styled.div`
   display: grid;
   grid-template-areas:
     "avatar basicInfo"
@@ -184,6 +218,12 @@ const LeftSide = styled.div`
   height: 128px;
   grid-template-rows: 1fr 40px;
   gap: 16px;
+
+  @media ${phoneAndSmaller} {
+    gap: 8px;
+    grid-template-rows: 1fr 40px;
+    margin: auto;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -203,6 +243,14 @@ const Sidebar = styled.div`
   gap: 32px;
   position: sticky;
   top: 135px;
+
+  @media ${tabletAndSmaller} {
+    width: 90%;
+    padding-right: 0;
+    position: relative;
+    top: 0;
+    margin-inline: auto;
+  }
 `;
 
 const StoriesBar = styled.div`
@@ -213,13 +261,14 @@ const StoriesBar = styled.div`
   flex-direction: column;
   gap: 32px;
   padding-bottom: 32px;
-`;
 
-const MaxWidth = styled.div`
-  width: 100%;
-  padding-inline: 10%;
+  @media ${tabletAndSmaller} {
+    max-width: var(--story-card-width);
+    padding: 32px 20px;
+    top: 0;
+    margin-inline: auto;
+  }
 `;
-
 const Avatar = styled(Image)``;
 
 const FollowAvatar = styled(Image)`
@@ -237,11 +286,19 @@ const BasicInfo = styled.div`
 const FollowersCount = styled.p`
   font-size: 1.2rem;
   color: var(--color-secondary);
+
+  @media ${phoneAndSmaller} {
+    font-size: 0.9rem;
+  }
 `;
 
 const Username = styled.h3`
   font-size: 1.5rem;
   color: var(--color-primary-dark);
+
+  @media ${phoneAndSmaller} {
+    font-size: 1.2rem;
+  }
 `;
 
 const FollowButton = styled(CustomBtn)`
@@ -253,11 +310,19 @@ const FollowButton = styled(CustomBtn)`
   width: 200px;
   background: ${({ isFollowing }: StyleProps) =>
     isFollowing ? "var(--color-distinct-light)" : "var(--color-primary)"};
+
+  @media ${phoneAndSmaller} {
+    width: 150px;
+  }
 `;
 
 const MaskIcon = styled(Mask)`
   width: 25px;
   height: 25px;
+
+  @media ${phoneAndSmaller} {
+    width: 150px;
+  }
 `;
 
 const SideCardWrapper = styled.section`

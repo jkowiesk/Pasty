@@ -20,6 +20,8 @@ import Menu from "./menu.component";
 
 import { UserContext } from "../contexts/user.context";
 
+import { phoneAndSmaller, tabletAndSmaller } from "../utils/constants.utils";
+
 type Props = {};
 
 type StyleProps = {
@@ -110,6 +112,10 @@ const Wrapper = styled.div`
 
 const HomeWrapper = styled(AnimatedIcon)`
   margin-left: 50px;
+
+  @media ${phoneAndSmaller} {
+    margin-left: 10px;
+  }
 `;
 
 const HeaderWrapper = styled.div`
@@ -124,6 +130,8 @@ const HeaderWrapper = styled.div`
 const Avatar = styled(ImageExperimental)`
   position: relative;
   border-radius: 50%;
+  width: calc(var(--icons-size) + 0px);
+  height: calc(var(--icons-size) + 0px);
 `;
 
 const HomeSide = styled.div`
@@ -135,6 +143,15 @@ const HomeSide = styled.div`
 const LogoWrapper = styled.div`
   width: 300px;
   padding-bottom: 10px;
+
+  @media ${tabletAndSmaller} {
+    width: 250px;
+  }
+
+  @media ${phoneAndSmaller} {
+    padding: 0;
+    width: 175px;
+  }
 `;
 
 const ActionSide = styled.div`
@@ -147,6 +164,10 @@ const Actions = styled.div`
   display: flex;
   gap: 16px;
   margin-right: 50px;
+
+  @media ${phoneAndSmaller} {
+    margin-right: 10px;
+  }
 `;
 
 const HomeIcon = styled(HomeAlt)`
