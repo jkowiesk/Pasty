@@ -6,6 +6,7 @@ import { Dialog } from "@headlessui/react";
 import { useEffect, useState, useContext } from "react";
 
 import { EventsContext } from "../contexts/events.context";
+import { isMobile } from "../utils/constants.utils";
 
 type Props = {};
 
@@ -23,9 +24,12 @@ export default function Alert() {
   const [isClosing, setIsClosing] = useState<boolean>(false);
 
   useEffect(() => {
-    const html = document.getElementsByTagName("html")[0];
-    html.style.overflowY = "scroll";
-    html.style.padding = "0";
+    const mql = window.matchMedia(isMobile);
+    if (!mql.matches) {
+      const html = document.getElementsByTagName("html")[0];
+      html.style.overflowY = "scroll";
+      html.style.padding = "0";
+    }
 
     const timeout = setTimeout(() => {
       setIsClosing(true);

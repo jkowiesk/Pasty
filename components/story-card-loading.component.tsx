@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { tabletAndSmaller } from "../utils/constants.utils";
 
 const blink = keyframes`
   0% {
@@ -14,16 +15,20 @@ const blink = keyframes`
 `;
 export const StoryCardLoading = styled.div`
   padding-inline: 8px;
-  padding-block: 16px;
+  padding-block: 4px 16px;
+  background: var(--color-gray-1000);
   border-radius: 5px;
   border: 2px solid var(--color-primary-dark);
   border-bottom: 8px solid var(--color-primary-dark);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   box-shadow: var(--shadow-elevation-low);
-  min-height: 400px;
   width: 100%;
   height: 450px;
   animation: ${blink} 1s infinite;
+
+  @media ${tabletAndSmaller} {
+    height: 330px;
+  }
 `;

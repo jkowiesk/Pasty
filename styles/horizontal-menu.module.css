@@ -1,0 +1,26 @@
+.enterMenu {
+  overflow: hidden;
+  transition: width 500ms ease-out;
+}
+
+.enterFromMenu {
+  width: 0px;
+}
+
+.enterToMenu {
+  width: 120px;
+}
+
+.leaveMenu {
+  overflow: hidden;
+  transition: width 500ms ease-in;
+}
+
+.leaveFromMenu {
+  width: 120px;
+}
+
+.leaveToMenu {
+  width: 0px;
+  display: none;
+}

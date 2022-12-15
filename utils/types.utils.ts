@@ -113,6 +113,11 @@ export type Result<T> = {
   returnCode: string;
 };
 
+export type WindowSize = {
+  width: number | undefined;
+  height: number | undefined;
+};
+
 export type isOpenType = "true" | "false" | "";
 
 export type AchievementName = "First Achievement";

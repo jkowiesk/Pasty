@@ -97,13 +97,15 @@ const Panel = styled(Dialog.Panel)`
   left: 0;
   right: 0;
   margin: auto;
-  height: 15vh;
-  width: 30vw;
+  height: 140px;
+  width: 280px;
+  min-width: 200px;
   padding: 16px 32px;
   background: var(--color-gray-1000);
   border-radius: 5px;
   border: 1px solid var(--color-primary-dark);
   border-bottom: 8px solid var(--color-primary-dark);
+  z-index: 1;
 `;
 
 const Cancel = styled.button`
@@ -145,7 +147,7 @@ const SearchBtn = styled(CustomBtn)`
     #f5970a
   );
   border: 1px solid var(--color-background);
-  width: 250px;
+  width: 100%;
   margin: auto;
 `;
 

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import styled, { keyframes, css } from "styled-components";
 
@@ -16,11 +16,18 @@ import { isOpenType } from "../utils/types.utils";
 
 import Logo from "../public/images/logo-header.png";
 
-import Menu from "./menu.component";
+import VerticalMenu from "./vertical-menu.component";
 
 import { UserContext } from "../contexts/user.context";
 
-import { phoneAndSmaller, tabletAndSmaller } from "../utils/constants.utils";
+import {
+  BREAKPOINTS,
+  isMobile,
+  phoneAndSmaller,
+  tabletAndSmaller,
+} from "../utils/constants.utils";
+import HorizontalMenu from "./horizontal-menu.component";
+import useWindowSize from "../hooks/use-window-size.hook";
 
 type Props = {};
 
@@ -33,8 +40,19 @@ export default function Header() {
     isLoggedIn,
     user: { username, avatar },
   } = useContext(UserContext);
+  const [renderVerticalMenu, setRenderVerticalMenu] = useState<boolean>(true);
 
   const [isMenuOpen, setIsMenuOpen] = useState<isOpenType>("");
+  const windowSize = useWindowSize();
+
+  useEffect(() => {
+    if (windowSize.width! <= BREAKPOINTS.phone) setRenderVerticalMenu(false);
+    else setRenderVerticalMenu(true);
+  }, [windowSize]);
+
+  useEffect(() => {
+    console.log(isMenuOpen);
+  });
 
   return (
     <Wrapper>
@@ -79,7 +97,14 @@ export default function Header() {
           </Actions>
         </ActionSide>
       </HeaderWrapper>
-      <Menu isOpen={isMenuOpen} />
+      {renderVerticalMenu ? (
+        <VerticalMenu isOpen={isMenuOpen} />
+      ) : (
+        <HorizontalMenu
+          isOpen={isMenuOpen === "true" ? true : false}
+          setIsOpen={setIsMenuOpen}
+        />
+      )}
     </Wrapper>
   );
 }
@@ -150,7 +175,7 @@ const LogoWrapper = styled.div`
 
   @media ${phoneAndSmaller} {
     padding: 0;
-    width: 175px;
+    width: 150px;
   }
 `;
 

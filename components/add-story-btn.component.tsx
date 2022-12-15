@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { isMobile } from "../utils/constants.utils";
 
 type Props = { setIsOpen: any };
 
@@ -6,9 +7,12 @@ export default function AddStoryBtn({ setIsOpen }: Props) {
   return (
     <Wrapper
       onClick={async () => {
+        const mql = window.matchMedia(isMobile);
         await setIsOpen(true);
-        const html = document.getElementsByTagName("html")[0];
-        html.style.paddingRight = "var(--scrollbar-size)";
+        if (!mql.matches) {
+          const html = document.getElementsByTagName("html")[0];
+          html.style.paddingRight = "var(--scrollbar-size)";
+        }
       }}
     >
       +

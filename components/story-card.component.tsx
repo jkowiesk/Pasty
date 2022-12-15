@@ -323,7 +323,7 @@ const storyClick = keyframes`
   }
 `;
 
-const Card = styled.div`
+export const Card = styled.div`
   padding-inline: 8px;
   padding-block: 4px 16px;
   background: var(--color-gray-1000);
@@ -334,7 +334,6 @@ const Card = styled.div`
   flex-direction: column;
   gap: 12px;
   box-shadow: var(--shadow-elevation-low);
-  min-height: 450px;
   width: 100%;
 
   @media ${phoneAndSmaller} {
@@ -356,8 +355,7 @@ const PreviewCard = styled(Card)`
   height: 450px;
 
   @media ${tabletAndSmaller} {
-    height: 350px;
-    min-height: 350px;
+    height: 330px;
   }
 `;
 

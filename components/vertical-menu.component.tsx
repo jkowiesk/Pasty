@@ -12,6 +12,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/user.context";
 import Link from "next/link";
 import SearchDialog from "./search-dialog.component";
+import { isMobile } from "../utils/constants.utils";
 
 type Props = {
   isOpen: isOpenType;
@@ -21,7 +22,7 @@ type WrapperProps = {
   isOpen: isOpenType;
 };
 
-export default function Menu({ isOpen }: Props) {
+export default function VerticalMenu({ isOpen }: Props) {
   const [isSearchDialogOpen, setSearchDialogOpen] = useState<boolean>(false);
   const [childrenNum, setChildrenNum] = useState(4);
   const handleSignOut = () => {
@@ -42,10 +43,13 @@ export default function Menu({ isOpen }: Props) {
           <AnimatedIcon
             text="Search"
             onClick={async () => {
+              const mql = window.matchMedia(isMobile);
               await setSearchDialogOpen(true);
-              const html = document.getElementsByTagName("html")[0];
-              html.style.overflowY = "none";
-              html.style.paddingRight = "var(--scrollbar-size)";
+              if (!mql.matches) {
+                const html = document.getElementsByTagName("html")[0];
+                html.style.overflowY = "none";
+                html.style.paddingRight = "var(--scrollbar-size)";
+              }
             }}
           >
             <SearchIcon />

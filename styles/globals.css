@@ -23,8 +23,8 @@ html {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  /* overflow-x: hidden;
-  overflow-y: scroll; */
+  overflow-x: hidden;
+  /* overflow-y: scroll; */
 }
 
 img,
@@ -157,6 +157,8 @@ html::-webkit-scrollbar-thumb:hover {
   border-radius: 3px;
 }
 
+/* global media queries */
+
 @media (max-width: 60rem) {
   :root {
     --icons-size: 35px;
@@ -165,6 +167,26 @@ html::-webkit-scrollbar-thumb:hover {
 
 @media (max-width: 36rem) {
   :root {
-    --icons-size: 30px;
+    --icons-size: 25px;
+  }
+}
+
+/*  */
+
+@keyframes widthAnimationOpen {
+  0% {
+    width: 100px;
+  }
+  100% {
+    width: 0x;
+  }
+}
+
+@keyframes widthAnimationClose {
+  0% {
+    width: 100px;
+  }
+  100% {
+    width: 0px;
   }
 }

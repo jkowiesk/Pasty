@@ -222,7 +222,9 @@ const ProfileInfo = styled.div`
   @media ${phoneAndSmaller} {
     gap: 8px;
     grid-template-rows: 1fr 40px;
+    justify-content: space-between;
     margin: auto;
+    width: 100%;
   }
 `;
 
@@ -346,8 +348,8 @@ const SideCardTitle = styled.h2`
 
 const SideCardElement = styled.div`
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: calc(var(--icons-size));
+  height: calc(var(--icons-size));
 `;
 
 const SideCardLink = styled.a`

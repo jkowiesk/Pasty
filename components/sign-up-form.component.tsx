@@ -9,6 +9,7 @@ import CustomBtn from "./custom-btn.component";
 import { Card } from "./card.component";
 
 import { Send } from "@styled-icons/fluentui-system-filled/Send";
+import { phoneAndSmaller } from "../utils/constants.utils";
 
 type Props = {
   story: StoryDoc;
@@ -83,6 +84,11 @@ const WrapperCard = styled(Card)`
   display: flex;
   flex-direction: column;
   gap: 40px;
+
+  @media ${phoneAndSmaller} {
+    width: 90%;
+    padding: 32px 32px;
+  }
 `;
 
 const Form = styled.form`

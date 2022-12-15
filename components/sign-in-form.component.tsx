@@ -15,6 +15,7 @@ import { Card } from "./card.component";
 import CustomBtn from "./custom-btn.component";
 
 import { EventsContext } from "../contexts/events.context";
+import { phoneAndSmaller } from "../utils/constants.utils";
 
 type Props = {
   story: StoryDoc;
@@ -110,6 +111,11 @@ const WrapperCard = styled(Card)`
   display: flex;
   flex-direction: column;
   gap: 40px;
+
+  @media ${phoneAndSmaller} {
+    width: 90%;
+    padding: 32px 32px;
+  }
 `;
 
 const Form = styled.form`

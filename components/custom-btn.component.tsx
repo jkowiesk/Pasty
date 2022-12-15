@@ -52,7 +52,7 @@ export default function CustomBtn({
     >
       {areChildren ? (
         <>
-          <ImageWrapper>{children}</ImageWrapper>
+          {children}
           <Label>{text}</Label>
         </>
       ) : (
@@ -73,6 +73,7 @@ const Wrapper = styled.button`
   cursor: pointer;
   padding-block: 4px;
   width: 100%;
+  max-width: 100%;
   opacity: 1;
 
   &:hover {
