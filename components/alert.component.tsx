@@ -1,3 +1,4 @@
+/* eslint "react-hooks/exhaustive-deps": "off" */
 import styled, { keyframes, css } from "styled-components";
 
 import { Cross } from "@styled-icons/entypo/Cross";
@@ -24,8 +25,9 @@ export default function Alert() {
   const [isClosing, setIsClosing] = useState<boolean>(false);
 
   useEffect(() => {
+    const isChrome = navigator.userAgent.indexOf("Chrome") != -1;
     const mql = window.matchMedia(isMobile);
-    if (!mql.matches) {
+    if (!mql.matches && isChrome) {
       const html = document.getElementsByTagName("html")[0];
       html.style.overflowY = "scroll";
       html.style.padding = "0";

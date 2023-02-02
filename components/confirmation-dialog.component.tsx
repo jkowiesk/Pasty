@@ -3,9 +3,6 @@ import { useContext, useEffect, useState } from "react";
 
 import { Dialog } from "@headlessui/react";
 
-import { TagsInput } from "react-tag-input-component";
-
-import { Cross } from "@styled-icons/entypo/Cross";
 import { Important as ImportantSI } from "@styled-icons/fluentui-system-filled/Important";
 
 import { Search } from "@styled-icons/material/Search";

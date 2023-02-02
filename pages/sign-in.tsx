@@ -21,7 +21,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (isLoggedIn) router.push("/");
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router]);
 
   return (
     <Layout>

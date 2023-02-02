@@ -50,10 +50,6 @@ export default function Header() {
     else setRenderVerticalMenu(true);
   }, [windowSize]);
 
-  useEffect(() => {
-    console.log(isMenuOpen);
-  });
-
   return (
     <Wrapper>
       <HeaderWrapper>
@@ -145,7 +141,6 @@ const HomeWrapper = styled(AnimatedIcon)`
 
 const HeaderWrapper = styled.div`
   background: var(--color-background-secondary);
-  grid-area: header;
   display: flex;
   align-items: center;
 

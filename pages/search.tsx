@@ -1,3 +1,4 @@
+/* eslint "react-hooks/exhaustive-deps": "off" */
 import styled from "styled-components";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 

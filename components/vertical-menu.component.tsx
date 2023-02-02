@@ -44,8 +44,9 @@ export default function VerticalMenu({ isOpen }: Props) {
             text="Search"
             onClick={async () => {
               const mql = window.matchMedia(isMobile);
+              const isChrome = navigator.userAgent.indexOf("Chrome") != -1;
               await setSearchDialogOpen(true);
-              if (!mql.matches) {
+              if (!mql.matches && isChrome) {
                 const html = document.getElementsByTagName("html")[0];
                 html.style.overflowY = "none";
                 html.style.paddingRight = "var(--scrollbar-size)";
