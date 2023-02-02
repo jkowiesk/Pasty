@@ -1,23 +1,21 @@
 import styled, { keyframes } from "styled-components";
 import { isMobile } from "../utils/constants.utils";
+import { useCallback } from "react";
 
 type Props = { setIsOpen: any };
 
 export default function AddStoryBtn({ setIsOpen }: Props) {
-  return (
-    <Wrapper
-      onClick={async () => {
-        const mql = window.matchMedia(isMobile);
-        await setIsOpen(true);
-        if (!mql.matches) {
-          const html = document.getElementsByTagName("html")[0];
-          html.style.paddingRight = "var(--scrollbar-size)";
-        }
-      }}
-    >
-      +
-    </Wrapper>
-  );
+  const onBtnClick = useCallback(async () => {
+    const isChrome = navigator.userAgent.indexOf("Chrome") != -1;
+    const mql = window.matchMedia(isMobile);
+    await setIsOpen(true);
+    if (!mql.matches && isChrome) {
+      const html = document.getElementsByTagName("html")[0];
+      html.style.paddingRight = "var(--scrollbar-size)";
+    }
+  }, [setIsOpen]);
+
+  return <Wrapper onClick={onBtnClick}>+</Wrapper>;
 }
 
 const hoverAnimation = keyframes`

@@ -1,3 +1,4 @@
+/* eslint "react-hooks/exhaustive-deps": "off" */
 import styled from "styled-components";
 
 import { useEffect, useState, useContext, useCallback, useRef } from "react";
@@ -59,18 +60,18 @@ export default function Home() {
       })
         .then((res) => res.json())
         .then(async (stories) => {
-          let storyCards: StoryCardType[] = [];
+          let storyCardsTemp: StoryCardType[] = [];
           for (let story of stories) {
             const { uid, username, avatar } = (await getUserById(
               story.uid
             )) as User;
-            storyCards.push({ story, user: { uid, username, avatar } });
+            storyCardsTemp.push({ story, user: { uid, username, avatar } });
           }
           setStoryCards((prevStoryCards: StoryCardType[]) => [
             ...prevStoryCards,
-            ...storyCards,
+            ...storyCardsTemp,
           ]);
-          setHasMore(storyCards.length > 0);
+          setHasMore(storyCardsTemp.length > 0);
         })
         .catch((e) => console.log(e));
 

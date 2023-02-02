@@ -36,7 +36,7 @@ export default function Settings({ query }: any) {
 
   useEffect(() => {
     if (!isLoggedIn) router.push("/");
-  }, [isLoggedIn]);
+  }, [isLoggedIn, router]);
 
   return (
     <Layout>
