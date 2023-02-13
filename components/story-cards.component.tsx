@@ -134,7 +134,7 @@ export const StoryCardFull = ({
           )}
         </RightHeader>
       </Header>
-      <Content>{content}</Content>
+      <ContentFull>{content}</ContentFull>
       <Footer>
         <AnimatedIcon
           onClick={handleCopy}
@@ -287,7 +287,9 @@ export const StoryCardPreview = ({
             if (isCardActive) setIsCardActive(false);
           }}
         >
-          <ContentPreview>{content}</ContentPreview>
+          <ContentPreviewWrapper>
+            <ContentPreview>{content}</ContentPreview>
+          </ContentPreviewWrapper>
         </LinkWrapper>
       </Link>
       <Footer>
@@ -443,7 +445,18 @@ const Content = styled.p`
 
   @media ${tabletAndSmaller} {
     font-size: 0.9rem;
+    max-width: 60ch;
   }
+`;
+
+const ContentPreviewWrapper = styled.p`
+  display: grid;
+  place-items: center;
+`;
+
+const ContentFull = styled(Content)`
+  max-width: 60ch;
+  line-height: 1.7rem;
 `;
 
 const ContentPreview = styled(Content)`
@@ -451,9 +464,10 @@ const ContentPreview = styled(Content)`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 10;
   overflow: hidden;
+  max-width: 65ch;
 
   @media ${tabletAndSmaller} {
-    -webkit-line-clamp: 8;
+    -webkit-line-clamp: 6;
   }
 `;
 
@@ -527,8 +541,8 @@ const UserBar = styled.a`
 const AvatarWrapper = styled.a`
   position: relative;
 
-  width: calc(var(--icons-size));
-  height: calc(var(--icons-size));
+  width: calc(var(--icons-size) - 5px);
+  height: calc(var(--icons-size) - 5px);
 `;
 
 const Avatar = styled(Image)`
@@ -536,12 +550,12 @@ const Avatar = styled(Image)`
 `;
 
 const Username = styled.p`
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--color-secondary);
   padding-top: 5px;
 
   @media ${tabletAndSmaller} {
-    font-size: 0.7rem;
+    font-size: 0.55rem;
   }
 `;
 
@@ -566,9 +580,13 @@ const RatingCounter = styled.p`
   padding-right: 1px;
   color: var(--color-background);
 
-  @media ${phoneAndSmaller} {
+  @media ${tabletAndSmaller} {
     padding-right: 0px;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  @media ${phoneAndSmaller} {
+    font-size: 0.5rem;
   }
 `;
 
